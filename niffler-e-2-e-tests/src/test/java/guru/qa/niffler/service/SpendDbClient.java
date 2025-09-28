@@ -2,6 +2,7 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +12,38 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDbClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
+
+  @Override
+  public SpendJson getSpendById(String id, String username) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
+
+//  @Override
+//  public List<SpendJson> findSpendsByUserName(String username) {
+//    return List.of();
+//  }
+//
+//  @Override
+//  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues) {
+//    return List.of();
+//  }
+//
+//  @Override
+//  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from) {
+//    return List.of();
+//  }
+
+  @Override
+  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from, String to) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
 
   @Override
   public SpendJson createSpend(SpendJson spend) {
@@ -66,6 +93,21 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  public SpendJson updateSpend(SpendJson spendJson) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
+
+  @Override
+  public void deleteSpends(String username, List<String> ids) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
+
+  @Override
+  public List<CategoryJson> findAllCategories(String username) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
+
+  @Override
   public CategoryJson createCategory(CategoryJson category) {
     try {
       final JdbcTemplate jdbcTemplate = new JdbcTemplate(
@@ -99,6 +141,11 @@ public class SpendDbClient implements SpendClient {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public CategoryJson updateCategory(CategoryJson categoryJson) {
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override

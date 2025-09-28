@@ -20,7 +20,7 @@ public interface SpendApi {
   Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
 
   @GET("internal/spends/all")
-  Call<List<SpendJson>> getSpends(
+  Call<SpendJson[]> getSpends(
           @Query("username") String username,
           @Query("filterCurrency") CurrencyValues filterCurrency,
           @Query("from") String from,
@@ -28,13 +28,13 @@ public interface SpendApi {
           );
 
   @POST("internal/spends/add")
-  Call<SpendJson> createSpend(@Body SpendJson spend);
+  Call<SpendJson> addSpend(@Body SpendJson spend);
 
   @PATCH("internal/spends/edit")
-  Call<SpendJson> editSpend(@Body SpendJson spend);
+  Call<SpendJson> updateSpend(@Body SpendJson spend);
 
   @DELETE("internal/spends/remove")
-  Call<Void> deleteSpends(@Query("username") String username, @Query("ids") List<String> ids);
+  Call<Void> removeSpends(@Query("username") String username, @Query("ids") List<String> ids);
 
   @GET("internal/categories/all")
   Call<List<CategoryJson>> getCategories(
@@ -43,7 +43,7 @@ public interface SpendApi {
   );
 
   @POST("internal/categories/add")
-  Call<CategoryJson> createCategory(@Body CategoryJson categoryJson);
+  Call<CategoryJson> addCategory(@Body CategoryJson categoryJson);
 
   @PATCH("internal/categories/update")
   Call<CategoryJson> updateCategory(@Body CategoryJson category);
