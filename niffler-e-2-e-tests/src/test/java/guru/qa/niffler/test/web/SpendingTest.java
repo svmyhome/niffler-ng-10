@@ -27,7 +27,6 @@ public class SpendingTest {
         .login("duck", "12345")
         .editSpending(spending.description())
         .setNewSpendingDescription(newDescription)
-        .save()
         .checkThatTableContains(newDescription);
   }
 }
