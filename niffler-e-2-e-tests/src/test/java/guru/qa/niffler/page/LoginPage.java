@@ -15,7 +15,6 @@ public class LoginPage {
     private final SelenideElement checkLogin = $(".header");
     private final SelenideElement formError = $(".form__error");
 
-
     public MainPage login(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
@@ -33,6 +32,11 @@ public class LoginPage {
     public RegisterPage switchToRegisterPage() {
         registerBtn.click();
         return new RegisterPage();
+    }
+
+    public MainPage switchToMainPage() {
+        registerBtn.click();
+        return new MainPage();
     }
 
     public LoginPage loginPageShouldBeDisplayed() {
