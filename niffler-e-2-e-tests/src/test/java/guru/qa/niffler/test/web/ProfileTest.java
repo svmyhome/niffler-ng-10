@@ -13,7 +13,6 @@ public class ProfileTest {
 
 
     @Category(
-            name="qaz11111",
             username = "duck",
             archived = false
     )

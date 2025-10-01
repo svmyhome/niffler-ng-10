@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.apache.hc.core5.http.HttpStatus.SC_ACCEPTED;
+import static org.apache.hc.core5.http.HttpStatus.SC_CREATED;
+import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpendApiClient implements SpendClient{
@@ -36,7 +39,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     return response.body();
   }
 
@@ -64,7 +67,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
@@ -76,7 +79,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(201, response.code());
+    assertEquals(SC_CREATED, response.code());
     return response.body();
   }
 
@@ -88,7 +91,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     return response.body();
   }
 
@@ -100,7 +103,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(202, response.code());
+    assertEquals(SC_ACCEPTED, response.code());
   }
 
   @Override
@@ -111,11 +114,10 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     assert response.body() != null;
     return response.body();
   }
-
 
   @Override
   public CategoryJson createCategory(CategoryJson category) {
@@ -125,7 +127,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     return response.body();
   }
 
@@ -137,7 +139,7 @@ public class SpendApiClient implements SpendClient{
     } catch (IOException e){
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(SC_OK, response.code());
     return response.body();
   }
 

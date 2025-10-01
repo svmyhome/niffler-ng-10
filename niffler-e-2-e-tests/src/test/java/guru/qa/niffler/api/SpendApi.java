@@ -43,7 +43,7 @@ public interface SpendApi {
   );
 
   @POST("internal/categories/add")
-  Call<CategoryJson> addCategory(@Body CategoryJson categoryJson);
+  Call<CategoryJson> addCategory(@Body CategoryJson category);
 
   @PATCH("internal/categories/update")
   Call<CategoryJson> updateCategory(@Body CategoryJson category);
