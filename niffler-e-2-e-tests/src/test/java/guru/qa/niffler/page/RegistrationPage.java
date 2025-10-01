@@ -1,11 +1,12 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
-public class RegisterPage {
+public class RegistrationPage {
     public LoginPage loginPage = new LoginPage();
 
     private final SelenideElement usernameInput = $("#username");
@@ -19,52 +20,50 @@ public class RegisterPage {
     private final SelenideElement switchToLogin = $(".form_sign-in");
     private final SelenideElement formError = $(".form__error");
 
-
-    public RegisterPage register(String username, String password, String passwordSubmit) {
-        usernameInput.val(username);
-        passwordInput.val(password);
-        passwordSubmitInput.val(passwordSubmit);
-        submitBtn.click();
-        return new RegisterPage();
-    }
-
-    public RegisterPage registerWithStep(String username, String password, String passwordSubmit) {
+    @Step("Register user with credentials")
+    public RegistrationPage registerUser(String username, String password, String passwordSubmit) {
         setUsername(username)
                 .setPassword(password)
                 .setPasswordSubmit(passwordSubmit)
-                .submitRegister();
-        return new RegisterPage();
+                .submitRegistration();
+        return new RegistrationPage();
     }
 
-    public RegisterPage setUsername(String username) {
+    @Step("Set username: '{username}'")
+    public RegistrationPage setUsername(String username) {
         usernameInput.val(username);
         return this;
     }
 
-    public RegisterPage setPassword(String password) {
+    @Step("Set password: '{password}'")
+    public RegistrationPage setPassword(String password) {
         passwordInput.val(password);
         return this;
     }
 
-    public RegisterPage setPasswordSubmit(String passwordSubmit) {
+    @Step("Set password submit: '{passwordSubmit}'")
+    public RegistrationPage setPasswordSubmit(String passwordSubmit) {
         passwordSubmitInput.val(passwordSubmit);
         return this;
     }
 
-    public RegisterPage submitRegister() {
+    @Step("Submit registration")
+    public RegistrationPage submitRegistration() {
         submitBtn.click();
         return this;
     }
 
-    public void checkRegister(String value) {
+    @Step("Successful registration")
+    public void registrationShouldBeSuccessful(String value) {
         checkRegisterResult.shouldHave(text(value));
-
     }
 
+    @Step("Verify error '{expectedErrorText}' visible")
     public void checkFormError(String expectedErrorText) {
         formError.shouldHave(text(expectedErrorText));
     }
 
+    @Step("Switch to login page")
     public LoginPage switchToLoginPage() {
         switchToLogin.click();
         return new LoginPage();

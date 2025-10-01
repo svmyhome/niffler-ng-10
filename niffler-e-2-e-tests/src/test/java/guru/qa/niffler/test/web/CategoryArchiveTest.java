@@ -18,10 +18,8 @@ public class CategoryArchiveTest {
     void archivedCategoryShouldNotBePresentedInActiveCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345")
-                .openMenu()
                 .openProfile()
-                .profilePage
-                .checkProfile()
+                .checkProfileIsDisplayed()
                 .checkCategoryIsNotDisplayed(category.name());
     }
 
@@ -30,10 +28,8 @@ public class CategoryArchiveTest {
     void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345")
-                .openMenu()
                 .openProfile()
-                .profilePage
-                .checkProfile()
+                .checkProfileIsDisplayed()
                 .checkCategoryIsDisplayed(category.name());
     }
 
@@ -45,10 +41,8 @@ public class CategoryArchiveTest {
     void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345")
-                .openMenu()
                 .openProfile()
-                .profilePage
-                .checkProfile()
+                .checkProfileIsDisplayed()
                 .checkArchivedCategoryExists(category.name());
     }
 }

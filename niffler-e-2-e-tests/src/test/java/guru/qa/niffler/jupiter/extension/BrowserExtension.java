@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 
 import java.io.ByteArrayInputStream;
 
@@ -55,7 +54,7 @@ public class BrowserExtension implements BeforeEachCallback,
             Allure.addAttachment(
                     "Screen on fail",
                     new ByteArrayInputStream(
-                            ((TakesScreenshot)WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)
+                            ((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)
                     )
             );
         }

@@ -18,8 +18,4 @@ enum LocalConfig implements Config {
         return "jdbc:postgresql://localhost:5432/niffler-spend";
     }
 
-    @Override
-    public String authJdbcUrl() {
-        return "jdbc:postgresql://localhost:5432/niffler-auth";
-    }
 }

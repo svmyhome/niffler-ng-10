@@ -6,28 +6,28 @@ import guru.qa.niffler.model.SpendJson;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface SpendClient {
 
-  SpendJson getSpendById(String id, String username);
+    SpendJson getSpendById(String id, String username);
 
-//  List<SpendJson> findSpendsByUserName(String username);
+    //  List<SpendJson> findSpendsByUserName(String username);
 //
 //  List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues);
 //  List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from);
-  List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from, String to);
+    List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from, String to);
 
-  SpendJson createSpend(SpendJson spend);
+    SpendJson createSpend(SpendJson spend);
 
-  SpendJson updateSpend(SpendJson spendJson);
-  void deleteSpends(String username, List<String> ids);
+    SpendJson updateSpend(SpendJson spendJson);
 
-  List<CategoryJson> findAllCategories(String username);
+    void deleteSpends(String username, List<String> ids);
 
-  CategoryJson createCategory(CategoryJson category);
+    List<CategoryJson> findAllCategories(String username);
 
-  CategoryJson updateCategory(CategoryJson categoryJson);
+    CategoryJson createCategory(CategoryJson category);
 
-  Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username);
+    CategoryJson updateCategory(CategoryJson categoryJson);
+
+    Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username);
 }

@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -15,6 +16,7 @@ public class LoginPage {
     private final SelenideElement checkLogin = $(".header");
     private final SelenideElement formError = $(".form__error");
 
+    @Step("Login user with credentials")
     public MainPage login(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
@@ -22,6 +24,7 @@ public class LoginPage {
         return new MainPage();
     }
 
+    @Step("Login with bad credential")
     public LoginPage loginWithBadCredential(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
@@ -29,21 +32,19 @@ public class LoginPage {
         return this;
     }
 
-    public RegisterPage switchToRegisterPage() {
+    @Step("Switch to register page")
+    public RegistrationPage switchToRegisterPage() {
         registerBtn.click();
-        return new RegisterPage();
+        return new RegistrationPage();
     }
 
-    public MainPage switchToMainPage() {
-        registerBtn.click();
-        return new MainPage();
-    }
-
+    @Step("Successfully opened profile")
     public LoginPage loginPageShouldBeDisplayed() {
         checkLogin.shouldHave(text("Log in"));
         return this;
     }
 
+    @Step("Verify error '{expectedErrorText}' visible")
     public LoginPage checkFormError(String expectedErrorText) {
         formError.shouldHave(text(expectedErrorText));
         return this;

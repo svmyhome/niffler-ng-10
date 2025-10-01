@@ -16,15 +16,16 @@ public class ProfilePage {
     private final SelenideElement category = $("#category"),
             archivedCategoryBtn = $("//*[text()='Учеба']/ancestor::div//button[@aria-label='Archive category']"),
             archiveBtn = $("//*[text()='Archive']"),
-            showArchived = $(".MuiSwitch-input"),
-            profile = $("h2:contains('Profile')");
+            showArchived = $(".MuiSwitch-input");
 
     private final ElementsCollection
             categories = $$(".MuiChip-filled.MuiChip-colorPrimary"),
-            categoriesArchived = $$(".MuiChip-filled.MuiChip-colorDefault");
+            categoriesArchived = $$(".MuiChip-filled.MuiChip-colorDefault"),
+            headersH2 = $$("h2");
 
-    public ProfilePage checkProfile() {
-        $("h2").shouldHave(text("Profile"));
+    @Step("Successfully opened profile")
+    public ProfilePage checkProfileIsDisplayed() {
+        headersH2.find(text("Profile")).should(visible);
         return this;
     }
 
