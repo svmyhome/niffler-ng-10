@@ -11,36 +11,36 @@ public class CategoryArchiveTest {
     private static final Config CFG = Config.getInstance();
 
     @Category(
-            username = "duck",
+            username = "mouse",
             archived = true
     )
     @Test
     void archivedCategoryShouldNotBePresentedInActiveCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
+                .login("mouse", "12345")
                 .openProfile()
                 .checkProfileIsDisplayed()
                 .checkCategoryIsNotDisplayed(category.name());
     }
 
-    @Category(username = "duck")
+    @Category(username = "cat")
     @Test
     void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
+                .login("cat", "12345")
                 .openProfile()
                 .checkProfileIsDisplayed()
                 .checkCategoryIsDisplayed(category.name());
     }
 
     @Category(
-            username = "duck",
+            username = "dog",
             archived = true
     )
     @Test
     void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
+                .login("dog", "12345")
                 .openProfile()
                 .checkProfileIsDisplayed()
                 .checkArchivedCategoryExists(category.name());
