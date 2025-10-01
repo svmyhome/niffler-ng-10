@@ -15,7 +15,7 @@ public class RegistrationTest {
         Selenide.open(CFG.frontUrl(), RegistrationPage.class)
                 .loginPage
                 .switchToRegisterPage()
-                .registerUser("horse421145", "12345", "12345")
+                .registerUser("horse", "12345", "12345")
                 .registrationShouldBeSuccessful(REGISTRATION_SUCCESS);
     }
 
@@ -24,19 +24,10 @@ public class RegistrationTest {
         Selenide.open(CFG.frontUrl(), RegistrationPage.class)
                 .loginPage
                 .switchToRegisterPage()
-                .setUsername("Moo015445")
-                .setPassword("1234")
-                .setPasswordSubmit("1234")
+                .setUsername("mouse")
+                .setPassword("12345")
+                .setPasswordSubmit("12345")
                 .submitRegistration()
-                .registrationShouldBeSuccessful(REGISTRATION_SUCCESS);
-    }
-
-    @Test
-    void shouldRegisterNewUserWithStep2() {
-        Selenide.open(CFG.frontUrl(), RegistrationPage.class)
-                .loginPage
-                .switchToRegisterPage()
-                .registerUser("horse0441", "12345", "12345")
                 .registrationShouldBeSuccessful(REGISTRATION_SUCCESS);
     }
 
@@ -45,9 +36,9 @@ public class RegistrationTest {
         Selenide.open(CFG.frontUrl(), RegistrationPage.class)
                 .loginPage
                 .switchToRegisterPage()
-                .setUsername("Moo13117")
-                .setPassword("1234")
-                .setPasswordSubmit("1234")
+                .setUsername("dog")
+                .setPassword("12345")
+                .setPasswordSubmit("12345")
                 .submitRegistration()
                 .switchToLoginPage()
                 .loginPageShouldBeDisplayed();
