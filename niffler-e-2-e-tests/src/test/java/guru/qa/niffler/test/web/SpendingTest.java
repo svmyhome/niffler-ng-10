@@ -13,24 +13,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BrowserExtension.class)
 public class SpendingTest {
 
-    private static final Config CFG = Config.getInstance();
+  private static final Config CFG = Config.getInstance();
 
-    @Spending(
-            username = "duck",
-            category = "Учеба",
-            amount = 89900,
-            currency = CurrencyValues.RUB,
-            description = "Обучение Niffler 2.0 юбилейный поток!"
-    )
-    @Test
-    void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
-        final String newDescription = "Обучение Niffler Next Generation";
+  @Spending(
+      username = "duck",
+      category = "Учеба",
+      amount = 89900,
+      currency = CurrencyValues.RUB,
+      description = "Обучение Niffler 2.0 юбилейный поток!"
+  )
+  @Test
+  void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
+    final String newDescription = "Обучение Niffler Next Generation";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
-                .editSpending(spending.description())
-                .setNewSpendingDescription(newDescription)
-                .checkThatTableContains(newDescription);
-    }
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login("duck", "12345")
+        .editSpending(spending.description())
+        .setNewSpendingDescription(newDescription)
+        .checkThatTableContains(newDescription);
+  }
 
 }

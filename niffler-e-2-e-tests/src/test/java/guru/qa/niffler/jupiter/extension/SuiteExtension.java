@@ -5,28 +5,28 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 public interface SuiteExtension extends BeforeAllCallback {
 
-    @Override
-    default void beforeAll(ExtensionContext context) throws Exception {
-        final ExtensionContext rootContext = context.getRoot();
-        rootContext.getStore(ExtensionContext.Namespace.GLOBAL)
-                .getOrComputeIfAbsent(
-                        this.getClass(),
-                        key -> {
-                            beforeSuite(rootContext);
-                            return new ExtensionContext.Store.CloseableResource() {
+  @Override
+  default void beforeAll(ExtensionContext context) throws Exception {
+    final ExtensionContext rootContext = context.getRoot();
+    rootContext.getStore(ExtensionContext.Namespace.GLOBAL)
+        .getOrComputeIfAbsent(
+            this.getClass(),
+            key -> {
+              beforeSuite(rootContext);
+              return new ExtensionContext.Store.CloseableResource() {
 
-                                @Override
-                                public void close() throws Throwable {
-                                    afterSuite();
-                                }
-                            };
-                        }
-                );
-    }
+                @Override
+                public void close() throws Throwable {
+                  afterSuite();
+                }
+              };
+            }
+        );
+  }
 
-    default void beforeSuite(ExtensionContext extensionContext) {
-    }
+  default void beforeSuite(ExtensionContext extensionContext) {
+  }
 
-    default void afterSuite() {
-    }
+  default void afterSuite() {
+  }
 }
