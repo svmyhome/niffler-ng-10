@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.annotation;
 
-import guru.qa.niffler.jupiter.extension.CreateSpendingExtension;
-import guru.qa.niffler.model.CurrencyValues;
+
+import guru.qa.niffler.jupiter.extension.CreateCategoryExtension;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,16 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith(CreateSpendingExtension.class)
-public @interface Spending {
+@ExtendWith(CreateCategoryExtension.class)
+public @interface Category {
 
   String username();
 
-  String category();
-
-  String description();
-
-  double amount();
-
-  CurrencyValues currency();
+  boolean archived() default false;
 }

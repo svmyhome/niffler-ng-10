@@ -1,19 +1,23 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.SelenideElement;
-
 import static com.codeborne.selenide.Selenide.$;
 
+import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
+
 public class EditSpendingPage {
+
   private final SelenideElement descriptionInput = $("#description");
   private final SelenideElement saveBtn = $("#save");
 
-  public EditSpendingPage setNewSpendingDescription(String description) {
+  @Step("Add new spending: '{description}'")
+  public MainPage setNewSpendingDescription(String description) {
     descriptionInput.val(description);
     saveBtn.click();
-    return this;
+    return new MainPage();
   }
 
+  @Step("Click add spending")
   public MainPage save() {
     saveBtn.click();
     return new MainPage();
