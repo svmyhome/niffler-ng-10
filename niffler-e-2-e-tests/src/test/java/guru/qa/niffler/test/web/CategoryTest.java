@@ -7,7 +7,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
-public class CategoryArchiveTest {
+public class CategoryTest {
     private static final Config CFG = Config.getInstance();
 
     @Category(
