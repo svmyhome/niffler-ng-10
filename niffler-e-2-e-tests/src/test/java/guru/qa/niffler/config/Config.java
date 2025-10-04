@@ -12,4 +12,5 @@ public interface Config {
 
   String spendJdbcUrl();
 
+  String ghUrl();
 }
