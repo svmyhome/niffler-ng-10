@@ -21,8 +21,8 @@ public class FriendsWebTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
-        .checkMyFriensIsDisplayed()
-        .userShouldHaveNewFriends(user.friend(), "Unfriend");
+        .verifyMyFriendsSectionDisplayed()
+        .verifyUserHasNewFriend(user.friend(), "Unfriend");
   }
 
   @Test
@@ -32,7 +32,7 @@ public class FriendsWebTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
-        .tableShouldNotHaveNewFriends();
+        .verifyFriendsTableIsEmpty();
   }
 
   @Test
@@ -42,8 +42,8 @@ public class FriendsWebTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
-        .friendsRequestIsDisplayed()
-        .userShouldHaveNewRequestFriends(user.income(), "Accept");
+        .verifyMyFriendsRequestSectionDisplayed()
+        .verifyUserHasNewIncomingFriendRequest(user.income(), "Accept");
   }
 
   @Test
@@ -53,8 +53,8 @@ public class FriendsWebTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
-        .tableShouldNotHaveNewFriends()
-        .switchToAllPeople()
-        .userShouldHaveNewOutcominFriends(user.outcome(), "Waiting...");
+        .verifyFriendsTableIsEmpty()
+        .openAllPeopleList()
+        .verifyUserHasNewOutcomingFriendRequest(user.outcome(), "Waiting...");
   }
 }

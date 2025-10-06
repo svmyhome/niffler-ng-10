@@ -11,58 +11,75 @@ import io.qameta.allure.Step;
 
 public class FriendsPage {
 
-  private final ElementsCollection headersH2 = $$("h2"),
-      friendsTableCells = $$("#friends tr td"),
-      requestTableCells = $$("#requests tr td"),
-      allPeopleTableCells = $$("#all tr td");
+  private final SelenideElement
+      friendsTable = $("#friends"),
+      requestsTable = $("#requests"),
+      allUsersTable = $("#all"),
+      emptyTable = $("#simple-tabpanel-friends");
 
-  private final SelenideElement friendsTable = $("#friends"),
-      requestFriendsTable = $("requests"),
-      emptyTable = $("#simple-tabpanel-friends"),
-      allPeople = $("#all");
+  private final ElementsCollection sectionHeaders = $$("h2");
 
-  @Step("My friends is display")
-  public FriendsPage checkMyFriensIsDisplayed() {
-    headersH2.find(text("My friends")).shouldBe(visible);
+  public ElementsCollection getAcceptedFriends() {
+    return friendsTable.$$("tr td");
+  }
+
+  public ElementsCollection getIncomingRequests() {
+    return requestsTable.$$("tr td");
+  }
+
+  public ElementsCollection getAllUsers() {
+    return allUsersTable.$$("tr td");
+  }
+
+  @Step("Check that user has a new friend")
+  public FriendsPage verifyUserHasNewFriend(String friendName, String friendshipStatus) {
+    SelenideElement friendCell = getAcceptedFriends().find(text(friendName));
+    friendCell.shouldBe(visible);
+
+    SelenideElement statusCell = friendCell.sibling(0);
+    statusCell.shouldHave(text(friendshipStatus));
+
+    return this;
+
+  }
+
+  @Step("Check that user has a new incoming requests")
+  public FriendsPage verifyUserHasNewIncomingFriendRequest(String friendName,
+      String friendshipStatus) {
+    getIncomingRequests().find(text(friendName)).shouldBe(visible)
+        .sibling(0).shouldHave(text(friendshipStatus));
     return this;
   }
 
-  @Step("Check that user has a friend")
-  public FriendsPage userShouldHaveNewFriends(String friendName, String friendshipSataus) {
-    friendsTableCells.find(text(friendName)).shouldBe(visible)
-        .sibling(0).shouldHave(text(friendshipSataus));
+  @Step("Check that user has a new outcoming requests")
+  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName,
+      String friendshipStatus) {
+    getAllUsers().find(text(friendName)).shouldBe(visible)
+        .sibling(0).shouldHave(text(friendshipStatus));
     return this;
   }
 
-  @Step("Check that user has a friend requests")
-  public FriendsPage userShouldHaveNewRequestFriends(String friendName, String friendshipSataus) {
-    requestTableCells.find(text(friendName)).shouldBe(visible)
-        .sibling(0).shouldHave(text(friendshipSataus));
-    return this;
-  }
-
-  @Step("Check that user has a invite people")
-  public FriendsPage userShouldHaveNewOutcominFriends(String friendName, String friendshipSataus) {
-    allPeopleTableCells.find(text(friendName)).shouldBe(visible)
-        .sibling(0).shouldHave(text(friendshipSataus));
-    return this;
-  }
-
-  @Step("Check that user has not a new friend in friends table")
-  public FriendsPage tableShouldNotHaveNewFriends() {
+  @Step("Check that friends table is empty")
+  public FriendsPage verifyFriendsTableIsEmpty() {
     emptyTable.shouldHave(text("There are no users yet")).shouldBe(visible);
     return this;
   }
 
-  @Step("Switch to All people list")
-  public FriendsPage switchToAllPeople() {
-    headersH2.find(text("All people")).shouldBe(visible).click();
+  @Step("Open All People list")
+  public FriendsPage openAllPeopleList() {
+    sectionHeaders.find(text("All people")).shouldBe(visible).click();
     return this;
   }
 
-  @Step("Friend requests is display")
-  public FriendsPage friendsRequestIsDisplayed() {
-    headersH2.find(text("Friend requests")).shouldBe(visible);
+  @Step("Verify My Friends section is displayed")
+  public FriendsPage verifyMyFriendsSectionDisplayed() {
+    sectionHeaders.find(text("My friends")).shouldBe(visible);
+    return this;
+  }
+
+  @Step("Verify My Friends request section is displayed")
+  public FriendsPage verifyMyFriendsRequestSectionDisplayed() {
+    sectionHeaders.find(text("Friend requests")).shouldBe(visible);
     return this;
   }
 }
