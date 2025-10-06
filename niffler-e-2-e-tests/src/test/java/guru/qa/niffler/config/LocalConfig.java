@@ -19,5 +19,7 @@ enum LocalConfig implements Config {
   }
 
   @Override
-  public String ghUrl() { return "https://api.github.com"; }
+  public String ghUrl() {
+    return "https://api.github.com";
+  }
 }

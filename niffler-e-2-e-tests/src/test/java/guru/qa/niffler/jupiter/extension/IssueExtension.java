@@ -18,13 +18,13 @@ public class IssueExtension implements ExecutionCondition {
         context.getRequiredTestMethod(),
         DisabledByIssue.class
     ).or(() -> AnnotationSupport.findAnnotation(
-            context.getRequiredTestClass(),
+        context.getRequiredTestClass(),
         DisabledByIssue.class,
         SearchOption.INCLUDE_ENCLOSING_CLASSES
     )).map(
         byIssue -> "open".equals(ghApiClient.issueState(byIssue.value()))
-        ? ConditionEvaluationResult.disabled("Disabled by issue " + byIssue.value())
-            :ConditionEvaluationResult.enabled("Issue closed")
+            ? ConditionEvaluationResult.disabled("Disabled by issue " + byIssue.value())
+            : ConditionEvaluationResult.enabled("Issue closed")
     ).orElse(ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found"));
 
   }

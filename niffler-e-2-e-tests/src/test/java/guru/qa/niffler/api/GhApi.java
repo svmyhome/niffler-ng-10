@@ -8,6 +8,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 public interface GhApi {
+
   @GET("repos/svmyhome/niffler-ng-10/issues/{issue_number}")
   @Headers({
       "Accept: application/vnd.github+json",
