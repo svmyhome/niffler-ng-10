@@ -42,7 +42,7 @@ public class UserQueueExtension implements
   }
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
+  public void beforeEach(ExtensionContext context) {
     Map<FriendType, StaticUser> users = new HashMap<>();
 
     Arrays.stream(context.getRequiredTestMethod().getParameters())
@@ -68,7 +68,7 @@ public class UserQueueExtension implements
   }
 
   @Override
-  public void afterTestExecution(ExtensionContext context) throws Exception {
+  public void afterTestExecution(ExtensionContext context) {
     Map<UserType.FriendType, StaticUser> users = context.getStore(NAMESPACE)
         .get(context.getUniqueId(), Map.class);
 

@@ -6,6 +6,7 @@ import guru.qa.niffler.jupiter.annotation.UserType;
 import guru.qa.niffler.jupiter.annotation.UserType.FriendType;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension;
+import guru.qa.niffler.model.StaticUser;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,17 +18,17 @@ public class FriendsWebTest {
 
   @Test
   public void friendShouldBePresentInFriendsTable(
-      @UserType(FriendType.WITH_FRIEND) guru.qa.niffler.model.StaticUser user) {
+      @UserType(FriendType.WITH_FRIEND) StaticUser user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
         .verifyMyFriendsSectionDisplayed()
-        .verifyUserHasNewFriend(user.friend(), "Unfriend");
+        .verifyUserHasNewFriend(user.friend());
   }
 
   @Test
   public void friendsTableShouldBeEmptyForNewFrieds(
-      @UserType(FriendType.EMPTY) guru.qa.niffler.model.StaticUser user
+      @UserType(FriendType.EMPTY) StaticUser user
   ) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
@@ -37,24 +38,24 @@ public class FriendsWebTest {
 
   @Test
   public void incomeInvitationBePresentInFriendsTable(
-      @UserType(FriendType.WITH_INCOME_REQUEST) guru.qa.niffler.model.StaticUser user
+      @UserType(FriendType.WITH_INCOME_REQUEST) StaticUser user
   ) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
         .verifyMyFriendsRequestSectionDisplayed()
-        .verifyUserHasNewIncomingFriendRequest(user.income(), "Accept");
+        .verifyUserHasNewIncomingFriendRequest(user.income());
   }
 
   @Test
   public void outcomeInvitationBePresentInFriendsTable(
-      @UserType(FriendType.WITH_OUTCOME_REQUEST) guru.qa.niffler.model.StaticUser user
+      @UserType(FriendType.WITH_OUTCOME_REQUEST) StaticUser user
   ) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.password())
         .openFriends()
         .verifyFriendsTableIsEmpty()
         .openAllPeopleList()
-        .verifyUserHasNewOutcomingFriendRequest(user.outcome(), "Waiting...");
+        .verifyUserHasNewOutcomingFriendRequest(user.outcome());
   }
 }

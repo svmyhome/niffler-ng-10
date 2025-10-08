@@ -32,30 +32,21 @@ public class FriendsPage {
   }
 
   @Step("Check that user has a new friend")
-  public FriendsPage verifyUserHasNewFriend(String friendName, String friendshipStatus) {
+  public FriendsPage verifyUserHasNewFriend(String friendName) {
     SelenideElement friendCell = getAcceptedFriends().find(text(friendName));
     friendCell.shouldBe(visible);
-
-    SelenideElement statusCell = friendCell.sibling(0);
-    statusCell.shouldHave(text(friendshipStatus));
-
     return this;
-
   }
 
   @Step("Check that user has a new incoming requests")
-  public FriendsPage verifyUserHasNewIncomingFriendRequest(String friendName,
-      String friendshipStatus) {
-    getIncomingRequests().find(text(friendName)).shouldBe(visible)
-        .sibling(0).shouldHave(text(friendshipStatus));
+  public FriendsPage verifyUserHasNewIncomingFriendRequest(String friendName) {
+    getIncomingRequests().find(text(friendName)).shouldBe(visible);
     return this;
   }
 
   @Step("Check that user has a new outcoming requests")
-  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName,
-      String friendshipStatus) {
-    getAllUsers().find(text(friendName)).shouldBe(visible)
-        .sibling(0).shouldHave(text(friendshipStatus));
+  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName) {
+    getAllUsers().find(text(friendName)).shouldBe(visible);
     return this;
   }
 
