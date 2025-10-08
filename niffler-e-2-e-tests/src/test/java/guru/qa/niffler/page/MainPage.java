@@ -12,9 +12,10 @@ import io.qameta.allure.Step;
 public class MainPage {
 
   private final ElementsCollection tableRows = $$("#spendings tr");
-  private final SelenideElement mainPage = $("#root");
-  private final SelenideElement menu = $(".MuiAvatar-root");
-  private final SelenideElement profile = $("[href='/profile']");
+  private final SelenideElement mainPage = $("#root"),
+      menu = $(".MuiAvatar-root"),
+      profile = $("[href='/profile']"),
+      friends = $("[href='/people/friends']");
 
   @Step("Edit spending: '{description}'")
   public EditSpendingPage editSpending(String description) {
@@ -45,5 +46,12 @@ public class MainPage {
     menu.click();
     profile.click();
     return new ProfilePage();
+  }
+
+  @Step("Switch to friends page")
+  public FriendsPage openFriends() {
+    menu.click();
+    friends.click();
+    return new FriendsPage();
   }
 }

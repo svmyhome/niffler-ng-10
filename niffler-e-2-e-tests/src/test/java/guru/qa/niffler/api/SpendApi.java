@@ -46,5 +46,4 @@ public interface SpendApi {
 
   @PATCH("internal/categories/update")
   Call<CategoryJson> updateCategory(@Body CategoryJson category);
-
 }

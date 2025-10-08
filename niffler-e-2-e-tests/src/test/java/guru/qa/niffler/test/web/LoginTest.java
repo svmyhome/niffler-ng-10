@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,24 @@ public class LoginTest {
 
   @Test
   void userStayOnLoginPageAfterLoginWithBadCredential() {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .loginWithBadCredential("duck", "1234")
+        .checkFormError("Неверные учетные данные пользователя")
+        .loginPageShouldBeDisplayed();
+  }
+
+  @DisabledByIssue("5")
+  @Test
+  void userStayOnLoginPageAfterLoginWithBadCredentialTestDisabled() {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .loginWithBadCredential("duck", "1234")
+        .checkFormError("Неверные учетные данные пользователя")
+        .loginPageShouldBeDisplayed();
+  }
+
+  @DisabledByIssue("1")
+  @Test
+  void userStayOnLoginPageAfterLoginWithBadCredentialTestEnadled() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .loginWithBadCredential("duck", "1234")
         .checkFormError("Неверные учетные данные пользователя")
