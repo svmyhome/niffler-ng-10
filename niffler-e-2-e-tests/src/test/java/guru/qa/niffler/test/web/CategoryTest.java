@@ -3,13 +3,14 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.jupiter.extension.TestMethodExtensionContext;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 @ExtendWith(BrowserExtension.class)
 public class CategoryTest {
@@ -45,6 +46,25 @@ public class CategoryTest {
   )
   @Test
   void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login("dog", "12345")
+        .openProfile()
+        .checkProfileIsDisplayed()
+        .checkArchivedCategoryExists(category.name());
+  }
+
+  @User(
+      categories = {@Category(
+          username = "dog",
+          archived = true
+      ),
+          @Category(
+              username = "cat",
+              archived = false
+          )}
+  )
+  @Test
+  void archivedCategoryShouldBePresentedInArchivedList111(CategoryJson category) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login("dog", "12345")
         .openProfile()

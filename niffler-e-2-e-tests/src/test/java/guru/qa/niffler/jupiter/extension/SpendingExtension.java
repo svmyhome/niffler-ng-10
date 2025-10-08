@@ -1,11 +1,13 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendApiClient;
 import guru.qa.niffler.service.SpendClient;
 import java.util.Date;
+import java.util.Optional;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -21,33 +23,58 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    AnnotationSupport.findAnnotation(
-        context.getRequiredTestMethod(),
-        Spending.class
-    ).ifPresent(
-        anno -> {
-          final SpendJson created = spendClient.createSpend(
-              new SpendJson(
+
+    Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
+        User.class);
+
+    Spending spending = null;
+    if (user.isPresent() && user.get().spendings().length > 0) {
+      spending = user.get().spendings()[0];
+    }
+    if (spending != null) {
+      final SpendJson created = spendClient.createSpend(
+          new SpendJson(
+              null,
+              new Date(),
+              new CategoryJson(
                   null,
-                  new Date(),
-                  new CategoryJson(
-                      null,
-                      anno.category(),
-                      anno.username(),
-                      false
-                  ),
-                  anno.currency(),
-                  anno.amount(),
-                  anno.description(),
-                  anno.username()
-              )
-          );
-          context.getStore(NAMESPACE).put(
-              context.getUniqueId(),
-              created
-          );
-        }
-    );
+                  spending.category(),
+                  spending.username(),
+                  false
+              ),
+              spending.currency(),
+              spending.amount(),
+              spending.description(),
+              spending.username()
+          )
+      );
+
+      //    AnnotationSupport.findAnnotation(
+//        context.getRequiredTestMethod(),
+//        Spending.class
+//    ).ifPresent(
+//        anno -> {
+//          final SpendJson created = spendClient.createSpend(
+//              new SpendJson(
+//                  null,
+//                  new Date(),
+//                  new CategoryJson(
+//                      null,
+//                      anno.category(),
+//                      anno.username(),
+//                      false
+//                  ),
+//                  anno.currency(),
+//                  anno.amount(),
+//                  anno.description(),
+//                  anno.username()
+//              )
+//          );
+      context.getStore(NAMESPACE).put(
+          context.getUniqueId(),
+          created
+      );
+    }
   }
 
   @Override
