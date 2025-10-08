@@ -13,10 +13,10 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-public class CreateSpendingExtension implements BeforeEachCallback, ParameterResolver {
+public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
-      CreateSpendingExtension.class);
+      SpendingExtension.class);
   private final SpendClient spendClient = new SpendApiClient();
 
   @Override

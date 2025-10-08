@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
-import static utils.DataGenerator.getRandomCategoryName;
+import static utils.RandomDataUtils.randomCategoryName;
 
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
@@ -14,13 +14,13 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-public class CreateCategoryExtension implements
+public class CategoryExtension implements
     BeforeEachCallback,
     AfterTestExecutionCallback,
     ParameterResolver {
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
-      CreateCategoryExtension.class);
+      CategoryExtension.class);
   private final SpendClient spendClient = new SpendApiClient();
 
   @Override
@@ -33,7 +33,7 @@ public class CreateCategoryExtension implements
           CategoryJson created = spendClient.createCategory(
               new CategoryJson(
                   null,
-                  getRandomCategoryName(),
+                  randomCategoryName(),
                   anno.username(),
                   anno.archived()
               )
