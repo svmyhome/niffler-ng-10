@@ -12,7 +12,6 @@ public class ProfileTest {
 
   private static final Config CFG = Config.getInstance();
 
-
   @Test
   public void openProfile() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)

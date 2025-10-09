@@ -3,11 +3,9 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +15,9 @@ public class CategoryTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Category(
+  @User(
       username = "mouse",
-      archived = true
+      categories = {@Category(archived = true)}
   )
   @Test
   void archivedCategoryShouldNotBePresentedInActiveCategoryList(CategoryJson category) {
@@ -30,7 +28,10 @@ public class CategoryTest {
         .checkCategoryIsNotDisplayed(category.name());
   }
 
-  @Category(username = "cat")
+  @User(
+      username = "cat",
+      categories = {@Category()}
+  )
   @Test
   void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -40,31 +41,15 @@ public class CategoryTest {
         .checkCategoryIsDisplayed(category.name());
   }
 
-  @Category(
+  @User(
       username = "dog",
-      archived = true
+      categories = {
+          @Category(archived = true),
+          @Category(archived = false)
+      }
   )
   @Test
   void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("dog", "12345")
-        .openProfile()
-        .checkProfileIsDisplayed()
-        .checkArchivedCategoryExists(category.name());
-  }
-
-  @User(
-      categories = {@Category(
-          username = "dog",
-          archived = true
-      ),
-          @Category(
-              username = "cat",
-              archived = false
-          )}
-  )
-  @Test
-  void archivedCategoryShouldBePresentedInArchivedList111(CategoryJson category) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login("dog", "12345")
         .openProfile()

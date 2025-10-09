@@ -16,34 +16,15 @@ public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Spending(
-      username = "duck",
-      category = "Учеба",
-      amount = 89900,
-      currency = CurrencyValues.RUB,
-      description = "Обучение Niffler 2.0 юбилейный поток!"
-  )
-  @Test
-  void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
-    final String newDescription = "Обучение Niffler Next Generation";
-
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("duck", "12345")
-        .editSpending(spending.description())
-        .setNewSpendingDescription(newDescription)
-        .checkThatTableContains(newDescription);
-  }
-
   @User(
+      username = "duck",
       spendings = {@Spending(
-          username = "duck",
           category = "Учеба",
           amount = 89900,
           currency = CurrencyValues.RUB,
           description = "Обучение Niffler 2.0 юбилейный поток!"
       ),
           @Spending(
-              username = "duck",
               category = "Пиво",
               amount = 100,
               currency = CurrencyValues.RUB,
@@ -51,8 +32,8 @@ public class SpendingTest {
           )}
   )
   @Test
-  void spendingDescriptionShouldBeEditedByTableAction11111(SpendJson spending) {
-    final String newDescription = "Обучение Niffler Next Generation 1";
+  void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
+    final String newDescription = "Обучение Niffler Next Generation 10";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login("duck", "12345")
@@ -60,5 +41,4 @@ public class SpendingTest {
         .setNewSpendingDescription(newDescription)
         .checkThatTableContains(newDescription);
   }
-
 }

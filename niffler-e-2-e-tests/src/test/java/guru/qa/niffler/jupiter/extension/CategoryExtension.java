@@ -26,7 +26,7 @@ public class CategoryExtension implements
   private final SpendClient spendClient = new SpendApiClient();
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
+  public void beforeEach(ExtensionContext context) {
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
 
@@ -39,7 +39,7 @@ public class CategoryExtension implements
           new CategoryJson(
               null,
               randomCategoryName(),
-              category.username(),
+              user.get().username(),
               category.archived()
           )
       );
@@ -47,40 +47,15 @@ public class CategoryExtension implements
         CategoryJson archivedCategory = new CategoryJson(
             created.id(),
             created.name(),
-            created.username(),
+            user.get().username(),
             true
         );
         created = spendClient.updateCategory(archivedCategory);
       }
 
-//    final SpendClient created = spendClient.createCategory();
-//      AnnotationSupport.findAnnotation(
-//        context.getRequiredTestMethod(),
-//        Category.class
-//    ).ifPresent(
-//        anno -> {
-//          CategoryJson created = spendClient.createCategory(
-//              new CategoryJson(
-//                  null,
-//                  randomCategoryName(),
-//                  anno.username(),
-//                  anno.archived()
-//              )
-//          );
-//          if (anno.archived()) {
-//            CategoryJson archivedCategory = new CategoryJson(
-//                created.id(),
-//                created.name(),
-//                created.username(),
-//                true
-//            );
-//            created = spendClient.updateCategory(archivedCategory);
-//          }
       context.getStore(NAMESPACE).put(
           context.getUniqueId(),
           created
-//    );
-//  }
       );
     }
   }
@@ -99,7 +74,7 @@ public class CategoryExtension implements
   }
 
   @Override
-  public void afterTestExecution(ExtensionContext context) throws Exception {
+  public void afterTestExecution(ExtensionContext context) {
     try {
       CategoryJson category = context.getStore(NAMESPACE)
           .get(context.getUniqueId(), CategoryJson.class);

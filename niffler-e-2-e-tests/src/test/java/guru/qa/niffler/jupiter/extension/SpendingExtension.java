@@ -22,7 +22,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
   private final SpendClient spendClient = new SpendApiClient();
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
+  public void beforeEach(ExtensionContext context) {
 
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
@@ -39,37 +39,16 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
               new CategoryJson(
                   null,
                   spending.category(),
-                  spending.username(),
+                  user.get().username(),
                   false
               ),
               spending.currency(),
               spending.amount(),
               spending.description(),
-              spending.username()
+              user.get().username()
           )
       );
 
-      //    AnnotationSupport.findAnnotation(
-//        context.getRequiredTestMethod(),
-//        Spending.class
-//    ).ifPresent(
-//        anno -> {
-//          final SpendJson created = spendClient.createSpend(
-//              new SpendJson(
-//                  null,
-//                  new Date(),
-//                  new CategoryJson(
-//                      null,
-//                      anno.category(),
-//                      anno.username(),
-//                      false
-//                  ),
-//                  anno.currency(),
-//                  anno.amount(),
-//                  anno.description(),
-//                  anno.username()
-//              )
-//          );
       context.getStore(NAMESPACE).put(
           context.getUniqueId(),
           created

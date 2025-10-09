@@ -13,7 +13,5 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
 
-  String username();
-
   boolean archived() default false;
 }

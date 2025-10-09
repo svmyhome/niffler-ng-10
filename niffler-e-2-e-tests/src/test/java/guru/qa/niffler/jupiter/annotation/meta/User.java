@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
     SpendingExtension.class
 })
 public @interface User {
+  String username();
   Category[] categories() default {};
   Spending[] spendings() default {};
 }
