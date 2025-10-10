@@ -78,16 +78,14 @@ public class CategoryExtension implements
     try {
       CategoryJson category = context.getStore(NAMESPACE)
           .get(context.getUniqueId(), CategoryJson.class);
-      if (category != null) {
-        if (!category.archived()) {
-          CategoryJson archivedCategory = new CategoryJson(
-              category.id(),
-              category.name(),
-              category.username(),
-              true
-          );
-          spendClient.updateCategory(archivedCategory);
-        }
+      if (category != null && !category.archived()) {
+        CategoryJson archivedCategory = new CategoryJson(
+            category.id(),
+            category.name(),
+            category.username(),
+            true
+        );
+        spendClient.updateCategory(archivedCategory);
       }
     } catch (Exception e) {
       System.err.println("Failed to archive category:" + e.getMessage());
