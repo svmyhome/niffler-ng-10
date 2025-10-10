@@ -30,11 +30,8 @@ public class CategoryExtension implements
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
 
-    Category category = null;
     if (user.isPresent() && user.get().categories().length > 0) {
-      category = user.get().categories()[0];
-    }
-    if (category != null) {
+      Category category = user.get().categories()[0];
       CategoryJson created = spendClient.createCategory(
           new CategoryJson(
               null,
@@ -78,16 +75,14 @@ public class CategoryExtension implements
     try {
       CategoryJson category = context.getStore(NAMESPACE)
           .get(context.getUniqueId(), CategoryJson.class);
-      if (category != null) {
-        if (!category.archived()) {
-          CategoryJson archivedCategory = new CategoryJson(
-              category.id(),
-              category.name(),
-              category.username(),
-              true
-          );
-          spendClient.updateCategory(archivedCategory);
-        }
+      if (category != null && !category.archived()) {
+        CategoryJson archivedCategory = new CategoryJson(
+            category.id(),
+            category.name(),
+            category.username(),
+            true
+        );
+        spendClient.updateCategory(archivedCategory);
       }
     } catch (Exception e) {
       System.err.println("Failed to archive category:" + e.getMessage());

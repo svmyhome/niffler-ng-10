@@ -27,11 +27,8 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
 
-    Spending spending = null;
     if (user.isPresent() && user.get().spendings().length > 0) {
-      spending = user.get().spendings()[0];
-    }
-    if (spending != null) {
+      Spending spending = user.get().spendings()[0];
       final SpendJson created = spendClient.createSpend(
           new SpendJson(
               null,
