@@ -68,5 +68,4 @@ public class RegistrationTest {
         .registerUser("duck", "123", "1234")
         .checkFormError("Passwords should be equal");
   }
-
 }
