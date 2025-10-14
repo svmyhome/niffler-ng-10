@@ -1,4 +1,4 @@
-package data.entity;
+package guru.qa.niffler.data;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,8 +11,6 @@ public class Databases {
 
   private Databases() {
   }
-
-  ;
 
   private static final Map<String, DataSource> datasources = new ConcurrentHashMap<>();
 
