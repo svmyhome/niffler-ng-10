@@ -41,7 +41,13 @@ public class JdbcTest {
     void spendIdDaotest() {
         SpendDaoJdbc spendDaoJdbc = new SpendDaoJdbc();
         Optional<SpendEntity> sp = spendDaoJdbc.findSpendById(UUID.fromString("b8e4f162-a8b9-11f0-ba80-6699f0f3bb28"));
-        System.out.println(sp);
+        System.out.println(sp.get().getId());
+        System.out.println(sp.get().getAmount());
+        System.out.println(sp.get().getSpendDate());
+        System.out.println(sp.get().getCategory().getName());
+        System.out.println(sp.get().getCurrency());
+        System.out.println(sp.get().getDescription());
+        System.out.println(sp.get().getUsername());
 
     }
 

@@ -59,6 +59,8 @@ public class SpendDaoJdbc implements SpendDao {
 
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
+
+                        CategoryEntity categoryEntity = new CategoryEntity();
                         SpendEntity se = new SpendEntity();
                         se.setId(rs.getObject("id", UUID.class));
                         se.setUsername(rs.getString("username"));
@@ -67,10 +69,18 @@ public class SpendDaoJdbc implements SpendDao {
                         se.setCurrency(CurrencyValues.valueOf(currencyString));
                         se.setAmount(rs.getDouble("amount"));
                         se.setDescription(rs.getString("description"));
-                        String categoryId = rs.getString("category_id");
 
-                        se.setCategory(rs.getString("category_id"));
+                        UUID categoryId = rs.getObject("category_id", UUID.class);
+                        Optional<CategoryEntity> category = new CategoryDaoJdbc().findCategoryById(categoryId);
 
+                        if (category.isPresent()) {
+                            categoryEntity = category.get();
+                            se.setCategory(categoryEntity);
+                        } else {
+                            CategoryEntity emptyCategory = new CategoryEntity();
+                            emptyCategory.setId(categoryId);
+                            se.setCategory(emptyCategory);
+                        }
                         return Optional.of(se);
                     } else {
                         return Optional.empty();
@@ -101,8 +111,7 @@ public class SpendDaoJdbc implements SpendDao {
                             se.setId(rs.getObject("id", UUID.class));
                             se.setUsername(rs.getString("username"));
                             se.setSpendDate(rs.getDate("spend_date"));
-                            String currencyString = rs.getString("currency");
-                            se.setCurrency(CurrencyValues.valueOf(currencyString));
+                            se.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
                             se.setAmount(rs.getDouble("amount"));
                             se.setDescription("description");
                             se.setId(rs.getObject("category_id", UUID.class));
@@ -122,19 +131,12 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public void deleteSpend(SpendEntity spend) {
-        try(Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
-            try(PreparedStatement ps = connection.prepareStatement(
+        try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
                     "DELETE FROM spend WHERE id =?"
             )) {
                 ps.setObject(1, spend.getId());
                 ps.execute();
-
-//                try(ResultSet rs = ps.getResultSet()) {
-//                    if (rs.next()) {
-//
-//                    }
-//                }
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
