@@ -7,6 +7,8 @@ import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.data.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.impl.SpendDaoJdbc;
 import guru.qa.niffler.model.SpendJson;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SpendDbClient {
 
@@ -24,5 +26,9 @@ public class SpendDbClient {
                 spendDao.createSpend(spendEntity)
         );
     }
+//
+//    public Optional<SpendJson> findSpendById(UUID id) {
+//        return Optional.of(SpendJson.fromEntity(spendDao.findSpendById(id)));
+//    }
 
 }
