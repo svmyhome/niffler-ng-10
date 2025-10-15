@@ -118,7 +118,7 @@ public class SpendDaoJdbc implements SpendDao {
                             entityList.add(se);
                         }
                     } else {
-                        throw new SQLException("Can't find username in ResultSet");
+                        throw new SQLException("Can't find spend in ResultSet");
                     }
                 }
             }

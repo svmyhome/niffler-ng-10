@@ -1,6 +1,8 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.data.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.impl.SpendDaoJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
@@ -66,6 +68,29 @@ public class JdbcTest {
         Optional<SpendEntity> sp = spendDaoJdbc.findSpendById(UUID.fromString("bd6de3e3-6c63-4fe6-8cf2-8fd648b5ca64"));
         if (sp.isPresent()) {
             spendDaoJdbc.deleteSpend(sp.get());
+        }
+    }
+
+    @Test
+    void categoryByNameCategoryDaotest() {
+        CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
+        Optional<CategoryEntity> ce = categoryDaoJdbc.findCategoryByUsernameAndCategoryName("duck", "111");
+        System.out.println(ce);
+    }
+
+    @Test
+    void lstCategory() {
+        CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
+        List<CategoryEntity> ca = categoryDaoJdbc.findAllByUsername("duck");
+        System.out.println(ca);
+    }
+
+    @Test
+    void CategoryDeleteDaotest() {
+        CategoryDaoJdbc categoryDaoJdbc= new CategoryDaoJdbc();
+        Optional<CategoryEntity> sp = categoryDaoJdbc.findCategoryById(UUID.fromString("1d924dc9-e735-496f-9dfd-c21ee154454e"));
+        if (sp.isPresent()) {
+            categoryDaoJdbc.deleteCategory(sp.get());
         }
     }
 
