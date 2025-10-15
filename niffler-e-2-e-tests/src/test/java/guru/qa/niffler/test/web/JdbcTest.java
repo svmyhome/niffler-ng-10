@@ -2,11 +2,14 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.impl.SpendDaoJdbc;
+import guru.qa.niffler.data.impl.UserdataUserDAOJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +40,24 @@ public class JdbcTest {
                 )
         );
         System.out.println(spend);
+    }
+
+    @Test
+    void userDAOtest() {
+        SpendDbClient spendDbClient = new SpendDbClient();
+        UserJson user = spendDbClient.createUser(
+                new UserJson(
+                        null,
+                        "bird",
+                        "First",
+                        "Sure",
+                        "Full",
+                        CurrencyValues.RUB,
+                        "123467890",
+                        "123467890"
+                )
+        );
+        System.out.println(user);
     }
 
     @Test
@@ -87,11 +108,22 @@ public class JdbcTest {
 
     @Test
     void CategoryDeleteDaotest() {
-        CategoryDaoJdbc categoryDaoJdbc= new CategoryDaoJdbc();
+        CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
         Optional<CategoryEntity> sp = categoryDaoJdbc.findCategoryById(UUID.fromString("1d924dc9-e735-496f-9dfd-c21ee154454e"));
         if (sp.isPresent()) {
             categoryDaoJdbc.deleteCategory(sp.get());
         }
     }
+
+    @Test
+    void userIdDaotest() {
+        UserdataUserDAOJdbc userdataUserDAOJdbc = new UserdataUserDAOJdbc();
+        Optional<UserEntity> sp = userdataUserDAOJdbc.findById(UUID.fromString("0e5f972a-a9f3-11f0-a5b1-ce53de3c691f"));
+        System.out.println(sp.get().getId());
+        System.out.println(sp.get().getCurrency());
+        System.out.println(sp.get().getUsername());
+
+    }
+
 
 }
