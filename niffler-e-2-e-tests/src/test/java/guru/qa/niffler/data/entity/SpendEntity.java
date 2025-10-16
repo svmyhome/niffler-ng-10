@@ -33,5 +33,4 @@ public class SpendEntity implements Serializable {
     );
     return se;
   }
-
 }
