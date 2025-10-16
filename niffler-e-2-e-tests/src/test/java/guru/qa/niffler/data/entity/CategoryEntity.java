@@ -17,7 +17,7 @@ public class CategoryEntity implements Serializable {
     private boolean archived;
 
 
-    public static CategoryEntity formJson(CategoryJson json) {
+    public static CategoryEntity fromJson(CategoryJson json) {
         CategoryEntity ce = new CategoryEntity();
         ce.setId(json.id());
         ce.setName(json.name());

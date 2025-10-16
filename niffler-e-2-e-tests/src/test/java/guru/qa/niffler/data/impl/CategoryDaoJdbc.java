@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.model.CategoryJson;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -142,5 +143,10 @@ public class CategoryDaoJdbc implements CategoryDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public CategoryJson updateCategory(CategoryJson categoryJson) {
+        return null;
     }
 }

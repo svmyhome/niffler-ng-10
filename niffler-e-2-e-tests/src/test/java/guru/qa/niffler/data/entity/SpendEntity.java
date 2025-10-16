@@ -29,7 +29,7 @@ public class SpendEntity implements Serializable {
         se.setAmount(json.amount());
         se.setDescription(json.description());
         se.setCategory(
-                CategoryEntity.formJson(json.category())
+                CategoryEntity.fromJson(json.category())
         );
         return se;
     }

@@ -3,8 +3,8 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.service.SpendApiClient;
 import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -19,7 +19,7 @@ public class CategoryExtension implements
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
             CategoryExtension.class);
-    private final SpendClient spendClient = new SpendApiClient();
+    private final SpendClient spendClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -28,24 +28,26 @@ public class CategoryExtension implements
 
         if (user.isPresent() && user.get().categories().length > 0) {
             Category category = user.get().categories()[0];
-            CategoryJson created = spendClient.createCategory(
-                    new CategoryJson(
-                            null,
-                            randomCategoryName(),
-                            user.get().username(),
-                            category.archived()
-                    )
-            );
+            CategoryJson created;
             if (category.archived()) {
-                CategoryJson archivedCategory = new CategoryJson(
-                        created.id(),
-                        created.name(),
-                        user.get().username(),
-                        true
+                created = spendClient.createCategory(
+                        new CategoryJson(
+                                null,
+                                randomCategoryName(),
+                                user.get().username(),
+                                true
+                        )
                 );
-                created = spendClient.updateCategory(archivedCategory);
+            } else {
+                created = spendClient.createCategory(
+                        new CategoryJson(
+                                null,
+                                randomCategoryName(),
+                                user.get().username(),
+                                category.archived()
+                        )
+                );
             }
-
             context.getStore(NAMESPACE).put(
                     context.getUniqueId(),
                     created

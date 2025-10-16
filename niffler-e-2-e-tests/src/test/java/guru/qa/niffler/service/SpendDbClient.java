@@ -9,15 +9,31 @@ import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.impl.UserdataUserDAOJdbc;
+import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 
-public class SpendDbClient {
+import java.util.List;
+import java.util.Optional;
+
+public class SpendDbClient implements SpendClient {
 
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
     private final SpendDao spendDao = new SpendDaoJdbc();
     private final UserdataUserDAO userDAO = new UserdataUserDAOJdbc();
 
+    @Override
+    public SpendJson getSpendById(String id, String username) {
+        return null;
+    }
+
+    @Override
+    public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from, String to) {
+        return List.of();
+    }
+
+    @Override
     public SpendJson createSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
         if (spendEntity.getCategory().getId() == null) {
@@ -30,14 +46,43 @@ public class SpendDbClient {
         );
     }
 
+    @Override
+    public SpendJson updateSpend(SpendJson spendJson) {
+        return null;
+    }
+
+    @Override
+    public void deleteSpends(String username, List<String> ids) {
+
+    }
+
+    @Override
+    public List<CategoryJson> findAllCategories(String username) {
+        return List.of();
+    }
+
+    @Override
+    public CategoryJson createCategory(CategoryJson category) {
+        CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+
+        return CategoryJson.fromEntity(
+                categoryDao.createCategory(categoryEntity)
+        );
+    }
+
+    @Override
+    public CategoryJson updateCategory(CategoryJson categoryJson) {
+        return null;
+    }
+
+    @Override
+    public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username) {
+        return Optional.empty();
+    }
+
     public UserJson createUser(UserJson user) {
         UserEntity userEntity = UserEntity.fromJson(user);
         return UserJson.fromEntity(userDAO.createUser(userEntity));
     }
-
-//
-//    public Optional<SpendJson> findSpendById(UUID id) {
-//        return Optional.of(SpendJson.fromEntity(spendDao.findSpendById(id)));
-//    }
 
 }
