@@ -63,7 +63,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
                         String currencyString = rs.getString("currency");
                         ue.setCurrency(CurrencyValues.valueOf(currencyString));
                         ue.setFirstname(rs.getString("firstname"));
-                        ue.setUsername(rs.getString("surname"));
+                        ue.setSurname(rs.getString("surname"));
                         ue.setFull_name(rs.getString("full_name"));
                         ue.setPhoto(rs.getBytes("photo"));
                         ue.setPhoto_small(rs.getBytes("photo_small"));
@@ -80,11 +80,46 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
+        try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM \"user\" WHERE username = ?"
+            )) {
+                ps.setObject(1, username);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        UserEntity ue = new UserEntity();
+                        ue.setId(rs.getObject("id", UUID.class));
+                        ue.setUsername(rs.getString("username"));
+                        String currencyString = rs.getString("currency");
+                        ue.setCurrency(CurrencyValues.valueOf(currencyString));
+                        ue.setFirstname(rs.getString("firstname"));
+                        ue.setSurname(rs.getString("surname"));
+                        ue.setFull_name(rs.getString("full_name"));
+                        ue.setPhoto(rs.getBytes("photo"));
+                        ue.setPhoto_small(rs.getBytes("photo_small"));
+                        return Optional.of(ue);
+                    } else {
+                        return Optional.empty();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(UserEntity user) {
-
+        try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM \"user\" WHERE id =?"
+            )) {
+                ps.setObject(1, user.getId());
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

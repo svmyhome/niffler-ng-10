@@ -125,5 +125,25 @@ public class JdbcTest {
 
     }
 
+    @Test
+    void userNameDaotest() {
+        UserdataUserDAOJdbc userdataUserDAOJdbc = new UserdataUserDAOJdbc();
+        Optional<UserEntity> sp = userdataUserDAOJdbc.findByUsername("bird");
+        System.out.println(sp.get().getId());
+        System.out.println(sp.get().getCurrency());
+        System.out.println(sp.get().getUsername());
+
+    }
+
+    @Test
+    void UserDeleteDaotest() {
+        UserdataUserDAOJdbc userdataUserDAOJdbc = new UserdataUserDAOJdbc();
+        Optional<UserEntity> sp = userdataUserDAOJdbc.findById(UUID.fromString("fb6699ce-1d2a-4929-b4d1-f33b92854cb4"));
+
+        if (sp.isPresent()) {
+            userdataUserDAOJdbc.delete(sp.get());
+        }
+    }
+
 
 }
