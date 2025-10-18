@@ -1,14 +1,19 @@
 package guru.qa.niffler.data;
 
+import com.atomikos.icatch.jta.UserTransactionImp;
+import com.atomikos.jdbc.AtomikosDataSourceBean;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
+import org.apache.commons.lang3.StringUtils;
 
 public class Databases {
 
@@ -17,6 +22,8 @@ public class Databases {
 
   private Databases() {
   }
+
+  ;
 
   public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
     Connection connection = null;
@@ -35,6 +42,28 @@ public class Databases {
         } catch (SQLException ex) {
           throw new RuntimeException(ex);
         }
+      }
+      throw new RuntimeException(e);
+    }
+  }
+
+  ;
+
+  public static <T> T xaTransaction(XaFunction<T>... actions) {
+    UserTransaction ut = new UserTransactionImp();
+    try {
+      ut.begin();
+      T result = null;
+      for (XaFunction<T> action : actions) {
+        result = action.function.apply(connection(action.jdbcUrl));
+      }
+      ut.commit();
+      return result;
+    } catch (Exception e) {
+      try {
+        ut.rollback();
+      } catch (SystemException ex) {
+        throw new RuntimeException(ex);
       }
       throw new RuntimeException(e);
     }
@@ -61,16 +90,39 @@ public class Databases {
     }
   }
 
+  public static void xaTransaction(XaConsumer... actions) {
+    UserTransaction ut = new UserTransactionImp();
+    try {
+      ut.begin();
+      for (XaConsumer action : actions) {
+        action.function.accept(connection(action.jdbcUrl));
+      }
+      ut.commit();
+    } catch (Exception e) {
+      try {
+        ut.rollback();
+      } catch (SystemException ex) {
+        throw new RuntimeException(ex);
+      }
+      throw new RuntimeException(e);
+    }
+  }
 
   private static DataSource dataSource(String jdbcUrl) {
     return datasources.computeIfAbsent(
         jdbcUrl,
         key -> {
-          PGSimpleDataSource ds = new PGSimpleDataSource();
-          ds.setURL(jdbcUrl);
-          ds.setUser("postgres");
-          ds.setPassword("secret");
-          return ds;
+          AtomikosDataSourceBean dsBean = new AtomikosDataSourceBean();
+          final String uniqId = StringUtils.substringAfter("jdbcUrl", "5432/");
+          dsBean.setUniqueResourceName(uniqId);
+          dsBean.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
+          Properties props = new Properties();
+          props.put("URL", jdbcUrl);
+          props.put("user", "postgres");
+          props.put("password", "secret");
+          dsBean.setXaProperties(props);
+          dsBean.setPoolSize(10);
+          return dsBean;
         }
     );
   }
@@ -112,5 +164,13 @@ public class Databases {
         }
       }
     }
+  }
+
+  public record XaFunction<T>(Function<Connection, T> function, String jdbcUrl) {
+
+  }
+
+  public record XaConsumer<T>(Consumer<Connection> function, String jdbcUrl) {
+
   }
 }
