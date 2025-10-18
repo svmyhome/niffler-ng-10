@@ -16,9 +16,15 @@ public interface Config {
 
   String authUrl();
 
+  String authJdbcUrl();
+
   String userdataUrl();
 
+  String userdataJdbcUrl();
+
   String currencyUrl();
+
+  String currencyJdbcUrl();
 
   String gwUrl();
 }

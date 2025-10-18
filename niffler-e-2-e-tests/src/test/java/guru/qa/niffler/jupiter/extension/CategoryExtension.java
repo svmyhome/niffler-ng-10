@@ -5,8 +5,8 @@ import static utils.RandomDataUtils.randomCategoryName;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.service.SpendApiClient;
 import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.SpendDbClient;
 import java.util.Optional;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -23,13 +23,12 @@ public class CategoryExtension implements
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
       CategoryExtension.class);
-  private final SpendClient spendClient = new SpendApiClient();
+  private final SpendClient spendClient = new SpendDbClient();
 
   @Override
   public void beforeEach(ExtensionContext context) {
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
-
     if (user.isPresent() && user.get().categories().length > 0) {
       Category category = user.get().categories()[0];
       CategoryJson created = spendClient.createCategory(
@@ -40,16 +39,6 @@ public class CategoryExtension implements
               category.archived()
           )
       );
-      if (category.archived()) {
-        CategoryJson archivedCategory = new CategoryJson(
-            created.id(),
-            created.name(),
-            user.get().username(),
-            true
-        );
-        created = spendClient.updateCategory(archivedCategory);
-      }
-
       context.getStore(NAMESPACE).put(
           context.getUniqueId(),
           created

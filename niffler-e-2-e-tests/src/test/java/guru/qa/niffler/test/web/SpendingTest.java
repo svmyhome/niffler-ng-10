@@ -19,7 +19,7 @@ public class SpendingTest {
   @User(
       username = "duck",
       spendings = {@Spending(
-          category = "Учеба",
+          category = "Машина",
           amount = 89900,
           currency = CurrencyValues.RUB,
           description = "Обучение Niffler 2.0 юбилейный поток!"

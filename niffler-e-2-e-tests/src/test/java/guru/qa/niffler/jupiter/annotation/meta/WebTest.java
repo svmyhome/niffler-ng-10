@@ -14,4 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
     BrowserExtension.class,
     UserQueueExtension.class
 })
-public @interface WebTest {}
+public @interface WebTest {
+
+}
