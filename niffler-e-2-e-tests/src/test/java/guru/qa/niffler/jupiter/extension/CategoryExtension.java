@@ -29,29 +29,16 @@ public class CategoryExtension implements
   public void beforeEach(ExtensionContext context) {
     Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
         User.class);
-
     if (user.isPresent() && user.get().categories().length > 0) {
       Category category = user.get().categories()[0];
-      CategoryJson created;
-      if (category.archived()) {
-        created = spendClient.createCategory(
-            new CategoryJson(
-                null,
-                randomCategoryName(),
-                user.get().username(),
-                true
-            )
-        );
-      } else {
-        created = spendClient.createCategory(
-            new CategoryJson(
-                null,
-                randomCategoryName(),
-                user.get().username(),
-                category.archived()
-            )
-        );
-      }
+      CategoryJson created = spendClient.createCategory(
+          new CategoryJson(
+              null,
+              randomCategoryName(),
+              user.get().username(),
+              category.archived()
+          )
+      );
       context.getStore(NAMESPACE).put(
           context.getUniqueId(),
           created

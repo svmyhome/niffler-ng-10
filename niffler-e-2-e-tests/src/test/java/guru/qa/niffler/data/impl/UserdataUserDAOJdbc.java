@@ -21,7 +21,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
   public UserEntity createUser(UserEntity user) {
     try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
       try (PreparedStatement ps = connection.prepareStatement(
-          "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
+          "INSERT INTO \"user\" (username, currency, firstname, surname, fullname, photo, photoSmall)"
               +
               "VALUES(?,?,?,?,?,?,?)",
           Statement.RETURN_GENERATED_KEYS
@@ -30,9 +30,9 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
         ps.setString(2, user.getCurrency().name());
         ps.setString(3, user.getFirstname());
         ps.setString(4, user.getSurname());
-        ps.setString(5, user.getFull_name());
+        ps.setString(5, user.getFullname());
         ps.setBytes(6, user.getPhoto());
-        ps.setBytes(7, user.getPhoto_small());
+        ps.setBytes(7, user.getPhotoSmall());
         ps.executeUpdate();
 
         final UUID generatedKey;
@@ -68,9 +68,9 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
             ue.setCurrency(CurrencyValues.valueOf(currencyString));
             ue.setFirstname(rs.getString("firstname"));
             ue.setSurname(rs.getString("surname"));
-            ue.setFull_name(rs.getString("full_name"));
+            ue.setFullname(rs.getString("fullname"));
             ue.setPhoto(rs.getBytes("photo"));
-            ue.setPhoto_small(rs.getBytes("photo_small"));
+            ue.setPhotoSmall(rs.getBytes("photoSmall"));
             return Optional.of(ue);
           } else {
             return Optional.empty();
@@ -99,9 +99,9 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
             ue.setCurrency(CurrencyValues.valueOf(currencyString));
             ue.setFirstname(rs.getString("firstname"));
             ue.setSurname(rs.getString("surname"));
-            ue.setFull_name(rs.getString("full_name"));
+            ue.setFullname(rs.getString("fullname"));
             ue.setPhoto(rs.getBytes("photo"));
-            ue.setPhoto_small(rs.getBytes("photo_small"));
+            ue.setPhotoSmall(rs.getBytes("photoSmall"));
             return Optional.of(ue);
           } else {
             return Optional.empty();

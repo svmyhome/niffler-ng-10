@@ -18,42 +18,42 @@ public class SpendDbClient implements SpendClient {
   private final SpendDao spendDao = new SpendDaoJdbc();
 
   @Override
-  public SpendJson getSpendById(String id, String username) {
-    return null;
+  public SpendJson findSpendById(String id, String username) {
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
   public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
       String from, String to) {
-    return List.of();
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
   public SpendJson createSpend(SpendJson spend) {
     SpendEntity spendEntity = SpendEntity.fromJson(spend);
     if (spendEntity.getCategory().getId() == null) {
-      CategoryEntity categoryEntity = categoryDao.createCategory(
+      CategoryEntity categoryEntity = categoryDao.create(
           spendEntity.getCategory());
       spendEntity.setCategory(categoryEntity);
     }
     return SpendJson.fromEntity(
-        spendDao.createSpend(spendEntity)
+        spendDao.create(spendEntity)
     );
   }
 
   @Override
   public SpendJson updateSpend(SpendJson spendJson) {
-    return null;
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
   public void deleteSpends(String username, List<String> ids) {
-
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
   public List<CategoryJson> findAllCategories(String username) {
-    return List.of();
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
@@ -61,18 +61,18 @@ public class SpendDbClient implements SpendClient {
     CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
 
     return CategoryJson.fromEntity(
-        categoryDao.createCategory(categoryEntity)
+        categoryDao.create(categoryEntity)
     );
   }
 
   @Override
   public CategoryJson updateCategory(CategoryJson categoryJson) {
-    return null;
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 
   @Override
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
-    return Optional.empty();
+    throw new UnsupportedOperationException("Not implemented :(");
   }
 }

@@ -10,10 +10,10 @@ public record UserJson(
     String username,
     String firstname,
     String surname,
-    String full_name,
+    String fullname,
     CurrencyValues currency,
     String photo,
-    String photo_small) {
+    String photoSmall) {
 
   public static UserJson fromEntity(UserEntity entity) {
     return new UserJson(
@@ -21,12 +21,12 @@ public record UserJson(
         entity.getUsername(),
         entity.getFirstname(),
         entity.getSurname(),
-        entity.getFull_name(),
+        entity.getFullname(),
         entity.getCurrency(),
         entity.getPhoto() != null && entity.getPhoto().length > 0 ? new String(entity.getPhoto(),
             StandardCharsets.UTF_8) : null,
-        entity.getPhoto_small() != null && entity.getPhoto_small().length > 0 ? new String(
-            entity.getPhoto_small(), StandardCharsets.UTF_8) : null
+        entity.getPhotoSmall() != null && entity.getPhotoSmall().length > 0 ? new String(
+            entity.getPhotoSmall(), StandardCharsets.UTF_8) : null
     );
   }
 

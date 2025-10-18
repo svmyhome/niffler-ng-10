@@ -20,7 +20,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public CategoryEntity createCategory(CategoryEntity category) {
+  public CategoryEntity create(CategoryEntity category) {
     try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
       try (PreparedStatement ps = connection.prepareStatement(
           "INSERT INTO category (name, username, archived)" +
@@ -50,7 +50,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
       try (PreparedStatement ps = connection.prepareStatement(
           "SELECT * FROM category WHERE id = ?"
@@ -135,7 +135,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public void deleteCategory(CategoryEntity category) {
+  public void delete(CategoryEntity category) {
     try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
       try (PreparedStatement ps = connection.prepareStatement(
           "DELETE FROM category WHERE id =?"
@@ -149,7 +149,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public CategoryJson updateCategory(CategoryJson categoryJson) {
-    return null;
+  public CategoryJson update(CategoryJson categoryJson) {
+    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }
