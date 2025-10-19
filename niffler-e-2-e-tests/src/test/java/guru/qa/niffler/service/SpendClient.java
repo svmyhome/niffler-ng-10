@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface SpendClient {
 
-  SpendJson getSpendById(String id, String username);
+  SpendJson findSpendById(String id, String username);
 
   List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from,
       String to);

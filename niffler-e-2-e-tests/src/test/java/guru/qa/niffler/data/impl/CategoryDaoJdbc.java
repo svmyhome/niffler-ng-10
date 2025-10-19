@@ -26,7 +26,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
 
   @Override
-  public CategoryEntity createCategory(CategoryEntity category) {
+  public CategoryEntity create(CategoryEntity category) {
     try (PreparedStatement ps = connection.prepareStatement(
         "INSERT INTO category (name, username, archived)" +
             "VALUES(?,?,?)",
@@ -54,7 +54,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
@@ -133,7 +133,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public void deleteCategory(CategoryEntity category) {
+  public void delete(CategoryEntity category) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM category WHERE id =?"
     )) {
@@ -145,7 +145,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public CategoryJson updateCategory(CategoryJson categoryJson) {
-    return null;
+  public CategoryJson update(CategoryJson categoryJson) {
+    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }

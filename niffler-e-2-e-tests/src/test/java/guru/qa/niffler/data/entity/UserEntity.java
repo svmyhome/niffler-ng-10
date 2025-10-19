@@ -16,9 +16,9 @@ public class UserEntity implements Serializable {
   private CurrencyValues currency;
   private String firstname;
   private String surname;
-  private String full_name;
+  private String fullname;
   private byte[] photo;
-  private byte[] photo_small;
+  private byte[] photoSmall;
 
   public static UserEntity fromJson(UserJson json) {
     UserEntity ue = new UserEntity();
@@ -27,9 +27,9 @@ public class UserEntity implements Serializable {
     ue.setCurrency(json.currency());
     ue.setFirstname(json.firstname());
     ue.setSurname(json.surname());
-    ue.setFull_name(json.full_name());
+    ue.setFullname(json.fullname());
     ue.setPhoto(json.photo().getBytes());
-    ue.setPhoto(json.photo_small().getBytes());
+    ue.setPhoto(json.photoSmall().getBytes());
     return ue;
   }
 }
