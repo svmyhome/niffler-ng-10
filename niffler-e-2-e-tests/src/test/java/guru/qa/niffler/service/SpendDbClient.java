@@ -64,7 +64,7 @@ public class SpendDbClient implements SpendClient {
     return Databases.transaction(connection -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
       return CategoryJson.fromEntity(
-          new CategoryDaoJdbc(connection).createCategory(categoryEntity)
+          new CategoryDaoJdbc(connection).create(categoryEntity)
       );
     }, CFG.spendJdbcUrl());
   }
