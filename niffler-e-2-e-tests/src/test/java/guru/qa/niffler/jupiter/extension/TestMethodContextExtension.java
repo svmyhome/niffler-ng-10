@@ -8,6 +8,10 @@ public class TestMethodContextExtension implements BeforeEachCallback, AfterEach
 
   private static final ThreadLocal<ExtensionContext> ctxStore = new ThreadLocal<>();
 
+  public static ExtensionContext context() {
+    return ctxStore.get();
+  }
+
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
     ctxStore.set(context);
@@ -16,9 +20,5 @@ public class TestMethodContextExtension implements BeforeEachCallback, AfterEach
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
     ctxStore.remove();
-  }
-
-  public static ExtensionContext context() {
-    return ctxStore.get();
   }
 }

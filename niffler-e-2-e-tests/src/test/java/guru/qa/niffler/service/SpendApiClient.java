@@ -31,7 +31,7 @@ public class SpendApiClient implements SpendClient {
 
 
   @Override
-  public SpendJson getSpendById(String id, String username) {
+  public SpendJson findSpendById(String id, String username) {
     final Response<SpendJson> response;
     try {
       response = spendApi.getSpend(id, username).execute();
