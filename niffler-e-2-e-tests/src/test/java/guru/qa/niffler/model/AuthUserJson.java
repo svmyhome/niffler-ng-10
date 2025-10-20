@@ -1,33 +1,31 @@
 package guru.qa.niffler.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.data.entity.CategoryEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
-public record AuthUserJson(
-        @JsonProperty("id")
-        UUID id,
-        @JsonProperty("username")
-        String username,
-        @JsonProperty("enabled")
-        boolean enabled,
-        @JsonProperty("accountNonExpired")
-        boolean accountNonExpired,
-        @JsonProperty("accountNonLocked")
-        boolean accountNonLocked,
-        @JsonProperty("credentialsNonExpired")
-        boolean credentialsNonExpired) {
+@Getter
+@Setter
+public class AuthUserJson {
+    private UUID id;
+    private String username;
+    private String password;
+    private boolean enabled;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
 
     public static AuthUserJson fromEntity(AuthUserEntity entity) {
-        return new AuthUserJson(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getEnabled(),
-                entity.getAccountNonExpired(),
-                entity.getAccountNonLocked(),
-                entity.getCredentialsNonExpired()
-        );
+        AuthUserJson au = new AuthUserJson();
+        au.setId(entity.getId());
+        au.setUsername(entity.getUsername());
+        au.setPassword(entity.getPassword());
+        au.setEnabled(entity.getEnabled());
+        au.setAccountNonExpired(entity.getAccountNonExpired());
+        au.setAccountNonLocked(entity.getAccountNonLocked());
+        au.setCredentialsNonExpired(entity.getCredentialsNonExpired());
+        return au;
     }
 }

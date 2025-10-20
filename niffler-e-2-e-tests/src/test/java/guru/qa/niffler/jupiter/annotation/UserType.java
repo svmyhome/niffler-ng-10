@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface UserType {
 
-  FriendType value() default FriendType.EMPTY;
+    FriendType value() default FriendType.EMPTY;
 
-  enum FriendType {
-    EMPTY, WITH_FRIEND, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST
-  }
+    enum FriendType {
+        EMPTY, WITH_FRIEND, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST
+    }
 }
