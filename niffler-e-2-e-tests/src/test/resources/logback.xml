@@ -1,23 +1,23 @@
 <configuration>
-    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
 
-    <logger level="error" name="org.hibernate"/>
-    <logger level="error" name="org.apache.kafka"/>
+  <logger level="error" name="org.hibernate"/>
+  <logger level="error" name="org.apache.kafka"/>
 
-    <logger level="error" name="com.codeborne.selenide.webdriver.WebDriverFactory"/>
-    <logger level="error" name="com.codeborne.selenide.impl.WebDriverThreadLocalContainer"/>
-    <logger level="error" name="com.codeborne.selenide.drivercommands.CreateDriverCommand"/>
-    <logger level="error" name="com.codeborne.selenide.drivercommands.CloseDriverCommand"/>
-    <logger level="error" name="com.codeborne.selenide.drivercommands.DisposablesRegistry"/>
+  <logger level="error" name="com.codeborne.selenide.webdriver.WebDriverFactory"/>
+  <logger level="error" name="com.codeborne.selenide.impl.WebDriverThreadLocalContainer"/>
+  <logger level="error" name="com.codeborne.selenide.drivercommands.CreateDriverCommand"/>
+  <logger level="error" name="com.codeborne.selenide.drivercommands.CloseDriverCommand"/>
+  <logger level="error" name="com.codeborne.selenide.drivercommands.DisposablesRegistry"/>
 
-    <logger level="warn" name="guru.qa.niffler.kafka.KafkaConsumer"/>
-    <logger level="debug" name="guru.qa.niffler.jupiter.extension.AllureDockerExtension"/>
+  <logger level="warn" name="guru.qa.niffler.kafka.KafkaConsumer"/>
+  <logger level="debug" name="guru.qa.niffler.jupiter.extension.AllureDockerExtension"/>
 
-    <root level="info">
-        <appender-ref ref="STDOUT"/>
-    </root>
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
 </configuration>

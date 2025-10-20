@@ -13,41 +13,41 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthUserDbClient implements AuthUserClient {
 
-    private static final Config CFG = Config.getInstance();
-    private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  private static final Config CFG = Config.getInstance();
+  private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    public AuthUserJson createUser(AuthUserJson authUser) {
-        authUser.setPassword(pe.encode(authUser.getPassword()));
-        AuthUserEntity ue = AuthUserEntity.fromJson(authUser);
-        Databases.xaTransaction(
-                new Databases.XaConsumer(
-                        connection -> {
-                            // Создаем пользователя
-                            AuthUserDaoJdbc userDao = new AuthUserDaoJdbc(connection);
-                            var createdUser = userDao.create(ue);
-                            ue.setId(createdUser.getId());
-                            ue.setPassword(createdUser.getPassword());
+  public AuthUserJson createUser(AuthUserJson authUser) {
+    authUser.setPassword(pe.encode(authUser.getPassword()));
+    AuthUserEntity ue = AuthUserEntity.fromJson(authUser);
+    Databases.xaTransaction(
+        new Databases.XaConsumer(
+            connection -> {
+              // Создаем пользователя
+              AuthUserDaoJdbc userDao = new AuthUserDaoJdbc(connection);
+              var createdUser = userDao.create(ue);
+              ue.setId(createdUser.getId());
+              ue.setPassword(createdUser.getPassword());
 
-                            // Создаем authority в ТОМ ЖЕ соединении
-                            AuthAuthorityDaoJdbc authorityDao = new AuthAuthorityDaoJdbc(connection);
-                            var ae = new AuthorityEntity();
-                            ae.setUserId(ue.getId());
-                            ae.setAuthority(Authority.read);
-                            authorityDao.create(ae);
-                        },
-                        CFG.authJdbcUrl()
-                )
-        );
-        return AuthUserJson.fromEntity(ue);
-    }
+              // Создаем authority в ТОМ ЖЕ соединении
+              AuthAuthorityDaoJdbc authorityDao = new AuthAuthorityDaoJdbc(connection);
+              var ae = new AuthorityEntity();
+              ae.setUserId(ue.getId());
+              ae.setAuthority(Authority.read);
+              authorityDao.create(ae);
+            },
+            CFG.authJdbcUrl()
+        )
+    );
+    return AuthUserJson.fromEntity(ue);
+  }
 
-    @Override
-    public AuthUserJson findByUsername(String id, String username) {
-        throw new UnsupportedOperationException("Not implemented :(");
-    }
+  @Override
+  public AuthUserJson findByUsername(String id, String username) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
 
-    @Override
-    public void deleteUser(AuthUserJson user) {
-        throw new UnsupportedOperationException("Not implemented :(");
-    }
+  @Override
+  public void deleteUser(AuthUserJson user) {
+    throw new UnsupportedOperationException("Not implemented :(");
+  }
 }

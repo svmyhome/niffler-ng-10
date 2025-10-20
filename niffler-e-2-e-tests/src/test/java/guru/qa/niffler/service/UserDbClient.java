@@ -8,14 +8,14 @@ import guru.qa.niffler.model.UserJson;
 
 public class UserDbClient implements UserClient {
 
-    private static final Config CFG = Config.getInstance();
+  private static final Config CFG = Config.getInstance();
 
-    @Override
-    public UserJson createUser(UserJson user) {
-        return Databases.transaction(connection -> {
-                    UserEntity userEntity = UserEntity.fromJson(user);
-                    return UserJson.fromEntity(new UserdataUserDAOJdbc(connection).createUser(userEntity));
-                },
-                CFG.userdataJdbcUrl());
-    }
+  @Override
+  public UserJson createUser(UserJson user) {
+    return Databases.transaction(connection -> {
+          UserEntity userEntity = UserEntity.fromJson(user);
+          return UserJson.fromEntity(new UserdataUserDAOJdbc(connection).createUser(userEntity));
+        },
+        CFG.userdataJdbcUrl());
+  }
 }

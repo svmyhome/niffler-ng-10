@@ -4,9 +4,9 @@ import guru.qa.niffler.model.AuthUserJson;
 
 public interface AuthUserClient {
 
-    AuthUserJson createUser(AuthUserJson user);
+  AuthUserJson createUser(AuthUserJson user);
 
-    AuthUserJson findByUsername(String id, String username);
+  AuthUserJson findByUsername(String id, String username);
 
-    void deleteUser(AuthUserJson user);
+  void deleteUser(AuthUserJson user);
 }

@@ -10,13 +10,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BrowserExtension.class)
 public class ProfileTest {
 
-    private static final Config CFG = Config.getInstance();
+  private static final Config CFG = Config.getInstance();
 
-    @Test
-    public void openProfile() {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
-                .openProfile()
-                .checkProfileIsDisplayed();
-    }
+  @Test
+  public void openProfile() {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login("duck", "12345")
+        .openProfile()
+        .checkProfileIsDisplayed();
+  }
 }
