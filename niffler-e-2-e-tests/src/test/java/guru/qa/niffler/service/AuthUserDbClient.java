@@ -22,13 +22,10 @@ public class AuthUserDbClient implements AuthUserClient {
     Databases.xaTransaction(
         new Databases.XaConsumer(
             connection -> {
-              // Создаем пользователя
               AuthUserDaoJdbc userDao = new AuthUserDaoJdbc(connection);
               var createdUser = userDao.create(ue);
               ue.setId(createdUser.getId());
               ue.setPassword(createdUser.getPassword());
-
-              // Создаем authority в ТОМ ЖЕ соединении
               AuthAuthorityDaoJdbc authorityDao = new AuthAuthorityDaoJdbc(connection);
               var ae = new AuthorityEntity();
               ae.setUserId(ue.getId());
