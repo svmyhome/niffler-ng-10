@@ -11,13 +11,10 @@ import java.util.UUID;
 
 public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
-    private static final Config CFG = Config.getInstance();
     private final Connection connection;
-
     public UserdataUserDAOJdbc(Connection connection) {
         this.connection = connection;
     }
-
 
     @Override
     public UserEntity createUser(UserEntity user) {

@@ -39,28 +39,6 @@ public class AuthUserDbClient implements AuthUserClient {
                 )
         );
         return AuthUserJson.fromEntity(ue);
-//        xaTransaction(
-//                new Databases.XaConsumer(
-//                        connection -> {
-//                            AuthUserDaoJdbc dao = new AuthUserDaoJdbc(connection);
-//                            var authenticated = dao.create(ue);
-//                            ue.setId(authenticated.getId());
-//                            ue.setPassword(authenticated.getPassword());
-//                        },
-//                        CFG.authJdbcUrl()
-//                ),
-//                new Databases.XaConsumer(
-//                        connection -> {
-//                            AuthAuthorityDaoJdbc authorityDao = new AuthAuthorityDaoJdbc(connection);
-//                            var ae = new AuthorityEntity();
-//                            ae.setUserId(ue.getId());
-//                            ae.setAuthority(Authority.read);
-//                            authorityDao.create(ae);
-//                        },
-//                        CFG.authJdbcUrl()
-//                )
-//        );
-//        return AuthUserJson.fromEntity(ue);
     }
 
     @Override

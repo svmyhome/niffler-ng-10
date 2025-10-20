@@ -50,7 +50,6 @@ public class JdbcTest {
         System.out.println(user);
     }
 
-
     @Test
     public void successTransactionTest() {
         AuthUserDbClient dbClient = new AuthUserDbClient();
@@ -63,5 +62,4 @@ public class JdbcTest {
         user.setEnabled(true);
         dbClient.createUser(user);
     }
-
 }

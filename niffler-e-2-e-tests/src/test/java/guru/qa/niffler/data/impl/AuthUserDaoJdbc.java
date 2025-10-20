@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.impl;
 
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 
@@ -10,9 +9,7 @@ import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
 
-    private static final Config CFG = Config.getInstance();
     private final Connection connection;
-
     public AuthUserDaoJdbc(Connection connection) {
         this.connection = connection;
     }

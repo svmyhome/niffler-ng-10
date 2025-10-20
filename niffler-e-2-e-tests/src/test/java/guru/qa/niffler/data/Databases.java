@@ -24,8 +24,6 @@ public class Databases {
     private Databases() {
     }
 
-    ;
-
     public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
         return transaction(function, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
     }
@@ -52,8 +50,6 @@ public class Databases {
             throw new RuntimeException(e);
         }
     }
-
-    ;
 
     public static void transaction(Consumer<Connection> consumer, String jdbcUrl) {
         transaction(consumer, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
@@ -91,7 +87,6 @@ public class Databases {
             ut.begin();
             T result = null;
             for (XaFunction<T> action : actions) {
-//                Connection conn = connection(action.jdbcUrl);
                 Connection conn = getNewConnection(action.jdbcUrl);
                 conn.setTransactionIsolation(isolationLvl);
                 result = action.function.apply(conn);
@@ -118,7 +113,6 @@ public class Databases {
         try {
             ut.begin();
             for (XaConsumer action : actions) {
-//                Connection conn = connection(action.jdbcUrl);
                 Connection conn = getNewConnection(action.jdbcUrl);
                 conn.setTransactionIsolation(isolationLvl);
                 action.consumer.accept(conn);
