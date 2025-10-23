@@ -18,7 +18,7 @@ public class RegistrationTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
-        .registerUser("horse", "12345", "12345")
+        .registerUser("horse24343234", "12345", "12345")
         .registrationShouldBeSuccessful(REGISTRATION_SUCCESS);
   }
 

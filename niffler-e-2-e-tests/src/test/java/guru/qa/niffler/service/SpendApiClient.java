@@ -29,7 +29,6 @@ public class SpendApiClient implements SpendClient {
 
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
-
   @Override
   public SpendJson findSpendById(String id, String username) {
     final Response<SpendJson> response;
