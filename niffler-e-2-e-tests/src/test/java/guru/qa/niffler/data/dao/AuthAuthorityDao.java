@@ -1,18 +1,21 @@
 package guru.qa.niffler.data.dao;
 
 import guru.qa.niffler.data.entity.AuthorityEntity;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface AuthAuthorityDao {
 
-  AuthorityEntity create(AuthorityEntity authority);
+    AuthorityEntity create(AuthorityEntity authority);
 
-  List<AuthorityEntity> findAuthoritiesByUserId(UUID id);
+    void create(AuthorityEntity... authorities);
 
-  Optional<AuthorityEntity> findById(UUID id);
+    List<AuthorityEntity> findAuthoritiesByUserId(UUID id);
 
-  void delete(AuthorityEntity authority);
+    Optional<AuthorityEntity> findById(UUID id);
+
+    void delete(AuthorityEntity authority);
 
 }

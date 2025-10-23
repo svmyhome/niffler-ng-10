@@ -20,7 +20,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
   }
 
   @Override
-  public UserEntity createUser(UserEntity user) {
+  public UserEntity create(UserEntity user) {
     try (PreparedStatement ps = connection.prepareStatement(
         "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
             +

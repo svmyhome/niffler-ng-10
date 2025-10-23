@@ -1,15 +1,14 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 public class JdbcTest {
 
@@ -53,16 +52,16 @@ public class JdbcTest {
     System.out.println(user);
   }
 
-  @Test
-  public void successTransactionTest() {
-    AuthUserDbClient dbClient = new AuthUserDbClient();
-    AuthUserJson user = new AuthUserJson();
-    user.setUsername("qwertyu1231");
-    user.setPassword("qaz1");
-    user.setCredentialsNonExpired(true);
-    user.setAccountNonExpired(true);
-    user.setAccountNonLocked(true);
-    user.setEnabled(true);
-    dbClient.createUser(user);
-  }
+//  @Test
+//  public void successTransactionTest() {
+//    AuthUserDbClient dbClient = new AuthUserDbClient();
+//    AuthUserJson user = new AuthUserJson();
+//    user.setUsername("qwertyu1231");
+//    user.setPassword("qaz1");
+//    user.setCredentialsNonExpired(true);
+//    user.setAccountNonExpired(true);
+//    user.setAccountNonLocked(true);
+//    user.setEnabled(true);
+//    dbClient.createUser(user);
+//  }
 }

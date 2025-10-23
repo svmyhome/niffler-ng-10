@@ -47,7 +47,26 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
   }
 
-  @Override
+    @Override
+    public void create(AuthorityEntity... authorities) {
+        try(PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO authority (user_id, authority)" +
+                        "VALUES(?,?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        )) {
+            for (AuthorityEntity authority : authorities) {
+                ps.setObject(2, authority.getUserId());
+                ps.setString(2, authority.getAuthority().name());
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
   public List<AuthorityEntity> findAuthoritiesByUserId(UUID id) {
     List<AuthorityEntity> authorities = new ArrayList<>();
     try (PreparedStatement ps = connection.prepareStatement(
@@ -65,7 +84,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
           }
           return authorities;
         } else {
-          throw new SQLException("Can't find spend in ResultSet");
+          throw new SQLException("Can't find authority in ResultSet");
         }
       }
     } catch (SQLException e) {

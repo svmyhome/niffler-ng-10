@@ -2,6 +2,8 @@ package guru.qa.niffler.data.impl;
 
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
+import guru.qa.niffler.data.entity.UserEntity;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,7 +82,12 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
   }
 
-  @Override
+    @Override
+    public Optional<AuthUserEntity> findById(UUID id) {
+        throw new UnsupportedOperationException("Not implemented :(");
+    }
+
+    @Override
   public void delete(AuthUserEntity user) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?"
