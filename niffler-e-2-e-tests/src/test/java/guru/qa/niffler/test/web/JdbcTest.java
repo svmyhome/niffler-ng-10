@@ -6,9 +6,8 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
-import org.junit.jupiter.api.Test;
-
 import java.util.Date;
+import org.junit.jupiter.api.Test;
 
 public class JdbcTest {
 
@@ -52,16 +51,21 @@ public class JdbcTest {
     System.out.println(user);
   }
 
-//  @Test
-//  public void successTransactionTest() {
-//    AuthUserDbClient dbClient = new AuthUserDbClient();
-//    AuthUserJson user = new AuthUserJson();
-//    user.setUsername("qwertyu1231");
-//    user.setPassword("qaz1");
-//    user.setCredentialsNonExpired(true);
-//    user.setAccountNonExpired(true);
-//    user.setAccountNonLocked(true);
-//    user.setEnabled(true);
-//    dbClient.createUser(user);
-//  }
+  @Test
+  public void successTransactionTest() {
+    UserDbClient dbClient = new UserDbClient();
+    UserJson user = dbClient.createUser(
+        new UserJson(
+            null,
+            "bird33334",
+            "First",
+            "Sure",
+            "Full",
+            CurrencyValues.RUB,
+            "123467890",
+            "123467890"
+        )
+    );
+    System.out.println(user);
+  }
 }
