@@ -68,4 +68,22 @@ public class JdbcTest {
     );
     System.out.println(user);
   }
+
+    @Test
+    public void springJdbcTest() {
+        UserDbClient dbClient = new UserDbClient();
+        UserJson user = dbClient.createUserSpringJdbc(
+                new UserJson(
+                        null,
+                        "pegas1234",
+                        null,
+                        null,
+                        null,
+                        CurrencyValues.RUB,
+                        "123467890",
+                        "123467890"
+                )
+        );
+        System.out.println(user);
+    }
 }
