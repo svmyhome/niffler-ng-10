@@ -67,6 +67,6 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
   @Override
   public void delete(AuthUserEntity user) {
-      throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }

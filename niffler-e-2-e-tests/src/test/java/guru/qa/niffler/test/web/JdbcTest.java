@@ -1,8 +1,5 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.data.entity.AuthorityEntity;
-import guru.qa.niffler.data.entity.CategoryEntity;
-import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -11,8 +8,8 @@ import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.util.Date;
 import java.util.List;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
+import utils.RandomDataUtils;
 
 public class JdbcTest {
 
@@ -25,7 +22,7 @@ public class JdbcTest {
             new Date(),
             new CategoryJson(
                 null,
-                "cat-name-tx-5",
+                RandomDataUtils.randomUsername(),
                 "duck",
                 false
             ),
@@ -44,7 +41,7 @@ public class JdbcTest {
     UserJson user = userDbClient.createUser(
         new UserJson(
             null,
-            "bird1111",
+            RandomDataUtils.randomUsername(),
             "First",
             "Sure",
             "Full",
@@ -62,7 +59,7 @@ public class JdbcTest {
     UserJson user = dbClient.createUser(
         new UserJson(
             null,
-            "bird33334",
+            RandomDataUtils.randomUsername(),
             "First",
             "Sure",
             "Full",
@@ -80,7 +77,7 @@ public class JdbcTest {
     UserJson user = dbClient.createUserSpringJdbc(
         new UserJson(
             null,
-            "pegas1234",
+            RandomDataUtils.randomUsername(),
             null,
             null,
             null,
@@ -89,14 +86,6 @@ public class JdbcTest {
             "123467890"
         )
     );
-    System.out.println(user);
-  }
-
-  @Test
-  public void springSearchJdbcTest() {
-    DataSource dataSource;
-    UserDbClient dbClient = new UserDbClient();
-    List<AuthorityEntity> user = dbClient.findAllAuthority();
     System.out.println(user);
   }
 

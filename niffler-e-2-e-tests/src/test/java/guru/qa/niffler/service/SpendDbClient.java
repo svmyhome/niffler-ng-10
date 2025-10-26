@@ -13,11 +13,8 @@ import guru.qa.niffler.data.impl.SpendDaoSpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class SpendDbClient implements SpendClient {
@@ -29,14 +26,16 @@ public class SpendDbClient implements SpendClient {
     throw new UnsupportedOperationException("Not implemented :(");
   }
 
-    @Override
-    public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from, String to) {
-        throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
-    }
+  @Override
+  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
+      String from, String to) {
+    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+  }
 
-    public List<SpendJson> findSpendsByUserName(String username) {
-        List<SpendEntity> entities = new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
-        return  entities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
+  public List<SpendJson> findSpendsByUserName(String username) {
+    List<SpendEntity> entities = new SpendDaoSpringJdbc(
+        dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
+    return entities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
   }
 
   @Override
@@ -68,8 +67,9 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   public List<CategoryJson> findAllCategories(String username) {
-      List<CategoryEntity> entities = new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
-      return entities.stream().map(CategoryJson::fromEntity).collect(Collectors.toList());
+    List<CategoryEntity> entities = new CategoryDaoSpringJdbc(
+        dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
+    return entities.stream().map(CategoryJson::fromEntity).collect(Collectors.toList());
   }
 
   @Override
@@ -91,13 +91,5 @@ public class SpendDbClient implements SpendClient {
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
     throw new UnsupportedOperationException("Not implemented :(");
-  }
-
-  //TODO удалить потом
-  // TODO отрефакторить метод выше, возможнос оит убрать все лишнее кроме имени
-  public List<CategoryEntity> findCategotiesByUserNameList(String username) {
-    List<CategoryEntity> CategoryDaoSpringJdbc =
-        new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
-    return CategoryDaoSpringJdbc;
   }
 }
