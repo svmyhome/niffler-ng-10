@@ -50,13 +50,13 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public List<AuthorityEntity> findAllByUserId(UUID user_id) {
+  public List<AuthorityEntity> findAllByUserId(UUID userId) {
       JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
       return jdbcTemplate.query(
               "SELECT * FROM authority WHERE user_id = ?",
               AuthAuthorityEntityRowMapper.instance,
-              user_id
+              userId
       );  }
 
   @Override

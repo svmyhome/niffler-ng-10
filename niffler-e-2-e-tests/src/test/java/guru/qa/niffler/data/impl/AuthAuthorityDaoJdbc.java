@@ -67,12 +67,12 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public List<AuthorityEntity> findAllByUserId(UUID user_id) {
+  public List<AuthorityEntity> findAllByUserId(UUID userId) {
     List<AuthorityEntity> authorities = new ArrayList<>();
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM authority WHERE user_id = ?"
     )) {
-      ps.setObject(1, user_id);
+      ps.setObject(1, userId);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           while (rs.next()) {

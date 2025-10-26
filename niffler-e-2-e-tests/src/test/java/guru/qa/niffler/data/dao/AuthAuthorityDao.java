@@ -11,7 +11,7 @@ public interface AuthAuthorityDao {
 
   void create(AuthorityEntity... authorities);
 
-  List<AuthorityEntity> findAllByUserId(UUID user_id);
+  List<AuthorityEntity> findAllByUserId(UUID userId);
 
   Optional<AuthorityEntity> findById(UUID id);
 

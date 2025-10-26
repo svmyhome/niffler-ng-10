@@ -16,9 +16,10 @@ import java.util.UUID;
 
 public class SpendDaoSpringJdbc implements SpendDao {
 
-    private static DataSource dataSource;
+    private final DataSource dataSource;
 
-    public SpendDaoSpringJdbc() {
+    public SpendDaoSpringJdbc(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -56,19 +57,24 @@ public class SpendDaoSpringJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllById(UUID id) {
+    public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         return jdbcTemplate.query(
-                "SELECT * FROM spend WHERE id = ?",
+                "SELECT * FROM spend WHERE category_id = ?",
                 SpendEntityRowMapper.instance,
-                id
+                categoryId
         );
     }
 
     @Override
     public List<SpendEntity> findAllByUsername(String username) {
-        throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM spend WHERE username = ?",
+                SpendEntityRowMapper.instance,
+                username
+        );
     }
 
     @Override

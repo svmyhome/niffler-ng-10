@@ -1,19 +1,19 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.data.entity.AuthorityEntity;
-import guru.qa.niffler.data.impl.AuthAuthorityDaoSpringJdbc;
+import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
-import java.util.Date;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
+import java.util.Date;
+import java.util.List;
 
 public class JdbcTest {
 
@@ -98,6 +98,29 @@ public class JdbcTest {
       DataSource dataSource;
         UserDbClient dbClient = new UserDbClient();
         List<AuthorityEntity> user = dbClient.findAllAuthority();
+        System.out.println(user);
+    }
+
+    @Test
+    public void springSpendJdbcTest() {
+        DataSource dataSource;
+        SpendDbClient dbClient = new SpendDbClient();
+        List<SpendEntity> user = dbClient.findAllCategoryList();
+        System.out.println(user);
+    }
+
+    @Test
+    public void springSpendUsernameJdbcTest() {
+        DataSource dataSource;
+        SpendDbClient dbClient = new SpendDbClient();
+        List<SpendEntity> user = dbClient.findSpendsByUserNameList("duck");
+        System.out.println(user);
+    }
+
+    @Test
+    public void springCategoryUsernameJdbcTest() {
+        SpendDbClient dbClient = new SpendDbClient();
+        List<CategoryEntity> user = dbClient.findCategotiesByUserNameList("duck");
         System.out.println(user);
     }
 }

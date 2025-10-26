@@ -3,6 +3,7 @@ package guru.qa.niffler.data.impl;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.model.CategoryJson;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -68,8 +69,12 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     @Override
     public List<CategoryEntity> findAllByUsername(String username) {
-        throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
-    }
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM category WHERE username = ?",
+                CategoryEntityRowMapper.instance,
+                username
+        );    }
 
     @Override
     public void delete(CategoryEntity category) {

@@ -61,6 +61,8 @@ public class UserDbClient implements UserClient {
             return authAuthorityDaoSpringJdbc;
     }
 
+
+
   @Override
   public UserJson createUser(UserJson user) {
     return UserJson.fromEntity(

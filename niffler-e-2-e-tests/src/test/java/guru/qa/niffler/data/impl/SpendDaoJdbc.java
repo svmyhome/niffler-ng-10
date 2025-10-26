@@ -87,7 +87,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
     @Override
-    public List<SpendEntity> findAllById(UUID id) {
+    public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
         return List.of();
     }
 
