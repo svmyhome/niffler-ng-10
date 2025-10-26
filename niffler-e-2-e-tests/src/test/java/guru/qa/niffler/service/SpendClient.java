@@ -10,8 +10,10 @@ public interface SpendClient {
 
   SpendJson findSpendById(String id, String username);
 
-  List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from,
-      String to);
+  List<SpendJson>  findSpendsByUserName(String username, CurrencyValues currencyValues, String from,
+                                         String to);
+
+  List<SpendJson>  findSpendsByUserName(String username);
 
   SpendJson createSpend(SpendJson spend);
 
@@ -21,7 +23,7 @@ public interface SpendClient {
 
   List<CategoryJson> findAllCategories(String username);
 
-  CategoryJson createCategory(CategoryJson category);
+    CategoryJson createCategory(CategoryJson category);
 
   CategoryJson updateCategory(CategoryJson categoryJson);
 

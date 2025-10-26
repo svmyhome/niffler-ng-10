@@ -101,25 +101,16 @@ public class JdbcTest {
   }
 
   @Test
-  public void springSpendJdbcTest() {
-    DataSource dataSource;
+  public void springCategoryUsernameJdbcTest() {
     SpendDbClient dbClient = new SpendDbClient();
-    List<SpendEntity> user = dbClient.findAllCategoryList();
+    List<CategoryJson> user = dbClient.findAllCategories("duck");
     System.out.println(user);
   }
 
   @Test
   public void springSpendUsernameJdbcTest() {
-    DataSource dataSource;
     SpendDbClient dbClient = new SpendDbClient();
-    List<SpendEntity> user = dbClient.findSpendsByUserNameList("duck");
-    System.out.println(user);
-  }
-
-  @Test
-  public void springCategoryUsernameJdbcTest() {
-    SpendDbClient dbClient = new SpendDbClient();
-    List<CategoryEntity> user = dbClient.findCategotiesByUserNameList("duck");
+    List<SpendJson> user = dbClient.findSpendsByUserName("duck");
     System.out.println(user);
   }
 }

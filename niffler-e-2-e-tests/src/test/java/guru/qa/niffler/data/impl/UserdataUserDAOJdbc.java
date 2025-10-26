@@ -85,7 +85,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {
-      ps.setObject(1, username); //TODO  string по идее
+      ps.setObject(1, username);
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {

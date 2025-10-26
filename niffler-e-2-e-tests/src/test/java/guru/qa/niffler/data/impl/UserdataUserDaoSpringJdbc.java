@@ -59,11 +59,11 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDAO {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    return Optional.empty();
+      throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 
   @Override
   public void delete(UserEntity user) {
-
+      throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }

@@ -54,7 +54,12 @@ public class SpendApiClient implements SpendClient {
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
-  @Override
+    @Override
+    public List<SpendJson> findSpendsByUserName(String username) {
+              throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    }
+
+    @Override
   public SpendJson createSpend(SpendJson spend) {
     final Response<SpendJson> response;
     try {
@@ -102,7 +107,7 @@ public class SpendApiClient implements SpendClient {
     return response.body();
   }
 
-  @Override
+    @Override
   public CategoryJson createCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
