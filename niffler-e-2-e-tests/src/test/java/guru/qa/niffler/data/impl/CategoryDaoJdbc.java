@@ -100,7 +100,12 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
   }
 
-  @Override
+    @Override
+    public List<CategoryEntity> findAllId(UUID id) {
+        return List.of();
+    }
+
+    @Override
   public List<CategoryEntity> findAllByUsername(String username) {
     List<CategoryEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = connection.prepareStatement(

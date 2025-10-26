@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.sql.DataSource;
+
+import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
+import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -19,7 +22,12 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     this.dataSource = dataSource;
   }
 
-  @Override
+    @Override
+    public AuthorityEntity create(AuthorityEntity authority) {
+        return null;
+    }
+
+    @Override
   public void create(AuthorityEntity... authority) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     jdbcTemplate.batchUpdate(
@@ -42,22 +50,29 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public AuthorityEntity create(AuthorityEntity authority) {
-    return null;
-  }
+  public List<AuthorityEntity> findAllByUserId(UUID user_id) {
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-  @Override
-  public List<AuthorityEntity> findAuthoritiesByUserId(UUID id) {
-    return List.of();
-  }
+      return jdbcTemplate.query(
+              "SELECT * FROM authority WHERE user_id = ?",
+              AuthAuthorityEntityRowMapper.instance,
+              user_id
+      );  }
 
   @Override
   public Optional<AuthorityEntity> findById(UUID id) {
-    return Optional.empty();
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+      return Optional.ofNullable(
+              jdbcTemplate.queryForObject(
+                      "SELECT * FROM authority WHERE id = ?",
+                      AuthAuthorityEntityRowMapper.instance,
+                      id
+              )
+      );
   }
 
   @Override
   public void delete(AuthorityEntity authority) {
-
+      throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }

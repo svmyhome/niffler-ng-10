@@ -12,6 +12,9 @@ import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.impl.*;
 import guru.qa.niffler.model.UserJson;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -50,6 +53,12 @@ public class UserDbClient implements UserClient {
                         .create(UserEntity.fromJson(user))
         );
 
+    }
+
+    public List<AuthorityEntity> findAllAuthority() {
+        List<AuthorityEntity> authAuthorityDaoSpringJdbc =
+                new AuthAuthorityDaoSpringJdbc(dataSource(CFG.authJdbcUrl())).findAllByUserId(UUID.fromString("25efd34a-b0a2-11f0-9909-fad236acdb6f"));
+            return authAuthorityDaoSpringJdbc;
     }
 
   @Override

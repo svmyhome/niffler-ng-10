@@ -1,5 +1,7 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.entity.AuthorityEntity;
+import guru.qa.niffler.data.impl.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -7,7 +9,11 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.util.Date;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+
+import javax.sql.DataSource;
 
 public class JdbcTest {
 
@@ -84,6 +90,14 @@ public class JdbcTest {
                         "123467890"
                 )
         );
+        System.out.println(user);
+    }
+
+    @Test
+    public void springSearchJdbcTest() {
+      DataSource dataSource;
+        UserDbClient dbClient = new UserDbClient();
+        List<AuthorityEntity> user = dbClient.findAllAuthority();
         System.out.println(user);
     }
 }

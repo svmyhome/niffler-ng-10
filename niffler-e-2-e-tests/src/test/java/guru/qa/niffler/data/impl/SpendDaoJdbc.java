@@ -86,7 +86,12 @@ public class SpendDaoJdbc implements SpendDao {
     }
   }
 
-  @Override
+    @Override
+    public List<SpendEntity> findAllById(UUID id) {
+        return List.of();
+    }
+
+    @Override
   public List<SpendEntity> findAllByUsername(String username) {
     List<SpendEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = connection.prepareStatement(
