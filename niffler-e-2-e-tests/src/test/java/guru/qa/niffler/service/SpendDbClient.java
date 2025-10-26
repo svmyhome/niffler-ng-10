@@ -1,19 +1,21 @@
 package guru.qa.niffler.service;
 
+import static guru.qa.niffler.data.Databases.dataSource;
+
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
-import guru.qa.niffler.data.entity.AuthorityEntity;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
-import guru.qa.niffler.data.impl.*;
+import guru.qa.niffler.data.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.impl.CategoryDaoSpringJdbc;
+import guru.qa.niffler.data.impl.SpendDaoJdbc;
+import guru.qa.niffler.data.impl.SpendDaoSpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static guru.qa.niffler.data.Databases.dataSource;
 
 public class SpendDbClient implements SpendClient {
 
@@ -30,12 +32,13 @@ public class SpendDbClient implements SpendClient {
     throw new UnsupportedOperationException("Not implemented :(");
   }
 
-    // TODO отрефакторить метод выше, возможнос оит убрать все лишнее кроме имени
-    public List<SpendEntity> findSpendsByUserNameList(String username) {
-        List<SpendEntity> SpendDaoSpringJdbc =
-                new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
-        return SpendDaoSpringJdbc;
-    }
+  //TODO удалить потом
+  // TODO отрефакторить метод выше, возможнос оит убрать все лишнее кроме имени
+  public List<SpendEntity> findSpendsByUserNameList(String username) {
+    List<SpendEntity> SpendDaoSpringJdbc =
+        new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
+    return SpendDaoSpringJdbc;
+  }
 
   @Override
   public SpendJson createSpend(SpendJson spend) {
@@ -68,12 +71,15 @@ public class SpendDbClient implements SpendClient {
   public List<CategoryJson> findAllCategories(String username) {
     throw new UnsupportedOperationException("Not implemented :(");
   }
-    // TODO отрефакторить метод выше хотя может и нет возможно они разные этот спенд тот категори
+
+  //TODO удалить потом
+  // TODO отрефакторить метод выше хотя может и нет возможно они разные этот спенд тот категори
   public List<SpendEntity> findAllCategoryList() {
-        List<SpendEntity> SpendDaoSpringJdbc =
-                new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByCategoryId(UUID.fromString("bc26917a-98a4-11f0-9844-9e2503c8b8c5"));
-        return SpendDaoSpringJdbc;
-    }
+    List<SpendEntity> SpendDaoSpringJdbc =
+        new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByCategoryId(
+            UUID.fromString("bc26917a-98a4-11f0-9844-9e2503c8b8c5"));
+    return SpendDaoSpringJdbc;
+  }
 
   @Override
   public CategoryJson createCategory(CategoryJson category) {
@@ -96,10 +102,11 @@ public class SpendDbClient implements SpendClient {
     throw new UnsupportedOperationException("Not implemented :(");
   }
 
-    // TODO отрефакторить метод выше, возможнос оит убрать все лишнее кроме имени
-    public List<CategoryEntity> findCategotiesByUserNameList(String username) {
-        List<CategoryEntity> CategoryDaoSpringJdbc =
-                new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
-        return CategoryDaoSpringJdbc;
-    }
+  //TODO удалить потом
+  // TODO отрефакторить метод выше, возможнос оит убрать все лишнее кроме имени
+  public List<CategoryEntity> findCategotiesByUserNameList(String username) {
+    List<CategoryEntity> CategoryDaoSpringJdbc =
+        new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findAllByUsername(username);
+    return CategoryDaoSpringJdbc;
+  }
 }

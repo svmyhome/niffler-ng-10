@@ -15,7 +15,6 @@ public interface CategoryDao {
   Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
       String categoryName);
 
-  List<CategoryEntity> findAllId(UUID id);
   List<CategoryEntity> findAllByUsername(String username);
 
   void delete(CategoryEntity category);

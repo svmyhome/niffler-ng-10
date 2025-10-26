@@ -9,11 +9,10 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
-import org.junit.jupiter.api.Test;
-
-import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.Test;
 
 public class JdbcTest {
 
@@ -75,52 +74,52 @@ public class JdbcTest {
     System.out.println(user);
   }
 
-    @Test
-    public void springJdbcTest() {
-        UserDbClient dbClient = new UserDbClient();
-        UserJson user = dbClient.createUserSpringJdbc(
-                new UserJson(
-                        null,
-                        "pegas1234",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        "123467890",
-                        "123467890"
-                )
-        );
-        System.out.println(user);
-    }
+  @Test
+  public void springJdbcTest() {
+    UserDbClient dbClient = new UserDbClient();
+    UserJson user = dbClient.createUserSpringJdbc(
+        new UserJson(
+            null,
+            "pegas1234",
+            null,
+            null,
+            null,
+            CurrencyValues.RUB,
+            "123467890",
+            "123467890"
+        )
+    );
+    System.out.println(user);
+  }
 
-    @Test
-    public void springSearchJdbcTest() {
-      DataSource dataSource;
-        UserDbClient dbClient = new UserDbClient();
-        List<AuthorityEntity> user = dbClient.findAllAuthority();
-        System.out.println(user);
-    }
+  @Test
+  public void springSearchJdbcTest() {
+    DataSource dataSource;
+    UserDbClient dbClient = new UserDbClient();
+    List<AuthorityEntity> user = dbClient.findAllAuthority();
+    System.out.println(user);
+  }
 
-    @Test
-    public void springSpendJdbcTest() {
-        DataSource dataSource;
-        SpendDbClient dbClient = new SpendDbClient();
-        List<SpendEntity> user = dbClient.findAllCategoryList();
-        System.out.println(user);
-    }
+  @Test
+  public void springSpendJdbcTest() {
+    DataSource dataSource;
+    SpendDbClient dbClient = new SpendDbClient();
+    List<SpendEntity> user = dbClient.findAllCategoryList();
+    System.out.println(user);
+  }
 
-    @Test
-    public void springSpendUsernameJdbcTest() {
-        DataSource dataSource;
-        SpendDbClient dbClient = new SpendDbClient();
-        List<SpendEntity> user = dbClient.findSpendsByUserNameList("duck");
-        System.out.println(user);
-    }
+  @Test
+  public void springSpendUsernameJdbcTest() {
+    DataSource dataSource;
+    SpendDbClient dbClient = new SpendDbClient();
+    List<SpendEntity> user = dbClient.findSpendsByUserNameList("duck");
+    System.out.println(user);
+  }
 
-    @Test
-    public void springCategoryUsernameJdbcTest() {
-        SpendDbClient dbClient = new SpendDbClient();
-        List<CategoryEntity> user = dbClient.findCategotiesByUserNameList("duck");
-        System.out.println(user);
-    }
+  @Test
+  public void springCategoryUsernameJdbcTest() {
+    SpendDbClient dbClient = new SpendDbClient();
+    List<CategoryEntity> user = dbClient.findCategotiesByUserNameList("duck");
+    System.out.println(user);
+  }
 }

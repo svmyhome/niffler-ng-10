@@ -86,12 +86,39 @@ public class SpendDaoJdbc implements SpendDao {
     }
   }
 
-    @Override
-    public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
-        return List.of();
+  @Override
+  public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
+    List<SpendEntity> entityList = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM spend WHERE category_id = ?"
+    )) {
+      ps.setObject(1, categoryId);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          while (rs.next()) {
+            SpendEntity se = new SpendEntity();
+            se.setId(rs.getObject("id", UUID.class));
+            se.setUsername(rs.getString("username"));
+            se.setSpendDate(rs.getDate("spend_date"));
+            se.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+            se.setAmount(rs.getDouble("amount"));
+            se.setDescription(rs.getString("description"));
+            CategoryEntity category = new CategoryEntity();
+            category.setId(categoryId);
+            se.setCategory(category);
+            entityList.add(se);
+          }
+        } else {
+          throw new SQLException("Can't find spend in ResultSet");
+        }
+        return entityList;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    @Override
+  @Override
   public List<SpendEntity> findAllByUsername(String username) {
     List<SpendEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = connection.prepareStatement(

@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -86,12 +85,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     throw new UnsupportedOperationException("Not implemented :(");
   }
 
-    @Override
-    public List<AuthUserEntity> findAllById(UUID id) {
-        return List.of();
-    }
-
-    @Override
+  @Override
   public void delete(AuthUserEntity user) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?"

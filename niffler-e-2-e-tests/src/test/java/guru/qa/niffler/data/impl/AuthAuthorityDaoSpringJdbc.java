@@ -2,15 +2,13 @@ package guru.qa.niffler.data.impl;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.AuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.sql.DataSource;
-
-import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
-import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -22,12 +20,12 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     this.dataSource = dataSource;
   }
 
-    @Override
-    public AuthorityEntity create(AuthorityEntity authority) {
-        return null;
-    }
+  @Override
+  public AuthorityEntity create(AuthorityEntity authority) {
+    return null;
+  }
 
-    @Override
+  @Override
   public void create(AuthorityEntity... authority) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     jdbcTemplate.batchUpdate(
@@ -51,28 +49,29 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
   @Override
   public List<AuthorityEntity> findAllByUserId(UUID userId) {
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-      return jdbcTemplate.query(
-              "SELECT * FROM authority WHERE user_id = ?",
-              AuthAuthorityEntityRowMapper.instance,
-              userId
-      );  }
+    return jdbcTemplate.query(
+        "SELECT * FROM authority WHERE user_id = ?",
+        AuthAuthorityEntityRowMapper.instance,
+        userId
+    );
+  }
 
   @Override
   public Optional<AuthorityEntity> findById(UUID id) {
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-      return Optional.ofNullable(
-              jdbcTemplate.queryForObject(
-                      "SELECT * FROM authority WHERE id = ?",
-                      AuthAuthorityEntityRowMapper.instance,
-                      id
-              )
-      );
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return Optional.ofNullable(
+        jdbcTemplate.queryForObject(
+            "SELECT * FROM authority WHERE id = ?",
+            AuthAuthorityEntityRowMapper.instance,
+            id
+        )
+    );
   }
 
   @Override
   public void delete(AuthorityEntity authority) {
-      throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
   }
 }
