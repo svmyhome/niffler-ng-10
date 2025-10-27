@@ -57,7 +57,7 @@ public class JdbcTest {
     UserJson user = dbClient.createUser(
         new UserJson(
             null,
-            "bird33334",
+            "bird3333411111",
             "First",
             "Sure",
             "Full",
