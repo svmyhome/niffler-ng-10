@@ -5,18 +5,16 @@ import static guru.qa.niffler.data.Databases.xaTransaction;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
-import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.data.entity.Authority;
-import guru.qa.niffler.data.entity.AuthorityEntity;
-import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.data.impl.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.data.impl.AuthAuthorityDaoSpringJdbc;
-import guru.qa.niffler.data.impl.AuthUserDaoJdbc;
-import guru.qa.niffler.data.impl.AuthUserDaoSpringJdbc;
-import guru.qa.niffler.data.impl.UserdataUserDAOJdbc;
-import guru.qa.niffler.data.impl.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.data.entity.*;
+import guru.qa.niffler.data.impl.*;
+import guru.qa.niffler.model.AuthUserJson;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserJson;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -92,4 +90,16 @@ public class UserDbClient implements UserClient {
             )
         ));
   }
+
+  //TODO передлать на Authotity Json
+    public List<AuthorityEntity> findAll() {
+        List<AuthorityEntity> entities = new AuthAuthorityDaoSpringJdbc(
+                dataSource(CFG.authJdbcUrl())).findAll();
+        return entities;
+    }
+
+    public void delete(AuthorityEntity... authority) {
+        new AuthAuthorityDaoSpringJdbc(
+                dataSource(CFG.authJdbcUrl())).delete(authority);
+    }
 }
