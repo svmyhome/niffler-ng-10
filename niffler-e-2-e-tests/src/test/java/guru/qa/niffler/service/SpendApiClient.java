@@ -57,14 +57,14 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public List<SpendJson> findSpendsByUserName(String username) {
-      final Response<SpendJson[]> response;
-      try {
-          response = spendApi.getSpends(username).execute();
-      } catch (IOException e) {
-          throw new AssertionError(e);
-      }
-      assertEquals(SC_OK, response.code());
-      return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
+    final Response<SpendJson[]> response;
+    try {
+      response = spendApi.getSpends(username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
   @Override
@@ -142,19 +142,19 @@ public class SpendApiClient implements SpendClient {
   @Override
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
-      final Response<List<CategoryJson>> response;
-      try {
-          response = spendApi.getCategories(categoryName, username).execute();
-      } catch (IOException e) {
-          throw new AssertionError(e);
-      }
-      assertEquals(SC_OK, response.code());
+    final Response<List<CategoryJson>> response;
+    try {
+      response = spendApi.getCategories(categoryName, username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
 
-      List<CategoryJson> categories = Objects.requireNonNullElseGet(
-              response.body(),
-              ArrayList::new
-      );
+    List<CategoryJson> categories = Objects.requireNonNullElseGet(
+        response.body(),
+        ArrayList::new
+    );
 
-      return categories.stream().findFirst();
+    return categories.stream().findFirst();
   }
 }
