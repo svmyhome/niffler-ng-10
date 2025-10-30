@@ -15,6 +15,7 @@ import guru.qa.niffler.data.impl.AuthUserDaoJdbc;
 import guru.qa.niffler.data.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.impl.UserdataUserDAOJdbc;
 import guru.qa.niffler.data.impl.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.UserJson;
 import java.util.Arrays;
 import java.util.List;
@@ -92,18 +93,6 @@ public class UserDbClient implements UserClient {
                 CFG.userdataJdbcUrl()
             )
         ));
-  }
-
-  //TODO передлать на Authotity Json
-  public List<AuthUserEntity> findAll() {
-    List<AuthUserEntity> entities = new AuthUserDaoSpringJdbc(
-        dataSource(CFG.authJdbcUrl())).findAll();
-    return entities;
-  }
-
-  public void delete(AuthUserEntity user) {
-    new AuthUserDaoSpringJdbc(
-        dataSource(CFG.authJdbcUrl())).delete(user);
   }
 
   public void deleteJdbc(AuthorityEntity... authority) {
