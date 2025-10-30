@@ -26,6 +26,11 @@ public interface SpendApi {
       @Query("to") String to
   );
 
+    @GET("internal/spends/all")
+    Call<SpendJson[]> getSpends(
+            @Query("username") String username
+    );
+
   @POST("internal/spends/add")
   Call<SpendJson> addSpend(@Body SpendJson spend);
 
@@ -35,11 +40,22 @@ public interface SpendApi {
   @DELETE("internal/spends/remove")
   Call<Void> removeSpends(@Query("username") String username, @Query("ids") List<String> ids);
 
+    @GET("internal/categories/all")
+    Call<List<CategoryJson>> getCategories(
+            @Query("username") String username
+    );
+
   @GET("internal/categories/all")
   Call<List<CategoryJson>> getCategories(
       @Query("username") String username,
       @Query("excludeArchived") Boolean excludeArchived
   );
+
+    @GET("internal/categories/all")
+    Call<List<CategoryJson>> getCategories(
+            @Query("name") String name,
+            @Query("username") String username
+    );
 
   @POST("internal/categories/add")
   Call<CategoryJson> addCategory(@Body CategoryJson category);
