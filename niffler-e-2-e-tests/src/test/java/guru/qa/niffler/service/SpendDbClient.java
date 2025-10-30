@@ -13,6 +13,7 @@ import guru.qa.niffler.data.impl.SpendDaoSpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,6 +91,26 @@ public class SpendDbClient implements SpendClient {
   @Override
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
-    throw new UnsupportedOperationException("Not implemented :(");
+    Optional<CategoryEntity> categoryEntity =
+        new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl()))
+            .findCategoryByUsernameAndCategoryName(categoryName, username);
+    return categoryEntity.map(CategoryJson::fromEntity);
+  }
+
+  public void deleteCategory(CategoryEntity category) {
+    new CategoryDaoSpringJdbc(
+        dataSource(CFG.spendJdbcUrl())).delete(category);
+  }
+
+  public void deleteSpend(SpendEntity spend) {
+    new SpendDaoSpringJdbc(
+        dataSource(CFG.spendJdbcUrl())).delete(spend);
+  }
+
+  public List<SpendJson> getAllSpends() {
+    List<SpendJson> spends = new ArrayList<>();
+    List<SpendEntity> spendEntities = new SpendDaoSpringJdbc(
+        dataSource(CFG.spendJdbcUrl())).findAll();
+    return spendEntities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
   }
 }

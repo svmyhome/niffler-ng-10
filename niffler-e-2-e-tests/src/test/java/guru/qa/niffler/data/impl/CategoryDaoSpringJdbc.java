@@ -3,7 +3,6 @@ package guru.qa.niffler.data.impl;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
-import guru.qa.niffler.model.CategoryJson;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -55,9 +54,16 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
-      String categoryName) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String categoryName,
+      String username
+  ) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return Optional.ofNullable(jdbcTemplate.queryForObject(
+        "SELECT * FROM category WHERE name = ? AND username = ?",
+        CategoryEntityRowMapper.instance,
+        categoryName,
+        username
+    ));
   }
 
   @Override
@@ -72,11 +78,19 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
   @Override
   public void delete(CategoryEntity category) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    jdbcTemplate.update(
+        "DELETE FROM category WHERE id =?",
+        category.getId()
+    );
   }
 
   @Override
-  public CategoryJson update(CategoryJson categoryJson) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+  public List<CategoryEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM category",
+        CategoryEntityRowMapper.instance
+    );
   }
 }

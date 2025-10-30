@@ -19,6 +19,7 @@ import guru.qa.niffler.model.UserJson;
 import java.util.Arrays;
 
 import org.springframework.jdbc.support.JdbcTransactionManager;
+import java.util.List;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -101,4 +102,29 @@ public class UserDbClient implements UserClient {
             )
         ));
   }
+
+  //TODO передлать на Authotity Json
+  public List<AuthUserEntity> findAll() {
+    List<AuthUserEntity> entities = new AuthUserDaoSpringJdbc(
+        dataSource(CFG.authJdbcUrl())).findAll();
+    return entities;
+  }
+
+  public void delete(AuthUserEntity user) {
+    new AuthUserDaoSpringJdbc(
+        dataSource(CFG.authJdbcUrl())).delete(user);
+  }
+
+  public void deleteJdbc(AuthorityEntity... authority) {
+    xaTransaction(
+        new Databases.XaFunction<Void>(
+            con -> {
+              new AuthAuthorityDaoJdbc(con).delete(authority);
+              return null;
+            },
+            CFG.authJdbcUrl()
+        )
+    );
+  }
+
 }

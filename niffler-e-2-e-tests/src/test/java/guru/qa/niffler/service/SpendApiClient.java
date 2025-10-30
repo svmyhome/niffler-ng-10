@@ -11,6 +11,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,7 +57,14 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public List<SpendJson> findSpendsByUserName(String username) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    final Response<SpendJson[]> response;
+    try {
+      response = spendApi.getSpends(username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
   @Override
@@ -98,7 +106,7 @@ public class SpendApiClient implements SpendClient {
   public List<CategoryJson> findAllCategories(String username) {
     final Response<List<CategoryJson>> response;
     try {
-      response = spendApi.getCategories(username, null).execute();
+      response = spendApi.getCategories(username).execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -134,6 +142,19 @@ public class SpendApiClient implements SpendClient {
   @Override
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
-    throw new UnsupportedOperationException("Not implemented :(");
+    final Response<List<CategoryJson>> response;
+    try {
+      response = spendApi.getCategories(categoryName, username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+
+    List<CategoryJson> categories = Objects.requireNonNullElseGet(
+        response.body(),
+        ArrayList::new
+    );
+
+    return categories.stream().findFirst();
   }
 }

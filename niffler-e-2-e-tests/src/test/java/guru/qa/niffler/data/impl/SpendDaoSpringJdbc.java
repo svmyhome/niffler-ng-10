@@ -78,6 +78,19 @@ public class SpendDaoSpringJdbc implements SpendDao {
 
   @Override
   public void delete(SpendEntity spend) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    jdbcTemplate.update(
+        "DELETE FROM spend WHERE id =?",
+        spend.getId()
+    );
+  }
+
+  @Override
+  public List<SpendEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM spend",
+        SpendEntityRowMapper.instance
+    );
   }
 }
