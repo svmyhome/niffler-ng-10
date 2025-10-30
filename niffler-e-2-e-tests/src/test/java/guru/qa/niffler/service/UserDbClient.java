@@ -94,17 +94,4 @@ public class UserDbClient implements UserClient {
             )
         ));
   }
-
-  public void deleteJdbc(AuthorityEntity... authority) {
-    xaTransaction(
-        new Databases.XaFunction<Void>(
-            con -> {
-              new AuthAuthorityDaoJdbc(con).delete(authority);
-              return null;
-            },
-            CFG.authJdbcUrl()
-        )
-    );
-  }
-
 }
