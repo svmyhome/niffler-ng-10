@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.sql.DataSource;
@@ -59,11 +60,29 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDAO {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return Optional.ofNullable(jdbcTemplate.queryForObject(
+        "SELECT * FROM \"user\" WHERE username = ?",
+        UserdataUserEntityRowMapper.instance,
+        username
+    ));
   }
 
   @Override
   public void delete(UserEntity user) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    jdbcTemplate.update(
+        "DELETE FROM \"user\" WHERE id = ?",
+        user.getId()
+    );
+  }
+
+  @Override
+  public List<UserEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM \"user\"",
+        UserdataUserEntityRowMapper.instance
+    );
   }
 }

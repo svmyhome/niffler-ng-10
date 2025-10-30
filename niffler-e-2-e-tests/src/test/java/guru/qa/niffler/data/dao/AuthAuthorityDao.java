@@ -7,15 +7,13 @@ import java.util.UUID;
 
 public interface AuthAuthorityDao {
 
-  AuthorityEntity create(AuthorityEntity authority);
-
   void create(AuthorityEntity... authorities);
 
   List<AuthorityEntity> findAllByUserId(UUID userId);
 
   Optional<AuthorityEntity> findById(UUID id);
 
-  void delete(AuthorityEntity authority);
+  void delete(AuthorityEntity... authority);
 
   List<AuthorityEntity> findAll();
 

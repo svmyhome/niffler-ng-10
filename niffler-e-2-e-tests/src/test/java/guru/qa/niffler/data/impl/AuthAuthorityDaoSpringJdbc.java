@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.impl;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
-import guru.qa.niffler.data.entity.Authority;
 import guru.qa.niffler.data.entity.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
 import java.sql.PreparedStatement;
@@ -19,11 +18,6 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
   public AuthAuthorityDaoSpringJdbc(DataSource dataSource) {
     this.dataSource = dataSource;
-  }
-
-  @Override
-  public AuthorityEntity create(AuthorityEntity authority) {
-    return null;
   }
 
   @Override
@@ -71,34 +65,30 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public void delete(AuthorityEntity authority) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+  public void delete(AuthorityEntity... authority) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    jdbcTemplate.batchUpdate(
+        "DELETE FROM authority WHERE user_id = ?",
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setObject(1, authority[i].getUserId());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return authority.length;
+          }
+        }
+    );
   }
 
-  public void delete(AuthorityEntity... authority){
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-      jdbcTemplate.batchUpdate(
-              "DELETE FROM authority WHERE user_id = ?",
-              new BatchPreparedStatementSetter() {
-                  @Override
-                  public void setValues(PreparedStatement ps, int i) throws SQLException {
-                     ps.setObject(1, authority[i].getUserId());
-                  }
-
-                  @Override
-                  public int getBatchSize() {
-                      return authority.length;
-                  }
-              }
-      );
+  @Override
+  public List<AuthorityEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM authority",
+        AuthAuthorityEntityRowMapper.instance
+    );
   }
-
-    @Override
-    public List<AuthorityEntity> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return jdbcTemplate.query(
-                "SELECT * FROM authority",
-                AuthAuthorityEntityRowMapper.instance
-        );
-    }
 }

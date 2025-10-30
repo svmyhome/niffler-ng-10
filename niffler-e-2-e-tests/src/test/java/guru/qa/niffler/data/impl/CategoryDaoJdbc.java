@@ -2,7 +2,6 @@ package guru.qa.niffler.data.impl;
 
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
-import guru.qa.niffler.model.CategoryJson;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -141,7 +140,28 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public CategoryJson update(CategoryJson categoryJson) {
-    throw new UnsupportedOperationException("Method updateCategory() is not implemented yet");
+  public List<CategoryEntity> findAll() {
+    List<CategoryEntity> categoryEntities = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM category"
+    )) {
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          CategoryEntity ce = new CategoryEntity();
+          while (rs.next()) {
+            ce.setId(rs.getObject("id", UUID.class));
+            ce.setName(rs.getString("name"));
+            ce.setUsername(rs.getString("username"));
+            ce.setArchived(rs.getBoolean("archived"));
+            categoryEntities.add(ce);
+          }
+          return categoryEntities;
+        } else {
+          throw new SQLException("Can't find in ResultSet");
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
