@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,11 +52,6 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   }
 
   @Override
-  public AuthUserEntity update(AuthUserEntity user) {
-    throw new UnsupportedOperationException("Not implemented :(");
-  }
-
-  @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
@@ -82,7 +79,28 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
-    throw new UnsupportedOperationException("Not implemented :(");
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM \"user\" WHERE id = ?"
+    )) {
+      ps.setObject(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          AuthUserEntity aue = new AuthUserEntity();
+          aue.setId(rs.getObject("id", UUID.class));
+          aue.setPassword(rs.getString("password"));
+          aue.setUsername(rs.getString("username"));
+          aue.setEnabled(rs.getBoolean("enabled"));
+          aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+          aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+          aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+          return Optional.of(aue);
+        } else {
+          return Optional.empty();
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -92,6 +110,35 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     )) {
       ps.setObject(1, user.getId());
       ps.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public List<AuthUserEntity> findAll() {
+    List<AuthUserEntity> authUserEntities = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM \"user\""
+    )) {
+      AuthUserEntity aue = new AuthUserEntity();
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          while (rs.next()) {
+            aue.setId(rs.getObject("id", UUID.class));
+            aue.setUsername(rs.getString("username"));
+            aue.setPassword(rs.getString("password"));
+            aue.setEnabled(rs.getBoolean("enabled"));
+            aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+            aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+            aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+            authUserEntities.add(aue);
+          }
+          return authUserEntities;
+        } else {
+          throw new SQLException("Can't find authUserEntity in ResultSet");
+        }
+      }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

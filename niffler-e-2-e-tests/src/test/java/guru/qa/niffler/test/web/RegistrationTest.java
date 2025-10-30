@@ -6,6 +6,7 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import utils.RandomDataUtils;
 
 @ExtendWith(BrowserExtension.class)
 public class RegistrationTest {
@@ -15,10 +16,9 @@ public class RegistrationTest {
 
   @Test
   void shouldRegisterNewUser() {
-
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
-        .registerUser("horse24343234", "12345", "12345")
+        .registerUser(RandomDataUtils.randomUsername(), "12345", "12345")
         .registrationShouldBeSuccessful(REGISTRATION_SUCCESS);
   }
 
@@ -26,7 +26,7 @@ public class RegistrationTest {
   void shouldRegisterNewUserWithStep() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
-        .setUsername("mouse")
+        .setUsername(RandomDataUtils.randomUsername())
         .setPassword("12345")
         .setPasswordSubmit("12345")
         .submitRegistration()
@@ -37,7 +37,7 @@ public class RegistrationTest {
   void shouldRegisterNewUserSwitchToLogin() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
-        .setUsername("dog")
+        .setUsername(RandomDataUtils.randomUsername())
         .setPassword("12345")
         .setPasswordSubmit("12345")
         .submitRegistration()

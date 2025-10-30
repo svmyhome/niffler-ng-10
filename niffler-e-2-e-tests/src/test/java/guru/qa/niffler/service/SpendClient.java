@@ -13,6 +13,8 @@ public interface SpendClient {
   List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues, String from,
       String to);
 
+  List<SpendJson> findSpendsByUserName(String username);
+
   SpendJson createSpend(SpendJson spend);
 
   SpendJson updateSpend(SpendJson spendJson);
