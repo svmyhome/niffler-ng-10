@@ -1,5 +1,7 @@
 package guru.qa.niffler.data.impl;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
@@ -16,16 +18,18 @@ import java.util.UUID;
 
 public class SpendDaoJdbc implements SpendDao {
 
-  private final Connection connection;
+//  private final Connection connection;
+//
+//  public SpendDaoJdbc(Connection connection) {
+//    this.connection = connection;
+//  }
 
-  public SpendDaoJdbc(Connection connection) {
-    this.connection = connection;
-  }
+  private static final Config CFG = Config.getInstance();
 
   @Override
   public SpendEntity create(SpendEntity spend) {
 
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "INSERT INTO spend (username, spend_date, currency, amount, description, category_id)" +
             "VALUES(?,?,?,?,?,?)",
         Statement.RETURN_GENERATED_KEYS
@@ -56,7 +60,7 @@ public class SpendDaoJdbc implements SpendDao {
 
   @Override
   public Optional<SpendEntity> findById(UUID id) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE id = ?"
     )) {
       ps.setObject(1, id);
@@ -89,7 +93,7 @@ public class SpendDaoJdbc implements SpendDao {
   @Override
   public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
     List<SpendEntity> entityList = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE category_id = ?"
     )) {
       ps.setObject(1, categoryId);
@@ -121,7 +125,7 @@ public class SpendDaoJdbc implements SpendDao {
   @Override
   public List<SpendEntity> findAllByUsername(String username) {
     List<SpendEntity> entityList = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE username = ?"
     )) {
       ps.setString(1, username);
@@ -151,7 +155,7 @@ public class SpendDaoJdbc implements SpendDao {
 
   @Override
   public void delete(SpendEntity spend) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "DELETE FROM spend WHERE id =?"
     )) {
       ps.setObject(1, spend.getId());
@@ -164,7 +168,7 @@ public class SpendDaoJdbc implements SpendDao {
   @Override
   public List<SpendEntity> findAll() {
     List<SpendEntity> spends = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend"
     )) {
       try (ResultSet rs = ps.executeQuery()) {

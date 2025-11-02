@@ -1,5 +1,7 @@
 package guru.qa.niffler.data.impl;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDAO;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
@@ -15,15 +17,17 @@ import java.util.UUID;
 
 public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
-  private final Connection connection;
+//  private final Connection connection;
+//
+//  public UserdataUserDAOJdbc(Connection connection) {
+//    this.connection = connection;
+//  }
 
-  public UserdataUserDAOJdbc(Connection connection) {
-    this.connection = connection;
-  }
+  private static final Config CFG = Config.getInstance();
 
   @Override
   public UserEntity create(UserEntity user) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
             +
             "VALUES(?,?,?,?,?,?,?)",
@@ -55,7 +59,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
   @Override
   public Optional<UserEntity> findById(UUID id) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE id = ?"
     )) {
       ps.setObject(1, id);
@@ -84,7 +88,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {
       ps.setObject(1, username);
@@ -113,7 +117,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
 
   @Override
   public void delete(UserEntity user) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id =?"
     )) {
       ps.setObject(1, user.getId());
@@ -126,7 +130,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
   @Override
   public List<UserEntity> findAll() {
     List<UserEntity> userEntities = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\""
     )) {
       try (ResultSet rs = ps.executeQuery()) {
