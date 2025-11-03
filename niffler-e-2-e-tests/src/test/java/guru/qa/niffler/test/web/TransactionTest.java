@@ -1,8 +1,18 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.AuthUserEntity;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.data.entity.UserEntity;
+import guru.qa.niffler.data.impl.AuthUserDaoJdbc;
+import guru.qa.niffler.data.impl.AuthUserDaoSpringJdbc;
+import guru.qa.niffler.data.impl.UserdataUserDaoJdbc;
+import guru.qa.niffler.data.impl.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.data.tpl.DataSources;
+import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
@@ -10,6 +20,8 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +29,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import utils.RandomDataUtils;
 
-public class JdbcTest {
+public class TransactionTest {
 
   @Test
   void txTest() {
@@ -201,4 +213,87 @@ public class JdbcTest {
             "1q1a1a1", "duck", false)
     );
   }
+
+  private static final Config CFG = Config.getInstance();
+
+  @Test
+  public void createUserJdbcWithTransactionTest() {
+    AuthUserJson user = getNewUserJson();
+    XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
+        CFG.authJdbcUrl(),
+        CFG.userdataJdbcUrl()
+    );
+    AuthUserDao authUserDao = new AuthUserDaoJdbc();
+    UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc();
+    xaTransactionTemplate.execute(() -> {
+      var savedUser = authUserDao.create(AuthUserEntity.fromJson(user));
+      userdataUserDao.create(getEntityFromUser(savedUser));
+      return null;
+    });
+  }
+
+  @Test
+  public void createUserJdbcWithoutTransactionTest() {
+    AuthUserJson user = getNewUserJson();
+    try (Connection authConnection = DataSources.dataSource(CFG.authJdbcUrl()).getConnection();
+        Connection userdataConnection = DataSources.dataSource(CFG.userdataJdbcUrl()).getConnection()) {
+      var savedUser = new AuthUserDaoJdbc().create(AuthUserEntity.fromJson(user));
+      new UserdataUserDaoJdbc().create(getEntityFromUser(savedUser));
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test
+  public void createUserSpringJdbcWithTransactionTest() {
+    AuthUserJson user = getNewUserJson();
+
+    XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
+        CFG.authJdbcUrl(),
+        CFG.userdataJdbcUrl()
+    );
+    AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
+
+    xaTransactionTemplate.execute(() -> {
+      var savedUser = authUserDao.create(AuthUserEntity.fromJson(user));
+      userdataUserDao.create(getEntityFromUser(savedUser));
+      return null;
+    });
+  }
+
+  @Test
+  public void springJdbcWithoutTransactionTest() {
+    AuthUserJson user = getNewUserJson();
+    AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
+
+    var savedUser = authUserDao.create(AuthUserEntity.fromJson(user));
+    userdataUserDao.create(getEntityFromUser(savedUser));
+  }
+
+
+  private AuthUserJson getNewUserJson() {
+    AuthUserJson newUser = new AuthUserJson();
+    newUser.setUsername(RandomDataUtils.randomUsername());
+    newUser.setPassword("12345");
+    newUser.setEnabled(true);
+    newUser.setAccountNonExpired(true);
+    newUser.setAccountNonLocked(true);
+    newUser.setCredentialsNonExpired(true);
+    return newUser;
+  }
+
+  private UserEntity getEntityFromUser(AuthUserEntity authEntity) {
+    UserEntity ue = new UserEntity();
+    ue.setUsername(authEntity.getUsername());
+    ue.setFullname(RandomDataUtils.randomFullName());
+    ue.setFirstname(RandomDataUtils.randomFirstName());
+    ue.setSurname(RandomDataUtils.randomLastName());
+    ue.setCurrency(CurrencyValues.RUB);
+    ue.setPhoto(new byte[0]);
+    ue.setPhotoSmall(new byte[0]);
+    return ue;
+  }
+
 }
