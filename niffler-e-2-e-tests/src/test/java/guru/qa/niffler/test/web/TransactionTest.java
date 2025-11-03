@@ -31,6 +31,8 @@ import utils.RandomDataUtils;
 
 public class TransactionTest {
 
+  private static final Config CFG = Config.getInstance();
+
   @Test
   void txTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
@@ -214,8 +216,6 @@ public class TransactionTest {
     );
   }
 
-  private static final Config CFG = Config.getInstance();
-
   @Test
   public void createUserJdbcWithTransactionTest() {
     AuthUserJson user = getNewUserJson();
@@ -236,7 +236,8 @@ public class TransactionTest {
   public void createUserJdbcWithoutTransactionTest() {
     AuthUserJson user = getNewUserJson();
     try (Connection authConnection = DataSources.dataSource(CFG.authJdbcUrl()).getConnection();
-        Connection userdataConnection = DataSources.dataSource(CFG.userdataJdbcUrl()).getConnection()) {
+        Connection userdataConnection = DataSources.dataSource(CFG.userdataJdbcUrl())
+            .getConnection()) {
       var savedUser = new AuthUserDaoJdbc().create(AuthUserEntity.fromJson(user));
       new UserdataUserDaoJdbc().create(getEntityFromUser(savedUser));
     } catch (SQLException e) {
