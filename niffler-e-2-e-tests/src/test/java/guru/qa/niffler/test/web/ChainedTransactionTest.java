@@ -19,7 +19,7 @@ public class ChainedTransactionTest {
 
   @Test
   void chainedTransactionSuccess() {
-    String testUsername = RandomDataUtils.randomUsername();
+    String userName = RandomDataUtils.randomUsername();
     ChainedTransactionTemplate chainedTx = new ChainedTransactionTemplate(
         CFG.authJdbcUrl(),
         CFG.userdataJdbcUrl()
@@ -28,7 +28,7 @@ public class ChainedTransactionTest {
     UserEntity createdUser = chainedTx.execute(
         () -> {
           AuthUserEntity authUser = new AuthUserEntity();
-          authUser.setUsername(RandomDataUtils.randomUsername());
+          authUser.setUsername(userName);
           authUser.setPassword("12345");
           authUser.setEnabled(true);
           authUser.setAccountNonExpired(true);
@@ -49,7 +49,7 @@ public class ChainedTransactionTest {
         },
         () -> {
           UserEntity udUser = new UserEntity();
-          udUser.setUsername(RandomDataUtils.randomUsername());
+          udUser.setUsername(userName);
           udUser.setCurrency(CurrencyValues.RUB);
           udUser.setFirstname(RandomDataUtils.randomFirstName());
           udUser.setSurname(RandomDataUtils.randomLastName());
