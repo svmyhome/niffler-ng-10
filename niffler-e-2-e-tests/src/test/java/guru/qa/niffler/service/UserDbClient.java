@@ -87,7 +87,6 @@ public class UserDbClient implements UserClient {
     );
   }
 
-
   public List<AuthUserJson> findAll() {
     List<AuthUserEntity> entities = authUserDao.findAll();
     return entities.stream().map(AuthUserJson::fromEntity).collect(Collectors.toList());
