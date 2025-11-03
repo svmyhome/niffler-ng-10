@@ -4,7 +4,6 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,12 +14,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CategoryDaoJdbc implements CategoryDao {
-
-//  private final Connection connection;
-//
-//  public CategoryDaoJdbc(Connection connection) {
-//    this.connection = connection;
-//  }
 
   private static final Config CFG = Config.getInstance();
 
@@ -79,12 +72,12 @@ public class CategoryDaoJdbc implements CategoryDao {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
-      String categoryName) {
+      String name) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE username = ? AND name = ?"
     )) {
       ps.setString(1, username);
-      ps.setString(2, categoryName);
+      ps.setString(2, name);
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -164,6 +157,31 @@ public class CategoryDaoJdbc implements CategoryDao {
           throw new SQLException("Can't find in ResultSet");
         }
       }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public CategoryEntity update(CategoryEntity category) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        "UPDATE category SET name = ? WHERE id = ?",
+        Statement.RETURN_GENERATED_KEYS
+    )) {
+      ps.setString(1, category.getName());
+      ps.setObject(2, category.getId());
+      ps.executeUpdate();
+
+      final UUID generatedKey;
+      try (ResultSet rs = ps.getGeneratedKeys()) {
+        if (rs.next()) {
+          generatedKey = rs.getObject("id", UUID.class);
+        } else {
+          throw new SQLException("Can't find id in ResultSet");
+        }
+      }
+      category.setId(generatedKey);
+      return category;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

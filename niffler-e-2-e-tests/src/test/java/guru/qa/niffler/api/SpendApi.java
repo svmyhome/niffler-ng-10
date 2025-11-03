@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface SpendApi {
 
   @GET("internal/spends/{id}")
-  Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
+  Call<SpendJson> getSpend(@Path("id") String id);
 
   @GET("internal/spends/all")
   Call<SpendJson[]> getSpends(

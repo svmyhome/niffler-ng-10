@@ -4,24 +4,18 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 public class CategoryDaoSpringJdbc implements CategoryDao {
-
-//  private final DataSource dataSource;
-//
-//  public CategoryDaoSpringJdbc(DataSource dataSource) {
-//    this.dataSource = dataSource;
-//  }
 
   private static final Config CFG = Config.getInstance();
 
@@ -59,14 +53,14 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String categoryName,
-      String username
+      String name
   ) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.queryForObject(
         "SELECT * FROM category WHERE name = ? AND username = ?",
         CategoryEntityRowMapper.instance,
         categoryName,
-        username
+        name
     ));
   }
 
@@ -96,5 +90,20 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         "SELECT * FROM category",
         CategoryEntityRowMapper.instance
     );
+  }
+
+  @Override
+  public CategoryEntity update(CategoryEntity category) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    KeyHolder kh = new GeneratedKeyHolder();
+    jdbcTemplate.update(
+        "UPDATE category SET name = ? WHERE id = ?",
+        SpendEntityRowMapper.instance,
+        category.getName(),
+        category.getId()
+    );
+    final UUID generatedKey = (UUID) kh.getKeys().get("id");
+    category.setId(generatedKey);
+    return category;
   }
 }

@@ -49,5 +49,4 @@ public class JdbcTransactionTemplate {
   public <T> T execute(Supplier<T> action) {
     return execute(action, Connection.TRANSACTION_REPEATABLE_READ);
   }
-
 }

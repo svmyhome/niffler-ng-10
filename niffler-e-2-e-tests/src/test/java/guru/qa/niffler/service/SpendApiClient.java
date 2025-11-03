@@ -4,7 +4,6 @@ import static org.apache.hc.core5.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.hc.core5.http.HttpStatus.SC_CREATED;
 import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
@@ -31,18 +30,18 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public SpendJson findSpendById(String id, String username) {
+  public Optional<SpendJson> findSpendById(String id) {
     final Response<SpendJson> response;
     try {
-      response = spendApi.getSpend(id, username).execute();
+      response = spendApi.getSpend(id).execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
     assertEquals(SC_OK, response.code());
-    return response.body();
+    return Optional.ofNullable(response.body());
   }
 
-  @Override
+
   public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
       String from, String to) {
     final Response<SpendJson[]> response;
@@ -91,7 +90,6 @@ public class SpendApiClient implements SpendClient {
     return response.body();
   }
 
-  @Override
   public void deleteSpends(String username, List<String> ids) {
     final Response<Void> response;
     try {

@@ -25,7 +25,6 @@ public class UserdataUserEntityRowMapper implements RowMapper<UserEntity> {
     ue.setPhoto(rs.getBytes("photo"));
     ue.setPhotoSmall(rs.getBytes("photo_small"));
     ue.setFullname(rs.getString("full_name"));
-
     return ue;
   }
 }

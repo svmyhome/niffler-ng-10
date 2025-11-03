@@ -10,18 +10,11 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 public class UserdataUserDaoSpringJdbc implements UserdataUserDAO {
-
-//  private final DataSource dataSource;
-//
-//  public UserdataUserDaoSpringJdbc(DataSource dataSource) {
-//    this.dataSource = dataSource;
-//  }
 
   private static final Config CFG = Config.getInstance();
 
@@ -83,7 +76,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDAO {
 
   @Override
   public List<UserEntity> findAll() {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()) );
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return jdbcTemplate.query(
         "SELECT * FROM \"user\"",
         UserdataUserEntityRowMapper.instance

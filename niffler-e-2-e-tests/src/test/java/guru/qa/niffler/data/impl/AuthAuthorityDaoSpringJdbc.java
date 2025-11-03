@@ -10,17 +10,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
-
-//  private final DataSource dataSource;
-//
-//  public AuthAuthorityDaoSpringJdbc(DataSource dataSource) {
-//    this.dataSource = dataSource;
-//  }
 
   private static final Config CFG = Config.getInstance();
 

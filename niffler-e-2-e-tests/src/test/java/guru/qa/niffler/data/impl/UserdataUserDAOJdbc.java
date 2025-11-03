@@ -5,7 +5,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDAO;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class UserdataUserDAOJdbc implements UserdataUserDAO {
-
-//  private final Connection connection;
-//
-//  public UserdataUserDAOJdbc(Connection connection) {
-//    this.connection = connection;
-//  }
 
   private static final Config CFG = Config.getInstance();
 

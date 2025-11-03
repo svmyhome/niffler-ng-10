@@ -6,7 +6,6 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
 import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,12 +16,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDaoJdbc implements SpendDao {
-
-//  private final Connection connection;
-//
-//  public SpendDaoJdbc(Connection connection) {
-//    this.connection = connection;
-//  }
 
   private static final Config CFG = Config.getInstance();
 
@@ -140,7 +133,9 @@ public class SpendDaoJdbc implements SpendDao {
             se.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
             se.setAmount(rs.getDouble("amount"));
             se.setDescription("description");
-            se.setCategory(rs.getObject("category_id", CategoryEntity.class));
+            CategoryEntity category = new CategoryEntity();
+            category.setId(UUID.fromString(rs.getString("category_id")));
+            se.setCategory(category);
             entityList.add(se);
           }
         } else {
@@ -181,7 +176,9 @@ public class SpendDaoJdbc implements SpendDao {
             sp.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
             sp.setAmount(rs.getDouble("amount"));
             sp.setDescription(rs.getString("description"));
-            sp.setCategory(rs.getObject("category_id", CategoryEntity.class));
+            CategoryEntity category = new CategoryEntity();
+            category.setId(UUID.fromString(rs.getString("category_id")));
+            sp.setCategory(category);
             spends.add(sp);
           }
           return spends;
@@ -189,6 +186,31 @@ public class SpendDaoJdbc implements SpendDao {
           throw new SQLException("Can't find in ResultSet");
         }
       }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public SpendEntity update(SpendEntity spend) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        "UPDATE spend SET DESCRIPTION = ? WHERE id = ?",
+        Statement.RETURN_GENERATED_KEYS
+    )) {
+      ps.setString(1, spend.getDescription());
+      ps.setObject(2, spend.getId());
+      ps.executeUpdate();
+
+      final UUID generatedKey;
+      try (ResultSet rs = ps.getGeneratedKeys()) {
+        if (rs.next()) {
+          generatedKey = rs.getObject("id", UUID.class);
+        } else {
+          throw new SQLException("Can't find id in ResultSet");
+        }
+      }
+      spend.setId(generatedKey);
+      return spend;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

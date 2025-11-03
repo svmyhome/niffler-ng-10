@@ -10,18 +10,11 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 public class SpendDaoSpringJdbc implements SpendDao {
-
-//  private final DataSource dataSource;
-//
-//  public SpendDaoSpringJdbc(DataSource dataSource) {
-//    this.dataSource = dataSource;
-//  }
 
   private static final Config CFG = Config.getInstance();
 
@@ -96,5 +89,20 @@ public class SpendDaoSpringJdbc implements SpendDao {
         "SELECT * FROM spend",
         SpendEntityRowMapper.instance
     );
+  }
+
+  @Override
+  public SpendEntity update(SpendEntity spend) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    KeyHolder kh = new GeneratedKeyHolder();
+    jdbcTemplate.update(
+        "UPDATE spend SET description = ? WHERE id = ?",
+        SpendEntityRowMapper.instance,
+        spend.getDescription(),
+        spend.getId()
+    );
+    final UUID generatedKey = (UUID) kh.getKeys().get("id");
+    spend.setId(generatedKey);
+    return spend;
   }
 }
