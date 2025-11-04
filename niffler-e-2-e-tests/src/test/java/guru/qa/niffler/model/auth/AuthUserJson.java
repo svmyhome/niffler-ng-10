@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.auth;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import java.util.UUID;

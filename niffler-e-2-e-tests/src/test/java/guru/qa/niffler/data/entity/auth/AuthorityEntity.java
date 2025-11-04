@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.entity.auth;
 
-import guru.qa.niffler.model.AuthorityJson;
+import guru.qa.niffler.model.auth.AuthorityJson;
 import java.io.Serializable;
 import java.util.UUID;
 import lombok.Getter;

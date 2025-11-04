@@ -1,7 +1,8 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.user;
 
 
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.spend.CurrencyValues;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 

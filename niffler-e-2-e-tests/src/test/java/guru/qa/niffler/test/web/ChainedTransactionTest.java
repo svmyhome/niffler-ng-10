@@ -9,7 +9,7 @@ import guru.qa.niffler.data.impl.auth.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.impl.auth.AuthUserDaoJdbc;
 import guru.qa.niffler.data.impl.userdata.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.tpl.ChainedTransactionTemplate;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.spend.CurrencyValues;
 import org.junit.jupiter.api.Test;
 import utils.RandomDataUtils;
 
