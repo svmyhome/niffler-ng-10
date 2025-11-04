@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -85,7 +87,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {
-      ps.setObject(1, username); //TODO  string по идее
+      ps.setObject(1, username);
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -116,6 +118,38 @@ public class UserdataUserDAOJdbc implements UserdataUserDAO {
     )) {
       ps.setObject(1, user.getId());
       ps.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public List<UserEntity> findAll() {
+    List<UserEntity> userEntities = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM \"user\""
+    )) {
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          UserEntity ue = new UserEntity();
+          while (rs.next()) {
+            ue.setId(rs.getObject("id", UUID.class));
+            ue.setUsername(rs.getString("username"));
+            String currencyString = rs.getString("currency");
+            ue.setCurrency(CurrencyValues.valueOf(currencyString));
+            ue.setFirstname(rs.getString("firstname"));
+            ue.setSurname(rs.getString("surname"));
+            ue.setFullname(rs.getString("fullname"));
+            ue.setPhoto(rs.getBytes("photo"));
+            ue.setPhotoSmall(rs.getBytes("photoSmall"));
+            userEntities.add(ue);
+          }
+          return userEntities;
+        } else {
+          throw new SQLException("Can't find in ResultSet");
+        }
+      }
+
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

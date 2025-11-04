@@ -7,6 +7,10 @@ public class RandomDataUtils {
 
   private static final Faker faker = new Faker(Locale.of("ru"));
 
+  public static String randomUsername() {
+    return faker.name().username();
+  }
+
   public static String randomFullName() {
     return faker.name().name();
   }
