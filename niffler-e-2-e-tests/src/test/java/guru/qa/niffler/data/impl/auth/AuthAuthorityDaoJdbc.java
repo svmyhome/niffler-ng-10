@@ -1,10 +1,10 @@
-package guru.qa.niffler.data.impl;
+package guru.qa.niffler.data.impl.auth;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.AuthAuthorityDao;
-import guru.qa.niffler.data.entity.Authority;
-import guru.qa.niffler.data.entity.AuthorityEntity;
+import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

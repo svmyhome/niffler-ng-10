@@ -1,16 +1,16 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.AuthUserDao;
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.data.entity.CategoryEntity;
-import guru.qa.niffler.data.entity.SpendEntity;
-import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.data.impl.AuthUserDaoJdbc;
-import guru.qa.niffler.data.impl.AuthUserDaoSpringJdbc;
-import guru.qa.niffler.data.impl.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.impl.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.data.dao.auth.AuthUserDao;
+import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.impl.auth.AuthUserDaoJdbc;
+import guru.qa.niffler.data.impl.auth.AuthUserDaoSpringJdbc;
+import guru.qa.niffler.data.impl.userdata.UserdataUserDaoJdbc;
+import guru.qa.niffler.data.impl.userdata.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.AuthUserJson;

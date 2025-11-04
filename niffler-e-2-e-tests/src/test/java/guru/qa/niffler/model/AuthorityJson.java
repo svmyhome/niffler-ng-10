@@ -1,7 +1,7 @@
 package guru.qa.niffler.model;
 
-import guru.qa.niffler.data.entity.Authority;
-import guru.qa.niffler.data.entity.AuthorityEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;

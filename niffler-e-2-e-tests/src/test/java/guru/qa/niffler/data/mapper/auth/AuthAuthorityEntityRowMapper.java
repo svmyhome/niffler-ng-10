@@ -1,7 +1,7 @@
-package guru.qa.niffler.data.mapper;
+package guru.qa.niffler.data.mapper.auth;
 
-import guru.qa.niffler.data.entity.Authority;
-import guru.qa.niffler.data.entity.AuthorityEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;

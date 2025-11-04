@@ -1,6 +1,6 @@
-package guru.qa.niffler.data.mapper;
+package guru.qa.niffler.data.mapper.spend;
 
-import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;

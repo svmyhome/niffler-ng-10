@@ -1,10 +1,10 @@
-package guru.qa.niffler.data.impl;
+package guru.qa.niffler.data.impl.spend;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.SpendDao;
-import guru.qa.niffler.data.entity.CategoryEntity;
-import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.data.dao.spend.SpendDao;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

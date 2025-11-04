@@ -1,13 +1,13 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.entity.AuthUserEntity;
-import guru.qa.niffler.data.entity.Authority;
-import guru.qa.niffler.data.entity.AuthorityEntity;
-import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.data.impl.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.data.impl.AuthUserDaoJdbc;
-import guru.qa.niffler.data.impl.UserdataUserDaoJdbc;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.impl.auth.AuthAuthorityDaoJdbc;
+import guru.qa.niffler.data.impl.auth.AuthUserDaoJdbc;
+import guru.qa.niffler.data.impl.userdata.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.tpl.ChainedTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.Test;

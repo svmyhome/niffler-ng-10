@@ -1,10 +1,10 @@
-package guru.qa.niffler.data.impl;
+package guru.qa.niffler.data.impl.spend;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.entity.CategoryEntity;
-import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
-import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
+import guru.qa.niffler.data.dao.spend.CategoryDao;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.mapper.spend.CategoryEntityRowMapper;
+import guru.qa.niffler.data.mapper.spend.SpendEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
 import java.sql.Statement;

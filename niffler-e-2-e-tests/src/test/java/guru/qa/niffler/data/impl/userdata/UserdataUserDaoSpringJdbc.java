@@ -1,9 +1,9 @@
-package guru.qa.niffler.data.impl;
+package guru.qa.niffler.data.impl.userdata;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
+import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.mapper.userdata.UserdataUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
 import java.sql.Statement;

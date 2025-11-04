@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.entity;
+package guru.qa.niffler.data.entity.auth;
 
 import guru.qa.niffler.model.AuthorityJson;
 import java.io.Serializable;
