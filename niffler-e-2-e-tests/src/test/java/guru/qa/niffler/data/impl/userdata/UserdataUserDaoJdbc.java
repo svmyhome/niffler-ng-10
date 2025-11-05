@@ -66,9 +66,9 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
           ue.setCurrency(CurrencyValues.valueOf(currencyString));
           ue.setFirstname(rs.getString("firstname"));
           ue.setSurname(rs.getString("surname"));
-          ue.setFullname(rs.getString("fullname"));
+          ue.setFullname(rs.getString("full_name"));
           ue.setPhoto(rs.getBytes("photo"));
-          ue.setPhotoSmall(rs.getBytes("photoSmall"));
+          ue.setPhotoSmall(rs.getBytes("photo_small"));
           return Optional.of(ue);
         } else {
           return Optional.empty();
@@ -95,9 +95,9 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
           ue.setCurrency(CurrencyValues.valueOf(currencyString));
           ue.setFirstname(rs.getString("firstname"));
           ue.setSurname(rs.getString("surname"));
-          ue.setFullname(rs.getString("fullname"));
+          ue.setFullname(rs.getString("full_name"));
           ue.setPhoto(rs.getBytes("photo"));
-          ue.setPhotoSmall(rs.getBytes("photoSmall"));
+          ue.setPhotoSmall(rs.getBytes("photo_small"));
           return Optional.of(ue);
         } else {
           return Optional.empty();
@@ -136,9 +136,9 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
             ue.setCurrency(CurrencyValues.valueOf(currencyString));
             ue.setFirstname(rs.getString("firstname"));
             ue.setSurname(rs.getString("surname"));
-            ue.setFullname(rs.getString("fullname"));
+            ue.setFullname(rs.getString("full_name"));
             ue.setPhoto(rs.getBytes("photo"));
-            ue.setPhotoSmall(rs.getBytes("photoSmall"));
+            ue.setPhotoSmall(rs.getBytes("photo_small"));
             userEntities.add(ue);
           }
           return userEntities;
