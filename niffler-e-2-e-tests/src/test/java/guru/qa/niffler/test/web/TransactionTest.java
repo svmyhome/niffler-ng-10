@@ -42,7 +42,7 @@ public class TransactionTest {
             new Date(),
             new CategoryJson(
                 null,
-                RandomDataUtils.randomUsername(),
+                RandomDataUtils.randomCategoryName(),
                 "duck",
                 false
             ),
