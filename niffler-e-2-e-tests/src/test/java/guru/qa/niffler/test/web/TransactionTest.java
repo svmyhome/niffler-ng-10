@@ -79,7 +79,7 @@ public class TransactionTest {
     UserJson user = dbClient.createUser(
         new UserJson(
             null,
-            RandomDataUtils.randomUsername(),
+            "valentin-6",
             "First",
             "Sure",
             "Full",
