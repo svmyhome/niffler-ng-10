@@ -1,8 +1,8 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.spend.CurrencyValues;
+import guru.qa.niffler.model.spend.SpendJson;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface SpendApi {
 
   @GET("internal/spends/{id}")
-  Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
+  Call<SpendJson> getSpend(@Path("id") String id);
 
   @GET("internal/spends/all")
   Call<SpendJson[]> getSpends(

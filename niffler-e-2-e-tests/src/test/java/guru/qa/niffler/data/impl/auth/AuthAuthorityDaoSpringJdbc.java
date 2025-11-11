@@ -1,0 +1,91 @@
+package guru.qa.niffler.data.impl.auth;
+
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.mapper.auth.AuthAuthorityEntityRowMapper;
+import guru.qa.niffler.data.tpl.DataSources;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
+
+  private static final Config CFG = Config.getInstance();
+
+  @Override
+  public void create(AuthorityEntity... authority) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    jdbcTemplate.batchUpdate(
+        "INSERT INTO authority (user_id, authority)" +
+            "VALUES(?,?)",
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setObject(1, authority[i].getUserId());
+            ps.setObject(2, authority[i].getAuthority().name());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return authority.length;
+          }
+        }
+    );
+  }
+
+  @Override
+  public List<AuthorityEntity> findAllByUserId(UUID userId) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+
+    return jdbcTemplate.query(
+        "SELECT * FROM authority WHERE user_id = ?",
+        AuthAuthorityEntityRowMapper.instance,
+        userId
+    );
+  }
+
+  @Override
+  public Optional<AuthorityEntity> findById(UUID id) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    return Optional.ofNullable(
+        jdbcTemplate.queryForObject(
+            "SELECT * FROM authority WHERE id = ?",
+            AuthAuthorityEntityRowMapper.instance,
+            id
+        )
+    );
+  }
+
+  @Override
+  public void delete(AuthorityEntity... authority) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    jdbcTemplate.batchUpdate(
+        "DELETE FROM authority WHERE user_id = ?",
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setObject(1, authority[i].getUserId());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return authority.length;
+          }
+        }
+    );
+  }
+
+  @Override
+  public List<AuthorityEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    return jdbcTemplate.query(
+        "SELECT * FROM authority",
+        AuthAuthorityEntityRowMapper.instance
+    );
+  }
+}
