@@ -165,11 +165,12 @@ public class CategoryDaoJdbc implements CategoryDao {
   @Override
   public CategoryEntity update(CategoryEntity category) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-        "UPDATE category SET name = ? WHERE id = ?",
+        "UPDATE category SET name = ?, archived = ? WHERE id = ?",
         Statement.RETURN_GENERATED_KEYS
     )) {
       ps.setString(1, category.getName());
-      ps.setObject(2, category.getId());
+      ps.setBoolean(2, category.isArchived());
+      ps.setObject(3, category.getId());
       ps.executeUpdate();
 
       final UUID generatedKey;

@@ -194,11 +194,14 @@ public class SpendDaoJdbc implements SpendDao {
   @Override
   public SpendEntity update(SpendEntity spend) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-        "UPDATE spend SET DESCRIPTION = ? WHERE id = ?",
+        "UPDATE spend SET currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?",
         Statement.RETURN_GENERATED_KEYS
     )) {
-      ps.setString(1, spend.getDescription());
-      ps.setObject(2, spend.getId());
+      ps.setString(1, String.valueOf(spend.getCurrency()));
+      ps.setDouble(2, spend.getAmount());
+      ps.setString(3, spend.getDescription());
+      ps.setObject(4, spend.getCategory().getId());
+      ps.setObject(5, spend.getId());
       ps.executeUpdate();
 
       final UUID generatedKey;

@@ -33,7 +33,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
       ps.setObject(3, spend.getCurrency());
       ps.setDouble(4, spend.getAmount());
       ps.setString(5, spend.getDescription());
-      ps.setObject(6, spend.getCategory());
+      ps.setObject(6, spend.getCategory().getId());
       return ps;
     }, kh);
 
@@ -96,9 +96,12 @@ public class SpendDaoSpringJdbc implements SpendDao {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(
-        "UPDATE spend SET description = ? WHERE id = ?",
+        "UPDATE spend SET currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?",
         SpendEntityRowMapper.instance,
+        spend.getCurrency(),
+        spend.getAmount(),
         spend.getDescription(),
+        spend.getCategory().getId(),
         spend.getId()
     );
     final UUID generatedKey = (UUID) kh.getKeys().get("id");

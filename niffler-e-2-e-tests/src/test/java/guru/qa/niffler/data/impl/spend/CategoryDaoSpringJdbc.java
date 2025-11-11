@@ -97,9 +97,10 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(
-        "UPDATE category SET name = ? WHERE id = ?",
+        "UPDATE category SET name = ?, archived = ? WHERE id = ?",
         SpendEntityRowMapper.instance,
         category.getName(),
+        category.isArchived(),
         category.getId()
     );
     final UUID generatedKey = (UUID) kh.getKeys().get("id");
