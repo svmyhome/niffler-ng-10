@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository;
+package guru.qa.niffler.data.repository.auth;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import java.util.List;

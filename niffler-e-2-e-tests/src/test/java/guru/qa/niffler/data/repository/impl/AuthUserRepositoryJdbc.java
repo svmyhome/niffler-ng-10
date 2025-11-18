@@ -6,7 +6,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.auth.AuthUserEntityRowMapper;
-import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.auth.AuthUserRepository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

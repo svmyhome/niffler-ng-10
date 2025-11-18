@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.impl.userdata;
+package guru.qa.niffler.data.dao.impl.userdata;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.userdata.UserdataUserDao;

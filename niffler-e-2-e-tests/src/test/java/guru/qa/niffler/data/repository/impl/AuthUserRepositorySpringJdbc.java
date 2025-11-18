@@ -1,10 +1,9 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.auth.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.mapper.auth.AuthUserEntityRowMapper;
-import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.auth.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
 import java.sql.Statement;

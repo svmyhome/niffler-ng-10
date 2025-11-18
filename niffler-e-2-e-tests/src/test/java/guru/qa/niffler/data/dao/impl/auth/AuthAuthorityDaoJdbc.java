@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.impl.auth;
+package guru.qa.niffler.data.dao.impl.auth;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
