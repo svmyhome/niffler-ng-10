@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.auth;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
@@ -53,7 +53,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         authorityPs.setObject(1, generatedKey);
         authorityPs.setString(2, a.getAuthority().name());
         authorityPs.addBatch();
-        authorityPs.clearParameters();
       }
       authorityPs.executeBatch();
 

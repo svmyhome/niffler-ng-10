@@ -2,15 +2,17 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
-import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -97,7 +99,7 @@ public class TransactionTest {
     UserJson user = dbClient.createUserSpringJdbc(
         new UserJson(
             null,
-            "petr-2",
+            "petr-12",
             null,
             null,
             null,
@@ -124,14 +126,14 @@ public class TransactionTest {
   }
 
   @Test
-  public void findAll() {
+  public void findAllTest() {
     UserDbClient userdbClient = new UserDbClient();
     List<AuthUserJson> authorityJson = userdbClient.findAll();
     System.out.println(authorityJson);
   }
 
   @Test
-  public void delete() {
+  public void deleteTest() {
     UserDbClient dbClient = new UserDbClient();
     AuthUserEntity ae = new AuthUserEntity();
     ae.setId(UUID.fromString("2db76cc4-8de4-4eee-9fee-dacd3c44b5f6"));
@@ -140,14 +142,14 @@ public class TransactionTest {
   }
 
   @Test
-  public void findCategoryAndUser() {
+  public void findCategoryAndUserTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<CategoryJson> category = spendDbClient.findCategoryByNameAndUsername("duck", "Машина");
     category.stream().forEach(System.out::println);
   }
 
   @Test
-  public void createCategory() {
+  public void createCategoryTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     CategoryJson categoryJson = spendDbClient.createCategory(
         new CategoryJson(
@@ -161,7 +163,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void deleteCategory() {
+  public void deleteCategoryTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     CategoryEntity category = new CategoryEntity();
     category.setId(UUID.fromString("2a6a67f0-b5bb-11f0-8a0e-aa5c32f82d84"));
@@ -169,7 +171,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void deleteSpend() {
+  public void deleteSpendTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     SpendEntity spend = new SpendEntity();
     spend.setId(UUID.fromString("9d8cfc1e-b5bd-11f0-bfb0-aa5c32f82d84"));
@@ -177,21 +179,21 @@ public class TransactionTest {
   }
 
   @Test
-  public void findAllSpends() {
+  public void findAllSpendsTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     List<SpendJson> spends = spendDbClient.findAllSpends();
     System.out.println(spends);
   }
 
   @Test
-  public void findSpendById() {
+  public void findSpendByIdTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<SpendJson> spend = spendDbClient.findSpendById("1328a312-b5bc-11f0-a017-aa5c32f82d84");
     System.out.println(spend);
   }
 
   @Test
-  public void updateSpendById() {
+  public void updateSpendByIdTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     SpendJson spend = spendDbClient.updateSpend(
         new SpendJson(UUID.fromString("888ca6da-b6e3-11f0-8e67-ea06c42c5790"),
@@ -207,7 +209,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void updateCategoryById() {
+  public void updateCategoryByIdTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     CategoryJson category = spendDbClient.updateCategory(
         new CategoryJson(
@@ -296,5 +298,4 @@ public class TransactionTest {
     ue.setPhotoSmall(new byte[0]);
     return ue;
   }
-
 }

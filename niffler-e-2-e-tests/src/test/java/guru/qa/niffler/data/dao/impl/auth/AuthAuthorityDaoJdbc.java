@@ -29,7 +29,6 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         ps.setObject(1, authority.getUser().getId());
         ps.setString(2, authority.getAuthority().name());
         ps.addBatch();
-        ps.clearParameters();
       }
       ps.executeBatch();
     } catch (SQLException e) {
@@ -93,7 +92,6 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
       for (AuthorityEntity authority : authorities) {
         ps.setObject(1, authority.getUser().getId());
         ps.addBatch();
-        ps.clearParameters();
       }
       ps.executeBatch();
     } catch (SQLException e) {
