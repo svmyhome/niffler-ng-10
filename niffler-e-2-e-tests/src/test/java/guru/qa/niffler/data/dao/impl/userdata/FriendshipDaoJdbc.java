@@ -33,7 +33,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
   }
 
   @Override
-  public List<FriendshipEntity> findByRequesterId(UUID requesterId) {
+  public List<FriendshipEntity> findByRequester(UUID requesterId) {
     List<FriendshipEntity> result = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM friendship WHERE requester_id = ?"
@@ -66,7 +66,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
   }
 
   @Override
-  public List<FriendshipEntity> findByAddresseeId(UUID addresseeId) {
+  public List<FriendshipEntity> findByAddressee(UUID addresseeId) {
     List<FriendshipEntity> result = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM friendship WHERE addressee_id = ?"

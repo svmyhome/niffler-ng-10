@@ -113,7 +113,7 @@ public class UserDbClient implements UserClient {
   }
 
   public List<FriendshipEntity> findFriendshipsByRequesterId(UUID requesterId) {
-    return friendshipDAO.findByRequesterId(requesterId);
+    return friendshipDAO.findByRequester(requesterId);
   }
 
   public void deleteFriendship(FriendshipEntity friendship) {

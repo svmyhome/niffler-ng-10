@@ -8,9 +8,9 @@ public interface FriendshipDao {
 
   void create(FriendshipEntity friendship);
 
-  List<FriendshipEntity> findByRequesterId(UUID requesterId);
+  List<FriendshipEntity> findByRequester(UUID requesterId);
 
-  List<FriendshipEntity> findByAddresseeId(UUID requesterId);
+  List<FriendshipEntity> findByAddressee(UUID requesterId);
 
   void delete(FriendshipEntity user);
 }
