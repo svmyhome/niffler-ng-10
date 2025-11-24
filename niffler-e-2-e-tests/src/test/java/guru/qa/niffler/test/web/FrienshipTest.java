@@ -1,34 +1,14 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.auth.AuthUserDao;
-import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoJdbc;
-import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
-import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoSpringJdbc;
-import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.data.tpl.DataSources;
-import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.auth.AuthUserJson;
-import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
-import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
-import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import utils.RandomDataUtils;
 
 public class FrienshipTest {
 
@@ -41,7 +21,7 @@ public class FrienshipTest {
     requester.setId(UUID.fromString("85a45678-b8c5-11f0-82bc-faa8bfae1c90"));
     UserEntity addresser = new UserEntity();
     addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
-    userDbClient.addFriend(requester,  addresser);
+    userDbClient.addFriend(requester, addresser);
   }
 
   @Test
@@ -51,7 +31,7 @@ public class FrienshipTest {
     requester.setId(UUID.fromString("85a45678-b8c5-11f0-82bc-faa8bfae1c90"));
     UserEntity addresser = new UserEntity();
     addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
-    userDbClient.addIncomeInvitation(requester,  addresser);
+    userDbClient.addIncomeInvitation(requester, addresser);
   }
 
   @Test
@@ -61,7 +41,7 @@ public class FrienshipTest {
     requester.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
     UserEntity addresser = new UserEntity();
     addresser.setId(UUID.fromString("51358a50-b6f5-11f0-9e9d-ea06c42c5790"));
-    userDbClient.addOutcomeInvitation(requester,  addresser);
+    userDbClient.addOutcomeInvitation(requester, addresser);
   }
 
   @Test
@@ -109,5 +89,11 @@ public class FrienshipTest {
     UserEntity addresser = new UserEntity();
     addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
     userDbClient.createUser1(requester, addresser);
+  }
+
+  @Test
+  void findFridByIdTest() {
+    UserDbClient userDbClient = new UserDbClient();
+    userDbClient.findUserById(UUID.fromString("b00e1bff-99da-46d0-81da-2394a412cd0d"));
   }
 }

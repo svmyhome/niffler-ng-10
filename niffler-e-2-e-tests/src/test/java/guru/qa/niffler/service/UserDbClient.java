@@ -1,6 +1,10 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
+import guru.qa.niffler.data.dao.auth.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.FriendshipDaoJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.dao.userdata.FriendshipDao;
@@ -19,6 +23,7 @@ import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.user.UserJson;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -29,8 +34,8 @@ public class UserDbClient implements UserClient {
   private static final Config CFG = Config.getInstance();
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-  //  private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
-//  private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
+  private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+  private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
   private final UserdataUserDao userdataUserDAO = new UserdataUserDaoJdbc();
   private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();
@@ -124,6 +129,9 @@ public class UserDbClient implements UserClient {
     return userdataUserRepository.createWithFriendship(requester, addressee);
   }
 
+  public Optional<UserEntity> findUserById(UUID id) {
+    return userdataUserRepository.findById(id);
+  }
 
   public UserJson createUser1(UserJson user, UserEntity addressee) {
     return UserJson.fromEntity(

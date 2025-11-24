@@ -98,15 +98,14 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         AuthUserEntity user = null;
         List<AuthorityEntity> authorityEntities = new ArrayList<>();
         while (rs.next()) {
-          if(user == null)  {
-            user = AuthUserEntityRowMapper.instance.mapRow(rs,1);
+          if (user == null) {
+            user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
           }
           AuthorityEntity ae = new AuthorityEntity();
           ae.setUser(user);
           ae.setId(rs.getObject("a. id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
-
 
           AuthUserEntity aue = new AuthUserEntity();
           aue.setId(rs.getObject("id", UUID.class));

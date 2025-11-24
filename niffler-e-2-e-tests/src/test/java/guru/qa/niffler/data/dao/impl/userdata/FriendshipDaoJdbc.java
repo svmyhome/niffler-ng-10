@@ -100,7 +100,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
 
   @Override
   public void delete(FriendshipEntity friendship) {
-    try(PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ?"
     )) {
       ps.setObject(1, friendship.getRequester().getId());
