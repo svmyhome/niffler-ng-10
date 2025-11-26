@@ -153,7 +153,6 @@ public class UserDbClient implements UserClient {
               ).toList());
               authUserRepository.create(authUser);
               UserEntity requester = UserEntity.fromJson(user);
-//              userdataUserDAO.create(requester);
               userdataUserRepository.createWithFriendship(requester, addressee);
               return requester;
             }
