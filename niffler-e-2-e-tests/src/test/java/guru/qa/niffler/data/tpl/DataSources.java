@@ -4,8 +4,11 @@ import com.atomikos.jdbc.AtomikosDataSourceBean;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.mapping.Index;
 
 public class DataSources {
 
@@ -29,6 +32,12 @@ public class DataSources {
           dsBean.setXaProperties(props);
           dsBean.setPoolSize(3);
           dsBean.setPoolSize(10);
+          try {
+            InitialContext context = new InitialContext();
+            context.bind("java:comp/env/jdbc/" + uniqId, dsBean);
+          } catch (NamingException e) {
+            throw new RuntimeException(e);
+          }
           return dsBean;
         }
     );
