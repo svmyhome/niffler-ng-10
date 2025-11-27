@@ -97,7 +97,7 @@ public class TransactionTest {
     UserJson user = dbClient.createUserSpringJdbc(
         new UserJson(
             null,
-            "petr-12",
+            "petr-32",
             null,
             null,
             null,
