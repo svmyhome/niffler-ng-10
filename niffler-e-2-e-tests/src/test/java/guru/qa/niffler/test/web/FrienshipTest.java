@@ -74,24 +74,6 @@ public class FrienshipTest {
   }
 
   @Test
-  void createUserWithFriendTest() {
-    UserDbClient userDbClient = new UserDbClient();
-    UserJson requester = new UserJson(
-        null,
-        "Ptaha5",
-        "First",
-        "Sure",
-        "Full",
-        CurrencyValues.RUB,
-        "123467890",
-        "123467890"
-    );
-    UserEntity addresser = new UserEntity();
-    addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
-    userDbClient.createUser1(requester, addresser);
-  }
-
-  @Test
   void findFridByIdTest() {
     UserDbClient userDbClient = new UserDbClient();
     userDbClient.findUserById(UUID.fromString("b00e1bff-99da-46d0-81da-2394a412cd0d"));

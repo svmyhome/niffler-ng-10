@@ -7,6 +7,7 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.dao.DataAccessException;
@@ -53,7 +54,7 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
       friendship.setStatus(FriendshipStatus.valueOf(rs.getString("status")));
       friendship.setCreatedDate(rs.getDate("created_date"));
 
-      if (addresseeId.equals(userId)) {
+      if (Objects.equals(addresseeId, userId)) {
         user.getFriendshipAddressees().add(friendship);
       } else {
         user.getFriendshipRequests().add(friendship);

@@ -65,22 +65,28 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "SELECT * FROM \"user\" WHERE username = ?"
+        "SELECT * FROM \"user\" u JOIN public.authority a on u.id = a.user_id WHERE username = ?"
     )) {
       ps.setString(1, username);
+      ps.execute();
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          AuthUserEntity aue = new AuthUserEntity();
-          aue.setId(rs.getObject("id", UUID.class));
-          aue.setPassword(rs.getString("password"));
-          aue.setUsername(rs.getString("username"));
-          aue.setEnabled(rs.getBoolean("enabled"));
-          aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-          aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-          aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-          return Optional.of(aue);
-        } else {
+        AuthUserEntity user = null;
+        List<AuthorityEntity> authorityEntities = new ArrayList<>();
+        while (rs.next()) {
+          if (user == null) {
+            user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
+          }
+          AuthorityEntity ae = new AuthorityEntity();
+          ae.setUser(user);
+          ae.setId(rs.getObject("id", UUID.class));
+          ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+          authorityEntities.add(ae);
+        }
+        if (user == null) {
           return Optional.empty();
+        } else {
+          user.setAuthorities(authorityEntities);
+          return Optional.of(user);
         }
       }
     } catch (SQLException e) {
@@ -94,6 +100,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         "SELECT * FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.id = ?"
     )) {
       ps.setObject(1, id);
+      ps.execute();
       try (ResultSet rs = ps.executeQuery()) {
         AuthUserEntity user = null;
         List<AuthorityEntity> authorityEntities = new ArrayList<>();
@@ -103,18 +110,9 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           }
           AuthorityEntity ae = new AuthorityEntity();
           ae.setUser(user);
-          ae.setId(rs.getObject("a. id", UUID.class));
+          ae.setId(rs.getObject("id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
-
-          AuthUserEntity aue = new AuthUserEntity();
-          aue.setId(rs.getObject("id", UUID.class));
-          aue.setPassword(rs.getString("password"));
-          aue.setUsername(rs.getString("username"));
-          aue.setEnabled(rs.getBoolean("enabled"));
-          aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-          aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-          aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
         }
         if (user == null) {
           return Optional.empty();
@@ -142,27 +140,28 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
   @Override
   public List<AuthUserEntity> findAll() {
-    List<AuthUserEntity> authUserEntities = new ArrayList<>();
+    List<AuthUserEntity> users = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "SELECT * FROM \"user\""
+//        "SELECT * FROM \"user\""
+        "SELECT * FROM \"user\" u JOIN public.authority a on u.id = a.user_id"
     )) {
       AuthUserEntity aue = new AuthUserEntity();
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          while (rs.next()) {
-            aue.setId(rs.getObject("id", UUID.class));
-            aue.setUsername(rs.getString("username"));
-            aue.setPassword(rs.getString("password"));
-            aue.setEnabled(rs.getBoolean("enabled"));
-            aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-            aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-            aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-            authUserEntities.add(aue);
+        AuthUserEntity user = null;
+        List<AuthorityEntity> authorityEntities = new ArrayList<>();
+        while (rs.next()) {
+          if (user == null) {
+            user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
           }
-          return authUserEntities;
-        } else {
-          throw new SQLException("Can't find authUserEntity in ResultSet");
+          AuthorityEntity ae = new AuthorityEntity();
+          ae.setUser(user);
+          ae.setId(rs.getObject("id", UUID.class));
+          ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+          authorityEntities.add(ae);
+          user.setAuthorities(authorityEntities);
+          users.add(user);
         }
+        return users;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

@@ -103,25 +103,20 @@ public class CategoryDaoJdbc implements CategoryDao {
         "SELECT * FROM category WHERE username = ?"
     )) {
       ps.setString(1, username);
-
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          while (rs.next()) {
-            CategoryEntity ce = new CategoryEntity();
-            ce.setId(rs.getObject("id", UUID.class));
-            ce.setName(rs.getString("name"));
-            ce.setUsername(rs.getString("username"));
-            ce.setArchived(rs.getBoolean("archived"));
-            entityList.add(ce);
-          }
-        } else {
-          throw new SQLException("Can't find category in ResultSet");
+        while (rs.next()) {
+          CategoryEntity ce = new CategoryEntity();
+          ce.setId(rs.getObject("id", UUID.class));
+          ce.setName(rs.getString("name"));
+          ce.setUsername(rs.getString("username"));
+          ce.setArchived(rs.getBoolean("archived"));
+          entityList.add(ce);
         }
+        return entityList;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    return entityList;
   }
 
   @Override
@@ -143,19 +138,15 @@ public class CategoryDaoJdbc implements CategoryDao {
         "SELECT * FROM category"
     )) {
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          CategoryEntity ce = new CategoryEntity();
-          while (rs.next()) {
-            ce.setId(rs.getObject("id", UUID.class));
-            ce.setName(rs.getString("name"));
-            ce.setUsername(rs.getString("username"));
-            ce.setArchived(rs.getBoolean("archived"));
-            categoryEntities.add(ce);
-          }
-          return categoryEntities;
-        } else {
-          throw new SQLException("Can't find in ResultSet");
+        CategoryEntity ce = new CategoryEntity();
+        while (rs.next()) {
+          ce.setId(rs.getObject("id", UUID.class));
+          ce.setName(rs.getString("name"));
+          ce.setUsername(rs.getString("username"));
+          ce.setArchived(rs.getBoolean("archived"));
+          categoryEntities.add(ce);
         }
+        return categoryEntities;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

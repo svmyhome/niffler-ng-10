@@ -1,7 +1,9 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
@@ -11,6 +13,8 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.repository.auth.AuthUserRepository;
+import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -71,6 +75,12 @@ public class TransactionTest {
         )
     );
     System.out.println(user);
+  }
+
+  @Test
+  void AuthAuthorityDaoJdbcTest() {
+    AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
+    System.out.println(authUserRepository.findAll());
   }
 
   @Test

@@ -54,11 +54,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
           friendship.setCreatedDate(rs.getDate("created_date"));
           result.add(friendship);
         }
-        if (result.isEmpty()) {
-          return List.of();
-        } else {
-          return result;
-        }
+        return result;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -87,11 +83,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
           friendship.setCreatedDate(rs.getDate("created_date"));
           result.add(friendship);
         }
-        if (result.isEmpty()) {
-          return List.of();
-        } else {
-          return result;
-        }
+        return result;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

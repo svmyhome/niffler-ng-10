@@ -3,6 +3,7 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.FriendshipDaoJdbc;
@@ -36,6 +37,7 @@ public class UserDbClient implements UserClient {
 
   private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
   private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
+  private final AuthAuthorityDaoJdbc authAuthorityDaoJdbc = new AuthAuthorityDaoJdbc();
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
   private final UserdataUserDao userdataUserDAO = new UserdataUserDaoJdbc();
   private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();
@@ -125,38 +127,7 @@ public class UserDbClient implements UserClient {
     friendshipDAO.delete(friendship);
   }
 
-  public UserEntity createUserWithFriend(UserEntity requester, UserEntity addressee) {
-    return userdataUserRepository.createWithFriendship(requester, addressee);
-  }
-
   public Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
-  }
-
-  public UserJson createUser1(UserJson user, UserEntity addressee) {
-    return UserJson.fromEntity(
-        xaTransactionTemplate.execute(() -> {
-              AuthUserEntity authUser = new AuthUserEntity();
-              authUser.setUsername(user.username());
-              authUser.setPassword(pe.encode("12345"));
-              authUser.setEnabled(true);
-              authUser.setAccountNonExpired(true);
-              authUser.setAccountNonLocked(true);
-              authUser.setCredentialsNonExpired(true);
-              authUser.setAuthorities(Arrays.stream(Authority.values()).map(
-                  a -> {
-                    AuthorityEntity ae = new AuthorityEntity();
-                    ae.setUser(authUser);
-                    ae.setAuthority(a);
-                    return ae;
-                  }
-              ).toList());
-              authUserRepository.create(authUser);
-              UserEntity requester = UserEntity.fromJson(user);
-              userdataUserRepository.createWithFriendship(requester, addressee);
-              return requester;
-            }
-        )
-    );
   }
 }

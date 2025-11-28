@@ -48,34 +48,6 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
-  public UserEntity createWithFriendship(UserEntity requester, UserEntity addressee) {
-    JdbcTemplate template = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    template.update(conn -> {
-      PreparedStatement userPs = conn.prepareStatement(
-          """
-              INSERT INTO "user" (username, currency, firstname, surname, photo, photo_small, full_name)
-              VALUES ( ?, ?, ?, ?, ?, ?, ?)
-              """,
-          Statement.RETURN_GENERATED_KEYS
-      );
-      PreparedStatement friendPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-          "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?,?)");
-      userPs.setString(1, requester.getUsername());
-      userPs.setString(2, requester.getCurrency().name());
-      userPs.setString(3, requester.getFirstname());
-      userPs.setString(4, requester.getSurname());
-      userPs.setObject(5, requester.getPhoto());
-      userPs.setObject(6, requester.getPhotoSmall());
-      userPs.setString(7, requester.getFullname());
-      return userPs;
-    }, keyHolder);
-    UUID generatedKey = (UUID) keyHolder.getKeys().get("id");
-    requester.setId(generatedKey);
-    return requester;
-  }
-
-  @Override
   public Optional<UserEntity> findById(UUID id) {
     JdbcTemplate template = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return Optional.ofNullable(template.query(
