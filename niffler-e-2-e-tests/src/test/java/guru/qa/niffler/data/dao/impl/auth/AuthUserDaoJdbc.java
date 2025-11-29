@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.impl.auth;
+package guru.qa.niffler.data.dao.impl.auth;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
@@ -120,21 +120,17 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     )) {
       AuthUserEntity aue = new AuthUserEntity();
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          while (rs.next()) {
-            aue.setId(rs.getObject("id", UUID.class));
-            aue.setUsername(rs.getString("username"));
-            aue.setPassword(rs.getString("password"));
-            aue.setEnabled(rs.getBoolean("enabled"));
-            aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-            aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-            aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-            authUserEntities.add(aue);
-          }
-          return authUserEntities;
-        } else {
-          throw new SQLException("Can't find authUserEntity in ResultSet");
+        while (rs.next()) {
+          aue.setId(rs.getObject("id", UUID.class));
+          aue.setUsername(rs.getString("username"));
+          aue.setPassword(rs.getString("password"));
+          aue.setEnabled(rs.getBoolean("enabled"));
+          aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+          aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+          aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+          authUserEntities.add(aue);
         }
+        return authUserEntities;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

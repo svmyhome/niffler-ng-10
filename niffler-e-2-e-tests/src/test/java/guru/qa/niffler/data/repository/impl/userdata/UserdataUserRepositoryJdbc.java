@@ -1,20 +1,24 @@
-package guru.qa.niffler.data.impl.userdata;
+package guru.qa.niffler.data.repository.impl.userdata;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.userdata.UserdataUserDao;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.mapper.userdata.UserdataUserEntityRowMapper;
+import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserdataUserDaoJdbc implements UserdataUserDao {
+public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
   private static final Config CFG = Config.getInstance();
 
@@ -53,25 +57,49 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   @Override
   public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-        "SELECT * FROM \"user\" WHERE id = ?"
+        """
+            SELECT u.*, f.*
+            FROM "user" u
+            LEFT JOIN friendship f ON u.id IN (f.addressee_id, f.requester_id)
+            WHERE u.id = ?
+            """
     )) {
       ps.setObject(1, id);
-
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          UserEntity ue = new UserEntity();
-          ue.setId(rs.getObject("id", UUID.class));
-          ue.setUsername(rs.getString("username"));
-          String currencyString = rs.getString("currency");
-          ue.setCurrency(CurrencyValues.valueOf(currencyString));
-          ue.setFirstname(rs.getString("firstname"));
-          ue.setSurname(rs.getString("surname"));
-          ue.setFullname(rs.getString("full_name"));
-          ue.setPhoto(rs.getBytes("photo"));
-          ue.setPhotoSmall(rs.getBytes("photo_small"));
-          return Optional.of(ue);
-        } else {
+      ps.execute();
+      UserEntity user = null;
+      var friendshipAddressees = new ArrayList<FriendshipEntity>();
+      var friendshipRequests = new ArrayList<FriendshipEntity>();
+      try (ResultSet resultSet = ps.getResultSet()) {
+        while (resultSet.next()) {
+          UUID userId = resultSet.getObject("id", UUID.class);
+          if (user == null) {
+            user = UserdataUserEntityRowMapper.instance.mapRow(resultSet, 1);
+          }
+          if (userId.equals(id)) {
+            var requester = new UserEntity();
+            var addressee = new UserEntity();
+            UUID requesterId = resultSet.getObject("requester_id", UUID.class);
+            UUID addresseeId = resultSet.getObject("addressee_id", UUID.class);
+            requester.setId(requesterId);
+            addressee.setId(addresseeId);
+            var friendship = new FriendshipEntity();
+            friendship.setRequester(requester);
+            friendship.setAddressee(addressee);
+            friendship.setStatus(FriendshipStatus.valueOf(resultSet.getString("status")));
+            friendship.setCreatedDate(resultSet.getDate("created_date"));
+            if (addresseeId.equals(userId)) {
+              friendshipAddressees.add(friendship);
+            } else {
+              friendshipRequests.add(friendship);
+            }
+          }
+        }
+        if (user == null) {
           return Optional.empty();
+        } else {
+          user.setFriendshipAddressees(friendshipAddressees);
+          user.setFriendshipRequests(friendshipRequests);
+          return Optional.of(user);
         }
       }
     } catch (SQLException e) {
@@ -147,6 +175,37 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
         }
       }
 
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    createFriendship(requester, addressee, FriendshipStatus.PENDING);
+  }
+
+  @Override
+  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+    createFriendship(addressee, requester, FriendshipStatus.PENDING);
+  }
+
+  @Override
+  public void addFriend(UserEntity requester, UserEntity addressee) {
+    createFriendship(requester, addressee, FriendshipStatus.ACCEPTED);
+    createFriendship(addressee, requester, FriendshipStatus.ACCEPTED);
+  }
+
+  private void createFriendship(UserEntity firstFriend, UserEntity secondFriend,
+      FriendshipStatus status) {
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+        "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?,?)"
+    )) {
+      ps.setObject(1, firstFriend.getId());
+      ps.setObject(2, secondFriend.getId());
+      ps.setString(3, status.name());
+      ps.setDate(4, new java.sql.Date(new Date().getTime()));
+      ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
