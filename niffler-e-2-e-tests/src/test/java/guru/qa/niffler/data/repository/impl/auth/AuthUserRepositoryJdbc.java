@@ -71,7 +71,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
             "FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.username = ?"
     )) {
       ps.setString(1, username);
-      ps.execute();
       try (ResultSet rs = ps.executeQuery()) {
         AuthUserEntity user = null;
         List<AuthorityEntity> authorityEntities = new ArrayList<>();
@@ -107,7 +106,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
             "FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.id = ?"
     )) {
       ps.setObject(1, id);
-      ps.execute();
       try (ResultSet rs = ps.executeQuery()) {
         AuthUserEntity user = null;
         List<AuthorityEntity> authorityEntities = new ArrayList<>();
