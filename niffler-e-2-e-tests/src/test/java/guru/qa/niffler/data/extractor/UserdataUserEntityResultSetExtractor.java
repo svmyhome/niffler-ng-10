@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.dao.DataAccessException;
@@ -44,14 +45,16 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
       });
       var friendship = new FriendshipEntity();
       var requester = new UserEntity();
-      UUID addresseeId = rs.getObject("addressee_id", UUID.class);
-      requester.setId(addresseeId);
       var addressee = new UserEntity();
       UUID requesterId = rs.getObject("requester_id", UUID.class);
-      addressee.setId(requesterId);
+      UUID addresseeId = rs.getObject("addressee_id", UUID.class);
+      requester.setId(requesterId);
+      addressee.setId(addresseeId);
       friendship.setRequester(requester);
       friendship.setAddressee(addressee);
-      friendship.setStatus(FriendshipStatus.valueOf(rs.getString("status")));
+      friendship.setStatus(Optional.ofNullable(rs.getString("status"))
+          .map(FriendshipStatus::valueOf)
+          .orElse(null));
       friendship.setCreatedDate(rs.getDate("created_date"));
 
       if (Objects.equals(addresseeId, userId)) {

@@ -69,7 +69,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
       UserEntity user = null;
       var friendshipAddressees = new ArrayList<FriendshipEntity>();
       var friendshipRequests = new ArrayList<FriendshipEntity>();
-
       try (ResultSet resultSet = ps.getResultSet()) {
         while (resultSet.next()) {
           UUID userId = resultSet.getObject("id", UUID.class);
@@ -78,17 +77,16 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
           }
           if (userId.equals(id)) {
             var requester = new UserEntity();
-            UUID addresseeId = resultSet.getObject("addressee_id", UUID.class);
-            requester.setId(addresseeId);
             var addressee = new UserEntity();
             UUID requesterId = resultSet.getObject("requester_id", UUID.class);
-            addressee.setId(requesterId);
+            UUID addresseeId = resultSet.getObject("addressee_id", UUID.class);
+            requester.setId(requesterId);
+            addressee.setId(addresseeId);
             var friendship = new FriendshipEntity();
             friendship.setRequester(requester);
             friendship.setAddressee(addressee);
             friendship.setStatus(FriendshipStatus.valueOf(resultSet.getString("status")));
             friendship.setCreatedDate(resultSet.getDate("created_date"));
-
             if (addresseeId.equals(userId)) {
               friendshipAddressees.add(friendship);
             } else {

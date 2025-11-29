@@ -12,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,8 +31,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         Statement.RETURN_GENERATED_KEYS
     );
         PreparedStatement authorityPs = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-            "INSERT INTO authority (user_id, authority)" +
-                "VALUES(?,?)")) {
+            "INSERT INTO authority (user_id, authority) VALUES(?,?)")) {
       userPs.setString(1, user.getUsername());
       userPs.setString(2, user.getPassword());
       userPs.setBoolean(3, user.getEnabled());
@@ -142,10 +143,8 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   public List<AuthUserEntity> findAll() {
     List<AuthUserEntity> users = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-//        "SELECT * FROM \"user\""
         "SELECT * FROM \"user\" u JOIN public.authority a on u.id = a.user_id"
     )) {
-      AuthUserEntity aue = new AuthUserEntity();
       try (ResultSet rs = ps.executeQuery()) {
         AuthUserEntity user = null;
         List<AuthorityEntity> authorityEntities = new ArrayList<>();
@@ -153,6 +152,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           if (user == null) {
             user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
           }
+
           AuthorityEntity ae = new AuthorityEntity();
           ae.setUser(user);
           ae.setId(rs.getObject("id", UUID.class));

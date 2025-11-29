@@ -47,29 +47,6 @@ public class UserDbClient implements UserClient {
       CFG.authJdbcUrl(),
       CFG.userdataJdbcUrl());
 
-  public UserJson createUserSpringJdbc(UserJson user) {
-    return xaTransactionTemplate.execute(() -> {
-      AuthUserEntity authUser = new AuthUserEntity();
-      authUser.setUsername(user.username());
-      authUser.setPassword(pe.encode("12345"));
-      authUser.setEnabled(true);
-      authUser.setAccountNonExpired(true);
-      authUser.setAccountNonLocked(true);
-      authUser.setCredentialsNonExpired(true);
-      authUser.setAuthorities(Arrays.stream(Authority.values()).map(
-          a -> {
-            AuthorityEntity ae = new AuthorityEntity();
-            ae.setUser(authUser);
-            ae.setAuthority(a);
-            return ae;
-          }
-      ).toList());
-
-      authUserRepository.create(authUser);
-      return UserJson.fromEntity(userdataUserDAO.create(UserEntity.fromJson(user)));
-    });
-  }
-
   @Override
   public UserJson createUser(UserJson user) {
     return UserJson.fromEntity(
