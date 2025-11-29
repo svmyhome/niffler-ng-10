@@ -27,7 +27,6 @@ public class AuthUserEntityListResultSetExtractor implements
 
     while (rs.next()) {
       UUID userId = rs.getObject("user_id", UUID.class);
-
       AuthUserEntity user = userMap.get(userId);
       if (user == null) {
         user = new AuthUserEntity();
@@ -41,14 +40,12 @@ public class AuthUserEntityListResultSetExtractor implements
         user.setAuthorities(new ArrayList<>());
         userMap.put(userId, user);
       }
-
       AuthorityEntity authority = new AuthorityEntity();
       authority.setId(rs.getObject("authority_id", UUID.class));
       authority.setAuthority(Authority.valueOf(rs.getString("authority")));
       authority.setUser(user);
       user.getAuthorities().add(authority);
     }
-
     return new ArrayList<>(userMap.values());
   }
 }

@@ -12,9 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,7 +64,11 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "SELECT * FROM \"user\" u JOIN public.authority a on u.id = a.user_id WHERE username = ?"
+        "SELECT " +
+            "u.id as user_id, u.username, u.password, u.enabled, " +
+            "u.account_non_expired, u.account_non_locked, u.credentials_non_expired, " +
+            "a.id as authority_id, a.authority " +
+            "FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.username = ?"
     )) {
       ps.setString(1, username);
       ps.execute();
@@ -79,7 +81,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           }
           AuthorityEntity ae = new AuthorityEntity();
           ae.setUser(user);
-          ae.setId(rs.getObject("id", UUID.class));
+          ae.setId(rs.getObject("authority_id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
         }
@@ -98,7 +100,11 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "SELECT * FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.id = ?"
+        "SELECT " +
+            "u.id as user_id, u.username, u.password, u.enabled, " +
+            "u.account_non_expired, u.account_non_locked, u.credentials_non_expired, " +
+            "a.id as authority_id, a.authority " +
+            "FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE u.id = ?"
     )) {
       ps.setObject(1, id);
       ps.execute();
@@ -111,7 +117,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           }
           AuthorityEntity ae = new AuthorityEntity();
           ae.setUser(user);
-          ae.setId(rs.getObject("id", UUID.class));
+          ae.setId(rs.getObject("authority_id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
         }

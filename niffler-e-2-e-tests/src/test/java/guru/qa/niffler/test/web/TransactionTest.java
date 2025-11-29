@@ -1,9 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
-import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
@@ -13,10 +11,6 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.data.repository.auth.AuthUserRepository;
-import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryJdbc;
-import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositorySpringJdbc;
-import guru.qa.niffler.data.repository.impl.userdata.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -77,71 +71,6 @@ public class TransactionTest {
         )
     );
     System.out.println(user);
-  }
-
-  @Test
-  void AuthAuthorityDaoJdbcTest() {
-    UserdataUserRepositorySpringJdbc  userdataUserRepositorySpringJdbc = new UserdataUserRepositorySpringJdbc();
-    Optional<UserEntity> byId = userdataUserRepositorySpringJdbc.findById(
-        UUID.fromString("954f085c-c69e-11f0-b64f-0a7dde25e63f"));
-    //оба запроса   8b8996ed-f701-49fd-a421-31183916d818
-    // нет a17bb716-ccec-11f0-aa97-261a21438e9e
-    // requester abadbab6-ba46-4090-bfff-79dc52bc1ab6
-    // addreser d34df1aa-6aec-4e0c-8447-cb1aa423ccad
-    byId.ifPresent(u -> {
-      System.out.println("User: " + u.getUsername());
-
-      System.out.println("=== Friendship Addressees ===");
-      u.getFriendshipAddressees().stream()
-          .forEach(f -> System.out.println(
-              "Addressee: " + f.getAddressee().getUsername() +
-                  ", Status: " + f.getStatus() +
-                  ", Created: " + f.getCreatedDate()
-          ));
-
-      System.out.println("=== Friendship Requests ===");
-      u.getFriendshipRequests().stream()
-          .forEach(f -> System.out.println(
-              "Requester: " + f.getRequester().getUsername() +
-                  ", Status: " + f.getStatus() +
-                  ", Created: " + f.getCreatedDate()
-          ));
-    });
-  }
-
-  @Test
-  void AuthAuthorityDaoJdbc1Test() {
-    AuthUserRepositoryJdbc  authUserRepositoryJdbc = new AuthUserRepositoryJdbc();
-    Optional<AuthUserEntity> byId = authUserRepositoryJdbc.findById(
-        UUID.fromString("a17bb716-ccec-11f0-aa97-261a21438e9e"));
-    System.out.println(byId);
-    //оба запроса   8b8996ed-f701-49fd-a421-31183916d818
-    // нет a17bb716-ccec-11f0-aa97-261a21438e9e
-    // requester abadbab6-ba46-4090-bfff-79dc52bc1ab6
-    // addreser d34df1aa-6aec-4e0c-8447-cb1aa423ccad
-//    byId.ifPresent(u -> System.out.println(u.getUsername()));
-//    byId.ifPresent(u -> u.getFriendshipAddressees().stream().forEach(System.out::println));
-//    byId.ifPresent(u -> System.out.println(u.getFriendshipRequests()));
-//    byId.ifPresent(u -> {
-//      System.out.println("User: " + u.getUsername());
-//
-//      System.out.println("=== Friendship Addressees ===");
-//      u.getFriendshipAddressees().stream()
-//          .forEach(f -> System.out.println(
-//              "Addressee: " + f.getAddressee().getUsername() +
-//                  ", Status: " + f.getStatus() +
-//                  ", Created: " + f.getCreatedDate()
-//          ));
-//
-//      System.out.println("=== Friendship Requests ===");
-//      u.getFriendshipRequests().stream()
-//          .forEach(f -> System.out.println(
-//              "Requester: " + f.getRequester().getUsername() +
-//                  ", Status: " + f.getStatus() +
-//                  ", Created: " + f.getCreatedDate()
-//          ));
-//    });
-
   }
 
   @Test
