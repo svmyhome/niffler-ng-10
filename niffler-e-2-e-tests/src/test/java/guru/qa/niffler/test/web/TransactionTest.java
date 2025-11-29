@@ -81,16 +81,32 @@ public class TransactionTest {
 
   @Test
   void AuthAuthorityDaoJdbcTest() {
-    AuthUserRepositoryJdbc  authUserRepositoryJdbc = new AuthUserRepositoryJdbc();
-    Optional<AuthUserEntity> byId = authUserRepositoryJdbc.findByUsername("duck");
+    UserdataUserRepositorySpringJdbc  userdataUserRepositorySpringJdbc = new UserdataUserRepositorySpringJdbc();
+    Optional<UserEntity> byId = userdataUserRepositorySpringJdbc.findById(
+        UUID.fromString("954f085c-c69e-11f0-b64f-0a7dde25e63f"));
     //оба запроса   8b8996ed-f701-49fd-a421-31183916d818
     // нет a17bb716-ccec-11f0-aa97-261a21438e9e
     // requester abadbab6-ba46-4090-bfff-79dc52bc1ab6
     // addreser d34df1aa-6aec-4e0c-8447-cb1aa423ccad
-//    byId.ifPresent(u -> System.out.println(u.getUsername()));
-//    byId.ifPresent(u -> u.getFriendshipAddressees().stream().forEach(System.out::println));
-//    byId.ifPresent(u -> System.out.println(u.getFriendshipRequests()));
+    byId.ifPresent(u -> {
+      System.out.println("User: " + u.getUsername());
 
+      System.out.println("=== Friendship Addressees ===");
+      u.getFriendshipAddressees().stream()
+          .forEach(f -> System.out.println(
+              "Addressee: " + f.getAddressee().getUsername() +
+                  ", Status: " + f.getStatus() +
+                  ", Created: " + f.getCreatedDate()
+          ));
+
+      System.out.println("=== Friendship Requests ===");
+      u.getFriendshipRequests().stream()
+          .forEach(f -> System.out.println(
+              "Requester: " + f.getRequester().getUsername() +
+                  ", Status: " + f.getStatus() +
+                  ", Created: " + f.getCreatedDate()
+          ));
+    });
   }
 
   @Test

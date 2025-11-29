@@ -59,7 +59,8 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
 
       if (Objects.equals(addresseeId, userId)) {
         user.getFriendshipAddressees().add(friendship);
-      } else {
+      }
+      if (Objects.equals(requesterId, userId)) {
         user.getFriendshipRequests().add(friendship);
       }
     }
