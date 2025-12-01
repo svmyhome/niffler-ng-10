@@ -3,8 +3,6 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.spend.CurrencyValues;
-import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserDbClient;
 import java.util.List;
 import java.util.UUID;
@@ -71,24 +69,6 @@ public class FrienshipTest {
     friendship.setRequester(requester);
     friendship.setAddressee(addresser);
     userDbClient.deleteFriendship(friendship);
-  }
-
-  @Test
-  void createUserWithFriendTest() {
-    UserDbClient userDbClient = new UserDbClient();
-    UserJson requester = new UserJson(
-        null,
-        "Ptaha5",
-        "First",
-        "Sure",
-        "Full",
-        CurrencyValues.RUB,
-        "123467890",
-        "123467890"
-    );
-    UserEntity addresser = new UserEntity();
-    addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
-    userDbClient.createUser1(requester, addresser);
   }
 
   @Test

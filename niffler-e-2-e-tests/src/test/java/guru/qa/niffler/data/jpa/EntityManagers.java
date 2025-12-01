@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityManagers {
 
+  private static final Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();
+
   private EntityManagers() {
   }
-
-  private static final Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();
 
   public static EntityManager em(String jdbcUrl) {
     return new ThreadSafeEntityManager(emfs.computeIfAbsent(

@@ -34,6 +34,15 @@ public class CategoryEntity implements Serializable {
   @Column(nullable = false)
   private boolean archived;
 
+  public static CategoryEntity fromJson(CategoryJson json) {
+    CategoryEntity ce = new CategoryEntity();
+    ce.setId(json.id());
+    ce.setName(json.name());
+    ce.setUsername(json.username());
+    ce.setArchived(json.archived());
+    return ce;
+  }
+
   @Override
   public final boolean equals(Object o) {
     if (this == o) {
@@ -59,14 +68,5 @@ public class CategoryEntity implements Serializable {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public static CategoryEntity fromJson(CategoryJson json) {
-    CategoryEntity ce = new CategoryEntity();
-    ce.setId(json.id());
-    ce.setName(json.name());
-    ce.setUsername(json.username());
-    ce.setArchived(json.archived());
-    return ce;
   }
 }

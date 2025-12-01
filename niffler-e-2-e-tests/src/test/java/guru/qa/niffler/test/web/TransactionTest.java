@@ -93,23 +93,29 @@ public class TransactionTest {
     System.out.println(user);
   }
 
+  UserDbClient dbClient = new UserDbClient();
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova4", "vova5", "vova6"}
+      strings = {"vova28"}
+  )
+  public void springJdbc11Test(String username) {
+    UserJson user = dbClient.createUserSpringJdbc(
+        username,
+        "12345"
+    );
+    dbClient.addFriendHiber(user, 1);
+    System.out.println(user);
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {"vova13"}
   )
   public void springJdbcTest(String username) {
     UserDbClient dbClient = new UserDbClient();
     UserJson user = dbClient.createUserSpringJdbc(
-        new UserJson(
-            null,
-            username ,
-            null,
-            null,
-            null,
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
+        username,
+        "12345"
     );
     System.out.println(user);
   }

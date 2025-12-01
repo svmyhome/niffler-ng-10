@@ -4,6 +4,7 @@ import static org.apache.hc.core5.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.hc.core5.http.HttpStatus.SC_CREATED;
 import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.CategoryJson;

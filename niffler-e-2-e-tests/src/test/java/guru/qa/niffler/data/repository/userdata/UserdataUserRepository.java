@@ -9,8 +9,6 @@ public interface UserdataUserRepository {
 
   UserEntity create(UserEntity user);
 
-  UserEntity createWithFriendship(UserEntity requester, UserEntity addressee);
-
   Optional<UserEntity> findById(UUID id);
 
   Optional<UserEntity> findByUsername(String username);

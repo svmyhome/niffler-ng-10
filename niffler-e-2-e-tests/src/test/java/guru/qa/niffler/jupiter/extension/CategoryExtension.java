@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import static utils.RandomDataUtils.randomCategoryName;
+
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;

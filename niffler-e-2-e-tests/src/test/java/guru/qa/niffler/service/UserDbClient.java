@@ -22,6 +22,7 @@ import guru.qa.niffler.data.repository.impl.userdata.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
+import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import utils.RandomDataUtils;
 
 public class UserDbClient implements UserClient {
 
@@ -49,18 +51,25 @@ public class UserDbClient implements UserClient {
       CFG.authJdbcUrl(),
       CFG.userdataJdbcUrl());
 
-  public UserJson createUserSpringJdbc(UserJson user) {
+  public static UserEntity userEntity(String username) {
+    UserEntity ue = new UserEntity();
+    ue.setUsername(username);
+    ue.setCurrency(CurrencyValues.RUB);
+    return ue;
+  }
+
+  public UserJson createUserSpringJdbc(String username, String password) {
     return xaTransactionTemplate.execute(() -> {
-      AuthUserEntity authUser = authUserEntity(user);
+      AuthUserEntity authUser = authUserEntity(username, password);
       authUserRepositoryHibernate.create(authUser);
-      return UserJson.fromEntity(userdataUserRepositoryHibernate.create(UserEntity.fromJson(user)));
+      return UserJson.fromEntity(userdataUserRepositoryHibernate.create(userEntity(username)));
     });
   }
 
-  private AuthUserEntity authUserEntity(UserJson user) {
+  private AuthUserEntity authUserEntity(String username, String password) {
     AuthUserEntity authUser = new AuthUserEntity();
-    authUser.setUsername(user.username());
-    authUser.setPassword(pe.encode("12345"));
+    authUser.setUsername(username);
+    authUser.setPassword(pe.encode(password));
     authUser.setEnabled(true);
     authUser.setAccountNonExpired(true);
     authUser.setAccountNonLocked(true);
@@ -80,8 +89,9 @@ public class UserDbClient implements UserClient {
   public UserJson createUser(UserJson user) {
     return UserJson.fromEntity(
         xaTransactionTemplate.execute(() -> {
-          AuthUserEntity authUser = authUserEntity(user);
-          authUserRepository.create(authUser);
+              AuthUserEntity authUser = authUserEntity("user",
+                  "1234"); // TODO переделать на стринг сейчас тут заглушка
+              authUserRepository.create(authUser);
               UserEntity ue = UserEntity.fromJson(user);
               userdataUserDAO.create(ue);
               return ue;
@@ -98,6 +108,54 @@ public class UserDbClient implements UserClient {
   public void delete(AuthUserEntity user) {
     authUserRepository.delete(user);
   }
+
+  public void addIncomeInvitationHiber(UserJson targetUser, int count) {
+    if (count > 0) {
+      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      for (int i = 0; i < count; i++) {
+        xaTransactionTemplate.execute(() -> {
+          String username = RandomDataUtils.randomUsername();
+          AuthUserEntity authUser = authUserEntity(username, "12345");
+          authUserRepositoryHibernate.create(authUser);
+          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntity(username));
+          userdataUserRepositoryHibernate.addIncomeInvitation(targetEntity, adressee);
+          return null;
+        });
+      }
+    }
+  } //TODO объеденить с методами ниже
+
+  public void addOutcomeInvitationHiber(UserJson targetUser, int count) {
+    if (count > 0) {
+      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      for (int i = 0; i < count; i++) {
+        xaTransactionTemplate.execute(() -> {
+          String username = RandomDataUtils.randomUsername();
+          AuthUserEntity authUser = authUserEntity(username, "12345");
+          authUserRepositoryHibernate.create(authUser);
+          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntity(username));
+          userdataUserRepositoryHibernate.addOutcomeInvitation(targetEntity, adressee);
+          return null;
+        });
+      }
+    }
+  } //TODO объеденить с методами ниже
+
+  public void addFriendHiber(UserJson targetUser, int count) {
+    if (count > 0) {
+      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      for (int i = 0; i < count; i++) {
+        xaTransactionTemplate.execute(() -> {
+          String username = RandomDataUtils.randomUsername();
+          AuthUserEntity authUser = authUserEntity(username, "12345");
+          authUserRepositoryHibernate.create(authUser);
+          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntity(username));
+          userdataUserRepositoryHibernate.addFriend(targetEntity, adressee);
+          return null;
+        });
+      }
+    }
+  }//TODO объеденить с методами ниже
 
   public void addFriend(UserEntity requester, UserEntity addressee) {
     userdataUserRepository.addFriend(requester, addressee);
@@ -119,24 +177,7 @@ public class UserDbClient implements UserClient {
     friendshipDAO.delete(friendship);
   }
 
-  public UserEntity createUserWithFriend(UserEntity requester, UserEntity addressee) {
-    return userdataUserRepository.createWithFriendship(requester, addressee);
-  }
-
   public Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
-  }
-
-  public UserJson createUser1(UserJson user, UserEntity addressee) {
-    return UserJson.fromEntity(
-        xaTransactionTemplate.execute(() -> {
-          AuthUserEntity authUser = authUserEntity(user);
-          authUserRepository.create(authUser);
-              UserEntity requester = UserEntity.fromJson(user);
-              userdataUserRepository.createWithFriendship(requester, addressee);
-              return requester;
-            }
-        )
-    );
   }
 }

@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.repository.impl.userdata;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
+
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -53,47 +54,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
       throw new RuntimeException(e);
     }
   }
-
-  @Override
-  public UserEntity createWithFriendship(UserEntity requester, UserEntity addressee) {
-    try (PreparedStatement userPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-        "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
-            +
-            "VALUES(?,?,?,?,?,?,?)",
-        Statement.RETURN_GENERATED_KEYS
-    );
-        PreparedStatement friendPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-            "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?,?)")) {
-      userPs.setString(1, requester.getUsername());
-      userPs.setString(2, requester.getCurrency().name());
-      userPs.setString(3, requester.getFirstname());
-      userPs.setString(4, requester.getSurname());
-      userPs.setString(5, requester.getFullname());
-      userPs.setBytes(6, requester.getPhoto());
-      userPs.setBytes(7, requester.getPhotoSmall());
-      userPs.executeUpdate();
-
-      final UUID generatedKey;
-      try (ResultSet rs = userPs.getGeneratedKeys()) {
-        if (rs.next()) {
-          generatedKey = rs.getObject("id", UUID.class);
-        } else {
-          throw new SQLException("Can't find id in ResultSet");
-        }
-      }
-      requester.setId(generatedKey);
-
-      friendPs.setObject(1, generatedKey);
-      friendPs.setObject(2, addressee.getId());
-      friendPs.setString(3, FriendshipStatus.ACCEPTED.name());
-      friendPs.setDate(4, new java.sql.Date(new Date().getTime()));
-      friendPs.executeUpdate();
-      return requester;
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
 
   @Override
   public Optional<UserEntity> findById(UUID id) {

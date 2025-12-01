@@ -114,13 +114,13 @@ public class ThreadSafeEntityManager implements EntityManager {
   }
 
   @Override
-  public void setFlushMode(FlushModeType flushMode) {
-    threadEm().setFlushMode(flushMode);
+  public FlushModeType getFlushMode() {
+    return threadEm().getFlushMode();
   }
 
   @Override
-  public FlushModeType getFlushMode() {
-    return threadEm().getFlushMode();
+  public void setFlushMode(FlushModeType flushMode) {
+    threadEm().setFlushMode(flushMode);
   }
 
   @Override
@@ -184,23 +184,23 @@ public class ThreadSafeEntityManager implements EntityManager {
   }
 
   @Override
-  public void setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
-    threadEm().setCacheRetrieveMode(cacheRetrieveMode);
-  }
-
-  @Override
-  public void setCacheStoreMode(CacheStoreMode cacheStoreMode) {
-    threadEm().setCacheStoreMode(cacheStoreMode);
-  }
-
-  @Override
   public CacheRetrieveMode getCacheRetrieveMode() {
     return threadEm().getCacheRetrieveMode();
   }
 
   @Override
+  public void setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
+    threadEm().setCacheRetrieveMode(cacheRetrieveMode);
+  }
+
+  @Override
   public CacheStoreMode getCacheStoreMode() {
     return threadEm().getCacheStoreMode();
+  }
+
+  @Override
+  public void setCacheStoreMode(CacheStoreMode cacheStoreMode) {
+    threadEm().setCacheStoreMode(cacheStoreMode);
   }
 
   @Override

@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.entity.auth;
 
 import static jakarta.persistence.FetchType.EAGER;
+
 import guru.qa.niffler.model.auth.AuthUserJson;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,6 +52,18 @@ public class AuthUserEntity implements Serializable {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private List<AuthorityEntity> authorities = new ArrayList<>();
 
+  public static AuthUserEntity fromJson(AuthUserJson json) {
+    AuthUserEntity aue = new AuthUserEntity();
+    aue.setId(json.getId());
+    aue.setUsername(json.getUsername());
+    aue.setPassword(json.getPassword());
+    aue.setEnabled(json.isEnabled());
+    aue.setAccountNonExpired(json.isAccountNonExpired());
+    aue.setAccountNonLocked(json.isAccountNonLocked());
+    aue.setCredentialsNonExpired(json.isCredentialsNonExpired());
+    return aue;
+  }
+
   public void addAuthorities(AuthorityEntity... authorities) {
     for (AuthorityEntity authority : authorities) {
       this.authorities.add(authority);
@@ -88,17 +101,5 @@ public class AuthUserEntity implements Serializable {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public static AuthUserEntity fromJson(AuthUserJson json) {
-    AuthUserEntity aue = new AuthUserEntity();
-    aue.setId(json.getId());
-    aue.setUsername(json.getUsername());
-    aue.setPassword(json.getPassword());
-    aue.setEnabled(json.isEnabled());
-    aue.setAccountNonExpired(json.isAccountNonExpired());
-    aue.setAccountNonLocked(json.isAccountNonLocked());
-    aue.setCredentialsNonExpired(json.isCredentialsNonExpired());
-    return aue;
   }
 }
