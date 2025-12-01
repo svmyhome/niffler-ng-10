@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import utils.RandomDataUtils;
 
 public class TransactionTest {
@@ -91,13 +93,16 @@ public class TransactionTest {
     System.out.println(user);
   }
 
-  @Test
-  public void springJdbcTest() {
+  @ParameterizedTest
+  @ValueSource(
+      strings = {"vova4", "vova5", "vova6"}
+  )
+  public void springJdbcTest(String username) {
     UserDbClient dbClient = new UserDbClient();
     UserJson user = dbClient.createUserSpringJdbc(
         new UserJson(
             null,
-            "petr-32",
+            username ,
             null,
             null,
             null,
