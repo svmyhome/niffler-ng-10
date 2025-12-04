@@ -2,7 +2,8 @@ package guru.qa.niffler.data.repository.impl.auth;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.mapper.auth.AuthUserEntityRowMapper;
+import guru.qa.niffler.data.extractor.AuthUserEntityListResultSetExtractor;
+import guru.qa.niffler.data.extractor.AuthUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.auth.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
@@ -46,9 +47,9 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-    return Optional.ofNullable(jdbcTemplate.queryForObject(
-        "SELECT * FROM \"user\" WHERE username = ?",
-        AuthUserEntityRowMapper.instance,
+    return Optional.ofNullable(jdbcTemplate.query(
+        "SELECT * FROM \"user\" u JOIN authority a on u.id = a.user_id WHERE username = ?",
+        AuthUserEntityResultSetExtractor.instance,
         username
     ));
   }
@@ -56,9 +57,21 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-    return Optional.ofNullable(jdbcTemplate.queryForObject(
-        "SELECT * FROM \"user\" WHERE id = ?",
-        AuthUserEntityRowMapper.instance,
+    return Optional.ofNullable(jdbcTemplate.query(
+        "SELECT " +
+            "u.id as user_id, " +
+            "u.username, " +
+            "u.password, " +
+            "u.enabled, " +
+            "u.account_non_expired, " +
+            "u.account_non_locked, " +
+            "u.credentials_non_expired, " +
+            "a.id as authority_id, " +
+            "a.authority " +
+            "FROM \"user\" u " +
+            "JOIN authority a ON u.id = a.user_id " +
+            "WHERE u.id = ?",
+        AuthUserEntityResultSetExtractor.instance,
         id
     ));
   }
@@ -76,8 +89,8 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   public List<AuthUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     return jdbcTemplate.query(
-        "SELECT * FROM \"user\"",
-        AuthUserEntityRowMapper.instance
+        "SELECT * FROM \"user\" u JOIN public.authority a on u.id = a.user_id",
+        AuthUserEntityListResultSetExtractor.instance
     );
   }
 }

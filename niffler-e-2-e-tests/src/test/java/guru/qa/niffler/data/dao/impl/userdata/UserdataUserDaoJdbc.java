@@ -128,26 +128,21 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
         "SELECT * FROM \"user\""
     )) {
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
+        while (rs.next()) {
           UserEntity ue = new UserEntity();
-          while (rs.next()) {
-            ue.setId(rs.getObject("id", UUID.class));
-            ue.setUsername(rs.getString("username"));
-            String currencyString = rs.getString("currency");
-            ue.setCurrency(CurrencyValues.valueOf(currencyString));
-            ue.setFirstname(rs.getString("firstname"));
-            ue.setSurname(rs.getString("surname"));
-            ue.setFullname(rs.getString("full_name"));
-            ue.setPhoto(rs.getBytes("photo"));
-            ue.setPhotoSmall(rs.getBytes("photo_small"));
-            userEntities.add(ue);
-          }
-          return userEntities;
-        } else {
-          throw new SQLException("Can't find in ResultSet");
+          ue.setId(rs.getObject("id", UUID.class));
+          ue.setUsername(rs.getString("username"));
+          String currencyString = rs.getString("currency");
+          ue.setCurrency(CurrencyValues.valueOf(currencyString));
+          ue.setFirstname(rs.getString("firstname"));
+          ue.setSurname(rs.getString("surname"));
+          ue.setFullname(rs.getString("full_name"));
+          ue.setPhoto(rs.getBytes("photo"));
+          ue.setPhotoSmall(rs.getBytes("photo_small"));
+          userEntities.add(ue);
         }
+        return userEntities;
       }
-
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

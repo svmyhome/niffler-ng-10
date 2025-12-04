@@ -3,6 +3,7 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.FriendshipDaoJdbc;
@@ -40,6 +41,7 @@ public class UserDbClient implements UserClient {
 
   private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
   private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
+  private final AuthAuthorityDaoJdbc authAuthorityDaoJdbc = new AuthAuthorityDaoJdbc();
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
   private final UserdataUserDao userdataUserDAO = new UserdataUserDaoJdbc();
   private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();

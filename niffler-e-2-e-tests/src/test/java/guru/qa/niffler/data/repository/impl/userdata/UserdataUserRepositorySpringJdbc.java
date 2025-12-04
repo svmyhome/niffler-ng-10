@@ -3,8 +3,8 @@ package guru.qa.niffler.data.repository.impl.userdata;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.extractor.UserdataUserEntityListResultSetExtractor;
 import guru.qa.niffler.data.extractor.UserdataUserEntityResultSetExtractor;
-import guru.qa.niffler.data.mapper.userdata.UserdataUserEntityRowMapper;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.sql.PreparedStatement;
@@ -64,7 +64,12 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
     JdbcTemplate template = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-    return Optional.ofNullable(template.query("SELECT * FROM \"user\" WHERE username = ?",
+    return Optional.ofNullable(template.query("""
+            SELECT u.*, f.*
+            FROM "user" u
+            LEFT JOIN friendship f ON u.id IN (f.addressee_id, f.requester_id)
+            WHERE u.username = ?
+            """,
         UserdataUserEntityResultSetExtractor.instance,
         username
     ));
@@ -81,10 +86,21 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
 
   @Override
   public List<UserEntity> findAll() {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+    String sql = """
+        SELECT
+            u.*, f.*,
+            requester.id as req_id, requester.username as req_username,
+            addressee.id as addr_id, addressee.username as addr_username
+        FROM "user" u
+        LEFT JOIN friendship f ON u.id = f.requester_id OR u.id = f.addressee_id
+        LEFT JOIN "user" requester ON f.requester_id = requester.id
+        LEFT JOIN "user" addressee ON f.addressee_id = addressee.id
+        ORDER BY u.id
+        """;
     return jdbcTemplate.query(
-        "SELECT * FROM \"user\"",
-        UserdataUserEntityRowMapper.instance
+        sql,
+        UserdataUserEntityListResultSetExtractor.instance
     );
   }
 

@@ -23,7 +23,7 @@ public class AuthUserEntityResultSetExtractor implements ResultSetExtractor<Auth
     Map<UUID, AuthUserEntity> userMap = new ConcurrentHashMap<>();
     UUID userId = null;
     while (rs.next()) {
-      userId = rs.getObject("id", UUID.class);
+      userId = rs.getObject("user_id", UUID.class);
       AuthUserEntity user = userMap.computeIfAbsent(userId, id -> {
         try {
           AuthUserEntity newUser = new AuthUserEntity();

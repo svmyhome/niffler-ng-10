@@ -22,9 +22,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   @Override
   public void create(AuthorityEntity... authorities) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "INSERT INTO authority (user_id, authority)" +
-            "VALUES(?,?)",
-        PreparedStatement.RETURN_GENERATED_KEYS //TODO удалить
+        "INSERT INTO authority (user_id, authority) VALUES(?,?)"
     )) {
       for (AuthorityEntity authority : authorities) {
         ps.setObject(1, authority.getUser().getId());
@@ -45,18 +43,16 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     )) {
       ps.setObject(1, userId);
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          while (rs.next()) {
-            AuthorityEntity ae = new AuthorityEntity();
-            ae.setId(rs.getObject("id", UUID.class));
-            ae.setUser(rs.getObject("user_id", AuthUserEntity.class));
-            ae.setAuthority(Authority.valueOf(rs.getString("authority")));
-            authorities.add(ae);
-          }
-          return authorities;
-        } else {
-          throw new SQLException("Can't find authority in ResultSet");
+        while (rs.next()) {
+          AuthorityEntity ae = new AuthorityEntity();
+          ae.setId(rs.getObject("id", UUID.class));
+          AuthUserEntity aue = new AuthUserEntity();
+          aue.setId(rs.getObject("user_id", UUID.class));
+          ae.setUser(aue);
+          ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+          authorities.add(ae);
         }
+        return authorities;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -73,7 +69,9 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         if (rs.next()) {
           AuthorityEntity ae = new AuthorityEntity();
           ae.setId(rs.getObject("id", UUID.class));
-          ae.setUser(rs.getObject("user_id", AuthUserEntity.class));
+          AuthUserEntity aue = new AuthUserEntity();
+          aue.setId(rs.getObject("user_id", UUID.class));
+          ae.setUser(aue);
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           return Optional.of(ae);
         } else {
@@ -107,18 +105,16 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         "SELECT * FROM authority"
     )) {
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          AuthorityEntity ae = new AuthorityEntity();
-          while (rs.next()) {
-            ae.setId(rs.getObject("id", UUID.class));
-            ae.setUser(rs.getObject("user_id", AuthUserEntity.class));
-            ae.setAuthority(Authority.valueOf(rs.getString("authority")));
-            authorities.add(ae);
-          }
-          return authorities;
-        } else {
-          throw new SQLException("Can't find in ResultSet");
+        AuthorityEntity ae = new AuthorityEntity();
+        while (rs.next()) {
+          ae.setId(rs.getObject("id", UUID.class));
+          AuthUserEntity aue = new AuthUserEntity();
+          aue.setId(rs.getObject("user_id", UUID.class));
+          ae.setUser(aue);
+          ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+          authorities.add(ae);
         }
+        return authorities;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

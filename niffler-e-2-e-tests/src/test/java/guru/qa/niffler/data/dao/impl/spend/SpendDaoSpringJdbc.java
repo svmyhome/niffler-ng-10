@@ -55,7 +55,6 @@ public class SpendDaoSpringJdbc implements SpendDao {
   @Override
   public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-
     return jdbcTemplate.query(
         "SELECT * FROM spend WHERE category_id = ?",
         SpendEntityRowMapper.instance,

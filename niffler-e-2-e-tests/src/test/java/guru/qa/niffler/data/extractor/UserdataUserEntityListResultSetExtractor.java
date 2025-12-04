@@ -6,6 +6,8 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,15 +16,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<UserEntity> {
+public class UserdataUserEntityListResultSetExtractor implements
+    ResultSetExtractor<List<UserEntity>> {
 
-  public static final UserdataUserEntityResultSetExtractor instance = new UserdataUserEntityResultSetExtractor();
+  public static final UserdataUserEntityListResultSetExtractor instance = new UserdataUserEntityListResultSetExtractor();
 
-  private UserdataUserEntityResultSetExtractor() {
+  private UserdataUserEntityListResultSetExtractor() {
   }
 
   @Override
-  public UserEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
+  public List<UserEntity> extractData(ResultSet rs) throws SQLException, DataAccessException {
     Map<UUID, UserEntity> userMap = new ConcurrentHashMap<>();
     UUID userId = null;
     while (rs.next()) {
@@ -64,6 +67,6 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
         user.getFriendshipRequests().add(friendship);
       }
     }
-    return userMap.get(userId);
+    return new ArrayList<>(userMap.values());
   }
 }
