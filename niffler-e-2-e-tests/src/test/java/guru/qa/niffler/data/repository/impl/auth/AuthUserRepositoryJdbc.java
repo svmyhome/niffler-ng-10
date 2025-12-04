@@ -63,6 +63,11 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   }
 
   @Override
+  public AuthUserEntity update(AuthUserEntity user) {
+    return null;
+  }
+
+  @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT " +
@@ -133,7 +138,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   }
 
   @Override
-  public void delete(AuthUserEntity user) {
+  public void remove(AuthUserEntity user) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?"
     )) {

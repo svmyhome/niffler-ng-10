@@ -138,7 +138,12 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
-  public void delete(UserEntity user) {
+  public UserEntity update(UserEntity user) {
+    return null;
+  }
+
+  @Override
+  public void remove(UserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id =?"
     )) {
@@ -189,6 +194,11 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   @Override
   public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
     createFriendship(addressee, requester, FriendshipStatus.PENDING);
+  }
+
+  @Override
+  public void sendInvitation(UserEntity requester, UserEntity addressee) {
+
   }
 
   @Override

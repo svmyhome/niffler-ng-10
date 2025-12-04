@@ -76,7 +76,12 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
-  public void delete(UserEntity user) {
+  public UserEntity update(UserEntity user) {
+    return null;
+  }
+
+  @Override
+  public void remove(UserEntity user) {
     JdbcTemplate template = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     template.update(
         "DELETE FROM \"user\" WHERE id = ?",
@@ -112,6 +117,11 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   @Override
   public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
     createFriendship(addressee, requester, FriendshipStatus.PENDING);
+  }
+
+  @Override
+  public void sendInvitation(UserEntity requester, UserEntity addressee) {
+
   }
 
   @Override

@@ -24,6 +24,11 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
+  public AuthUserEntity update(AuthUserEntity user) {
+    return null;
+  }
+
+  @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try {
       return Optional.of(
@@ -42,7 +47,7 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
-  public void delete(AuthUserEntity user) {
+  public void remove(AuthUserEntity user) {
 
   }
 

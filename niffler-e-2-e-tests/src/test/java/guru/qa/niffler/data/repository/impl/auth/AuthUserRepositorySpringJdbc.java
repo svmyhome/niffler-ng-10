@@ -45,6 +45,11 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   }
 
   @Override
+  public AuthUserEntity update(AuthUserEntity user) {
+    return null;
+  }
+
+  @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.query(
@@ -77,7 +82,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   }
 
   @Override
-  public void delete(AuthUserEntity user) {
+  public void remove(AuthUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     jdbcTemplate.update(
         "DELETE FROM \"user\" WHERE id = ?",

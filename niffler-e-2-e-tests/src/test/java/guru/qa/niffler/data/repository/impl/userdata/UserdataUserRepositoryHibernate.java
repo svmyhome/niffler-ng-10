@@ -34,7 +34,12 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
   }
 
   @Override
-  public void delete(UserEntity user) {
+  public UserEntity update(UserEntity user) {
+    return null;
+  }
+
+  @Override
+  public void remove(UserEntity user) {
 
   }
 
@@ -53,6 +58,11 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
   public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
     entityManager.joinTransaction();
     requester.addFriends(FriendshipStatus.PENDING, addressee);
+  }
+
+  @Override
+  public void sendInvitation(UserEntity requester, UserEntity addressee) {
+
   }
 
   @Override

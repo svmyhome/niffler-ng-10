@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class FrienshipTest {
+public class FriendshipTest {
 
   private static final Config CFG = Config.getInstance();
 
@@ -16,9 +16,9 @@ public class FrienshipTest {
   void addFriendJdbcTest() {
     UserDbClient userDbClient = new UserDbClient();
     UserEntity requester = new UserEntity();
-    requester.setId(UUID.fromString("85a45678-b8c5-11f0-82bc-faa8bfae1c90"));
+    requester.setId(UUID.fromString("726d9c7c-b8de-11f0-84ca-faa8bfae1c90"));
     UserEntity addresser = new UserEntity();
-    addresser.setId(UUID.fromString("cde87b76-b8c5-11f0-9e12-faa8bfae1c90"));
+    addresser.setId(UUID.fromString("8016ff0c-b8df-11f0-bb7d-faa8bfae1c90"));
     userDbClient.addFriend(requester, addresser);
   }
 

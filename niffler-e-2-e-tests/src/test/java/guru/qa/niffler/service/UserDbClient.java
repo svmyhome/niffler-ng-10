@@ -1,11 +1,6 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.auth.AuthAuthorityDao;
-import guru.qa.niffler.data.dao.auth.AuthUserDao;
-import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.data.dao.impl.auth.AuthAuthorityDaoSpringJdbc;
-import guru.qa.niffler.data.dao.impl.auth.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.FriendshipDaoJdbc;
 import guru.qa.niffler.data.dao.impl.userdata.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.dao.userdata.FriendshipDao;
@@ -39,9 +34,6 @@ public class UserDbClient implements UserClient {
   private static final Config CFG = Config.getInstance();
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-  private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
-  private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
-  private final AuthAuthorityDaoJdbc authAuthorityDaoJdbc = new AuthAuthorityDaoJdbc();
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
   private final UserdataUserDao userdataUserDAO = new UserdataUserDaoJdbc();
   private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();
@@ -108,7 +100,7 @@ public class UserDbClient implements UserClient {
   }
 
   public void delete(AuthUserEntity user) {
-    authUserRepository.delete(user);
+    authUserRepository.remove(user);
   }
 
   public void addIncomeInvitationHiber(UserJson targetUser, int count) {

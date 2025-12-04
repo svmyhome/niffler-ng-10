@@ -9,11 +9,13 @@ public interface AuthUserRepository {
 
   AuthUserEntity create(AuthUserEntity user);
 
-  Optional<AuthUserEntity> findByUsername(String username);
+  AuthUserEntity update(AuthUserEntity user);
 
   Optional<AuthUserEntity> findById(UUID id);
 
-  void delete(AuthUserEntity user);
+  Optional<AuthUserEntity> findByUsername(String username);
 
   List<AuthUserEntity> findAll();
+
+  void remove(AuthUserEntity user);
 }
