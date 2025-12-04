@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.impl.spend;
+package guru.qa.niffler.data.dao.impl.spend;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.spend.CategoryDao;

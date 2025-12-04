@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.impl.spend;
+package guru.qa.niffler.data.dao.impl.spend;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.spend.SpendDao;
@@ -29,7 +29,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
           Statement.RETURN_GENERATED_KEYS
       );
       ps.setString(1, spend.getUsername());
-      ps.setDate(2, spend.getSpendDate());
+      ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
       ps.setObject(3, spend.getCurrency());
       ps.setDouble(4, spend.getAmount());
       ps.setString(5, spend.getDescription());
@@ -55,7 +55,6 @@ public class SpendDaoSpringJdbc implements SpendDao {
   @Override
   public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-
     return jdbcTemplate.query(
         "SELECT * FROM spend WHERE category_id = ?",
         SpendEntityRowMapper.instance,

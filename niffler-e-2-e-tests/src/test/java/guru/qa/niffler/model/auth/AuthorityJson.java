@@ -18,7 +18,7 @@ public class AuthorityJson {
     AuthorityJson au = new AuthorityJson();
     au.setId(entity.getId());
     au.setAuthority(entity.getAuthority());
-    au.setUserId(entity.getUserId());
+    au.setUserId(entity.getId());
     return au;
   }
 }
