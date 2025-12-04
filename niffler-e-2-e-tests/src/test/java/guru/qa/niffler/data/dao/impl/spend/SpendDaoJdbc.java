@@ -157,8 +157,8 @@ public class SpendDaoJdbc implements SpendDao {
         "SELECT * FROM spend"
     )) {
       try (ResultSet rs = ps.executeQuery()) {
-        SpendEntity sp = new SpendEntity();
         while (rs.next()) {
+          SpendEntity sp = new SpendEntity();
           sp.setId(rs.getObject("id", UUID.class));
           sp.setUsername(rs.getString("username"));
           sp.setSpendDate(rs.getDate("spend_date"));

@@ -127,8 +127,8 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
         "SELECT * FROM \"user\""
     )) {
       try (ResultSet rs = ps.executeQuery()) {
-        UserEntity ue = new UserEntity();
         while (rs.next()) {
+          UserEntity ue = new UserEntity();
           ue.setId(rs.getObject("id", UUID.class));
           ue.setUsername(rs.getString("username"));
           String currencyString = rs.getString("currency");
