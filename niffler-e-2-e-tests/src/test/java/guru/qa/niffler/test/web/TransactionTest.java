@@ -96,7 +96,7 @@ public class TransactionTest {
   UserDbClient dbClient = new UserDbClient();
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova28"}
+      strings = {"vova278"}
   )
   public void springJdbc11Test(String username) {
     UserJson user = dbClient.createUserSpringJdbc(
@@ -109,7 +109,7 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova1114"}
+      strings = {"vova11114"}
   )
   public void springJdbcTest(String username) {
     UserDbClient dbClient = new UserDbClient();
