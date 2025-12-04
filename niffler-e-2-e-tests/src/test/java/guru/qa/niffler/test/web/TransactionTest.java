@@ -109,7 +109,7 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova13"}
+      strings = {"vova1114"}
   )
   public void springJdbcTest(String username) {
     UserDbClient dbClient = new UserDbClient();

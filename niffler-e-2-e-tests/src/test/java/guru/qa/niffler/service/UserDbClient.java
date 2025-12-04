@@ -44,8 +44,8 @@ public class UserDbClient implements UserClient {
   private final UserdataUserDao userdataUserDAO = new UserdataUserDaoJdbc();
   private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();
   private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryJdbc();
-  private final AuthUserRepositoryHibernate authUserRepositoryHibernate = new AuthUserRepositoryHibernate();
-  private final UserdataUserRepositoryHibernate userdataUserRepositoryHibernate = new UserdataUserRepositoryHibernate();
+  private final AuthUserRepository authUserRepositoryHibernate = new AuthUserRepositoryHibernate();
+  private final UserdataUserRepository userdataUserRepositoryHibernate = new UserdataUserRepositoryHibernate();
 
   private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
       CFG.authJdbcUrl(),
