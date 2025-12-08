@@ -108,16 +108,16 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         UserdataUserEntityListResultSetExtractor.instance
     );
   }
-
-  @Override
-  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-    createFriendship(requester, addressee, FriendshipStatus.PENDING);
-  }
-
-  @Override
-  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-    createFriendship(addressee, requester, FriendshipStatus.PENDING);
-  }
+//
+//  @Override
+//  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+//    createFriendship(requester, addressee, FriendshipStatus.PENDING);
+//  }
+//
+//  @Override
+//  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+//    createFriendship(addressee, requester, FriendshipStatus.PENDING);
+//  }
 
   @Override
   public void sendInvitation(UserEntity requester, UserEntity addressee) {

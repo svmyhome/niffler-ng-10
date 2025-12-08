@@ -85,7 +85,8 @@ public class UserDbClient implements UserClient {
     });
   }
 
-  public void addIncomeInvitationHiber(UserJson targetUser, int count) {
+  @Override
+  public void createIncomeInvitations(UserJson targetUser, int count) {
     if (count > 0) {
       UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
@@ -94,14 +95,17 @@ public class UserDbClient implements UserClient {
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
-          userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
+//          userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
+          userdataUserRepository.sendInvitation(adressee,targetEntity);
+
           return null;
         });
       }
     }
-  } //TODO объеденить с методами ниже
+  }
 
-  public void addOutcomeInvitationHiber(UserJson targetUser, int count) {
+  @Override
+  public void createOutcomeInvitations(UserJson targetUser, int count) {
     if (count > 0) {
       UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
@@ -110,14 +114,16 @@ public class UserDbClient implements UserClient {
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
-          userdataUserRepository.addOutcomeInvitation(targetEntity, adressee);
+//          userdataUserRepository.addOutcomeInvitation(targetEntity, adressee);
+          userdataUserRepository.sendInvitation(targetEntity, adressee);
           return null;
         });
       }
     }
-  } //TODO объеденить с методами ниже
+  }
 
-  public void addFriendHiber(UserJson targetUser, int count) {
+  @Override
+  public void createFriends(UserJson targetUser, int count) {
     if (count > 0) {
       UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {

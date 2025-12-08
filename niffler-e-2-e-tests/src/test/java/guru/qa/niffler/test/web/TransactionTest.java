@@ -77,7 +77,7 @@ public class TransactionTest {
         username,
         "12345"
     );
-    dbClient.addFriendHiber(user, 1);
+    dbClient.createFriends(user, 1);
     System.out.println(user);
   }
 
