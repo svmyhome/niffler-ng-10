@@ -4,5 +4,5 @@ import guru.qa.niffler.model.user.UserJson;
 
 public interface UserClient {
 
-  UserJson createUser(UserJson user);
+  UserJson createUser(String username, String password);
 }

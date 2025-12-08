@@ -58,37 +58,11 @@ public class TransactionTest {
   }
 
   @Test
-  void userDAOtest() {
+  public void successTransactionTest() {
     UserDbClient userDbClient = new UserDbClient();
     UserJson user = userDbClient.createUser(
-        new UserJson(
-            null,
-            RandomDataUtils.randomUsername(),
-            "First",
-            "Sure",
-            "Full",
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
-    );
-    System.out.println(user);
-  }
-
-  @Test
-  public void successTransactionTest() {
-    UserDbClient dbClient = new UserDbClient();
-    UserJson user = dbClient.createUser(
-        new UserJson(
-            null,
-            "valentin-6",
-            "First",
-            "Sure",
-            "Full",
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
+        RandomDataUtils.randomUsername(),
+        "12345"
     );
     System.out.println(user);
   }
@@ -96,10 +70,10 @@ public class TransactionTest {
   UserDbClient dbClient = new UserDbClient();
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova278"}
+      strings = {"vova1278"}
   )
-  public void springJdbc11Test(String username) {
-    UserJson user = dbClient.createUserSpringJdbc(
+  public void addFriendTest(String username) {
+    UserJson user = dbClient.createUser(
         username,
         "12345"
     );
@@ -109,11 +83,11 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova11114"}
+      strings = {"vova1111114"}
   )
-  public void springJdbcTest(String username) {
+  public void createSimpleUserTest(String username) {
     UserDbClient dbClient = new UserDbClient();
-    UserJson user = dbClient.createUserSpringJdbc(
+    UserJson user = dbClient.createUser(
         username,
         "12345"
     );
@@ -144,9 +118,11 @@ public class TransactionTest {
   @Test
   public void deleteTest() {
     UserDbClient dbClient = new UserDbClient();
-    AuthUserEntity ae = new AuthUserEntity();
-    ae.setId(UUID.fromString("2db76cc4-8de4-4eee-9fee-dacd3c44b5f6"));
-    dbClient.delete(ae);
+    Optional<AuthUserEntity> user = dbClient.findAuthUserById(UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
+    if (user.isPresent()) {
+      AuthUserEntity authUser = user.get();
+      dbClient.delete(authUser);
+    }
     System.out.println();
   }
 
