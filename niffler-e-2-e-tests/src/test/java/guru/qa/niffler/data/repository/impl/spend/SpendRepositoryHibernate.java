@@ -7,16 +7,19 @@ import guru.qa.niffler.data.dao.spend.CategoryDao;
 import guru.qa.niffler.data.dao.spend.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.spend.SpendRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SpendRepositoryHibernate implements SpendRepository {
 
-  private static final Config CFG = Config.getInstance();
-  private final CategoryDao categoryDao = new CategoryDaoJdbc();
-  private final SpendDao spendDao = new SpendDaoJdbc();
+  private final Config CFG = Config.getInstance();
+
+  private final EntityManager entityManager = EntityManagers.em(CFG.spendJdbcUrl());
 
   @Override
   public SpendEntity createSpend(SpendEntity spend) {
@@ -29,8 +32,8 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
-  public Optional<SpendEntity> findSpendById(String id) {
-    return spendDao.findById(UUID.fromString(id));
+  public Optional<SpendEntity> findSpendById(UUID id) {
+    return Optional.ofNullable(entityManager.find(SpendEntity.class, id));
   }
 
   @Override

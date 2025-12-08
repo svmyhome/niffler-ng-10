@@ -12,7 +12,7 @@ public interface SpendRepository {
 
   SpendEntity update(SpendEntity spend);
 
-  Optional<SpendEntity> findSpendById(String id);
+  Optional<SpendEntity> findSpendById(UUID id);
 
   Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description);
 
