@@ -1,17 +1,13 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.userdata.FriendshipDaoJdbc;
-import guru.qa.niffler.data.dao.userdata.FriendshipDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.auth.AuthUserRepository;
 import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryHibernate;
 import guru.qa.niffler.data.repository.impl.userdata.UserdataUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.userdata.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -31,10 +27,8 @@ public class UserDbClient implements UserClient {
   private static final Config CFG = Config.getInstance();
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-  private final FriendshipDao friendshipDAO = new FriendshipDaoJdbc();
-  private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryJdbc();
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
-  private final UserdataUserRepository userdataUserRepositoryHibernate = new UserdataUserRepositoryHibernate();
+  private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryHibernate();
 
   private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
       CFG.authJdbcUrl(),
@@ -71,7 +65,7 @@ public class UserDbClient implements UserClient {
     return xaTransactionTemplate.execute(() -> {
       AuthUserEntity authUser = authUserEntity(username, password);
       authUserRepository.create(authUser);
-      return UserJson.fromEntity(userdataUserRepositoryHibernate.create(userEntityRequiredField(username)));
+      return UserJson.fromEntity(userdataUserRepository.create(userEntityRequiredField(username)));
     });
   }
 
@@ -93,14 +87,14 @@ public class UserDbClient implements UserClient {
 
   public void addIncomeInvitationHiber(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
-          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntityRequiredField(username));
-          userdataUserRepositoryHibernate.addIncomeInvitation(targetEntity, adressee);
+          UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
+          userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
           return null;
         });
       }
@@ -109,14 +103,14 @@ public class UserDbClient implements UserClient {
 
   public void addOutcomeInvitationHiber(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
-          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntityRequiredField(username));
-          userdataUserRepositoryHibernate.addOutcomeInvitation(targetEntity, adressee);
+          UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
+          userdataUserRepository.addOutcomeInvitation(targetEntity, adressee);
           return null;
         });
       }
@@ -125,39 +119,42 @@ public class UserDbClient implements UserClient {
 
   public void addFriendHiber(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepositoryHibernate.findById(targetUser.id()).orElseThrow();
+      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
-          UserEntity adressee = userdataUserRepositoryHibernate.create(userEntityRequiredField(username));
-          userdataUserRepositoryHibernate.addFriend(targetEntity, adressee);
+          UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
+          userdataUserRepository.addFriend(targetEntity, adressee);
           return null;
         });
       }
     }
   }//TODO объеденить с методами ниже
 
-  public void addFriend(UserEntity requester, UserEntity addressee) {
-    userdataUserRepository.addFriend(requester, addressee);
-  }
+//  public void addFriend(UserEntity requester, UserEntity addressee) {
+//    xaTransactionTemplate.execute(() -> {
+//    userdataUserRepositoryHibernate.addFriend(requester, addressee);
+//      return null;
+//    });
+//  }
+//
+//  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+//    userdataUserRepository.addIncomeInvitation(requester, addressee);
+//  }
+//
+//  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+//    userdataUserRepository.addOutcomeInvitation(requester, addressee);
+//  }
 
-  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-    userdataUserRepository.addIncomeInvitation(requester, addressee);
-  }
-
-  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-    userdataUserRepository.addOutcomeInvitation(requester, addressee);
-  }
-
-  public List<FriendshipEntity> findFriendshipsByRequesterId(UUID requesterId) {
-    return friendshipDAO.findByRequester(requesterId);
-  }
-
-  public void deleteFriendship(FriendshipEntity friendship) {
-    friendshipDAO.delete(friendship);
-  }
+//  public List<FriendshipEntity> findFriendshipsByRequesterId(UUID requesterId) {
+//    return friendshipDAO.findByRequester(requesterId);
+//  }
+//
+//  public void deleteFriendship(FriendshipEntity friendship) {
+//    friendshipDAO.delete(friendship);
+//  }
 
   public Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);

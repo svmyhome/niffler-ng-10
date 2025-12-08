@@ -83,7 +83,7 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova1111114"}
+      strings = {"vova111111114"}
   )
   public void createSimpleUserTest(String username) {
     UserDbClient dbClient = new UserDbClient();
