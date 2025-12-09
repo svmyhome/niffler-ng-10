@@ -29,7 +29,10 @@ public class SpendDnEntityClient implements SpendClientEntity {
 
   @Override
   public SpendEntity update(SpendEntity spend) {
-    return null;
+    return xaTransactionTemplate.execute(() -> {
+      spendRepository.update(spend);
+      return null;
+    });
   }
 
   @Override

@@ -123,4 +123,27 @@ public class SpendingTest {
     spendDnEntityClient.create(entity);
     spendDnEntityClient.remove(entity);
   }
+
+  @Test
+  void updateSpendingTest() {
+    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setName("777qaa");
+    categoryEntity.setUsername("duck");
+    categoryEntity.setArchived(false);
+
+    // Создаем SpendEntity напрямую
+    SpendEntity entity = new SpendEntity();
+    entity.setUsername("duck");
+    entity.setCurrency(CurrencyValues.RUB);
+    entity.setSpendDate(new Date());
+    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setDescription("777qazsdfg");
+    entity.setCategory(categoryEntity);
+
+    spendDnEntityClient.create(entity);
+    entity.setAmount(222.0);
+    spendDnEntityClient.update(entity);
+  }
 }

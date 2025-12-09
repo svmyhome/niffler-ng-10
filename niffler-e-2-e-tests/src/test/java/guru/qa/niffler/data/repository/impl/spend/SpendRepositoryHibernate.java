@@ -13,7 +13,6 @@ import java.util.UUID;
 public class SpendRepositoryHibernate implements SpendRepository {
 
   private final Config CFG = Config.getInstance();
-
   private final EntityManager entityManager = EntityManagers.em(CFG.spendJdbcUrl());
 
   @Override
@@ -25,7 +24,17 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
   @Override
   public SpendEntity update(SpendEntity spend) {
-    return null;
+//    entityManager.createQuery(
+//        "UPDATE SpendEntity s SET s.username = :username, s.spendDate = :spend_date, s.currency = :currency, s.amount = :amount, s.description = :description WHERE s.id = :id")
+//        .setParameter("username", spend.getUsername())
+//        .setParameter("spend_date", spend.getSpendDate())
+//        .setParameter("currency", spend.getCurrency())
+//        .setParameter("amount", spend.getAmount())
+//        .setParameter("description", spend.getDescription())
+//        .executeUpdate();
+//
+//    return entityManager.find(SpendEntity.class, spend.getId());
+    return entityManager.merge(spend);
   }
 
   @Override
@@ -58,7 +67,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
   @Override
   public CategoryEntity updateCategory(CategoryEntity category) {
-    return null;
+    return entityManager.merge(category);
   }
 
   @Override
