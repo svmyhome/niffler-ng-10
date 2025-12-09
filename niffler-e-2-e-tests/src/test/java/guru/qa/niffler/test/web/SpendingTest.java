@@ -9,11 +9,10 @@ import guru.qa.niffler.data.repository.impl.spend.SpendRepositoryJdbc;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.service.SpendDnEntityClient;
+import guru.qa.niffler.service.SpendDbClient;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,23 +52,23 @@ public class SpendingTest {
 
   @Test
   void findSpendingByIdTest() {
-    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
-    Optional<SpendEntity> byId = spendDnEntityClient.findById(
+    SpendDbClient spendDbClient = new SpendDbClient();
+    Optional<SpendEntity> byId = spendDbClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(byId);
   }
 
   @Test
   void findSpendByNameAndDescription()  {
-    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
-    Optional<SpendEntity> duck = spendDnEntityClient.findByUsernameAndSpendDescription("duck",
+    SpendDbClient spendDbClient = new SpendDbClient();
+    Optional<SpendEntity> duck = spendDbClient.findByUsernameAndSpendDescription("duck",
         "11111");
     System.out.println(duck);
   }
 
   @Test
   void createSpendingTest() {
-    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+    SpendDbClient spendDbClient = new SpendDbClient();
     CategoryEntity categoryEntity = new CategoryEntity();
     categoryEntity.setName("1qaa");
     categoryEntity.setUsername("duck");
@@ -81,12 +80,12 @@ public class SpendingTest {
     entity.setAmount(123.0); // ЯВНО устанавливаем
     entity.setDescription("qazsdfg");
     entity.setCategory(categoryEntity);
-    spendDnEntityClient.create(entity);
+    spendDbClient.create(entity);
   }
 
   @Test
   void deleteSpendingTest() {
-    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+    SpendDbClient spendDbClient = new SpendDbClient();
     CategoryEntity categoryEntity = new CategoryEntity();
     categoryEntity.setName("555qaa");
     categoryEntity.setUsername("duck");
@@ -100,13 +99,13 @@ public class SpendingTest {
     entity.setDescription("55qazsdfg");
     entity.setCategory(categoryEntity);
 
-    spendDnEntityClient.create(entity);
-    spendDnEntityClient.remove(entity);
+    spendDbClient.create(entity);
+    spendDbClient.remove(entity);
   }
 
   @Test
   void updateSpendingTest() {
-    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+    SpendDbClient spendDbClient = new SpendDbClient();
 
     CategoryEntity categoryEntity = new CategoryEntity();
     categoryEntity.setName("777qaa");
@@ -121,9 +120,9 @@ public class SpendingTest {
     entity.setDescription("777qazsdfg");
     entity.setCategory(categoryEntity);
 
-    spendDnEntityClient.create(entity);
+    spendDbClient.create(entity);
     entity.setAmount(222.0);
-    spendDnEntityClient.update(entity);
+    spendDbClient.update(entity);
   }
 
   @Test
