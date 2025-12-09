@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SpendJsonClient implements SpendClient {
+public class SpendJsonClientJson implements SpendClientJson {
 
   private static final Config CFG = Config.getInstance();
   private final CategoryDao categoryDao = new CategoryDaoJdbc();

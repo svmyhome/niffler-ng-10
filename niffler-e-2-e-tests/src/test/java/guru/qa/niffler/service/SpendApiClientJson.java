@@ -4,7 +4,6 @@ import static org.apache.hc.core5.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.hc.core5.http.HttpStatus.SC_CREATED;
 import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.CategoryJson;
@@ -19,7 +18,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class SpendApiClient implements SpendClient {
+public class SpendApiClientJson implements SpendClientJson {
 
   private static final Config CFG = Config.getInstance();
 

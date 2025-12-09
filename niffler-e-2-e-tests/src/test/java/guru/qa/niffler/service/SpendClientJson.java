@@ -5,7 +5,7 @@ import guru.qa.niffler.model.spend.SpendJson;
 import java.util.List;
 import java.util.Optional;
 
-public interface SpendClient {
+public interface SpendClientJson {
 
   Optional<SpendJson> findSpendById(String id);
 

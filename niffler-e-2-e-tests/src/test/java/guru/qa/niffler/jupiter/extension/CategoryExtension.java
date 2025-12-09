@@ -4,8 +4,8 @@ import static utils.RandomDataUtils.randomCategoryName;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;
-import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.SpendJsonClient;
+import guru.qa.niffler.service.SpendClientJson;
+import guru.qa.niffler.service.SpendJsonClientJson;
 import java.util.Optional;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -22,7 +22,7 @@ public class CategoryExtension implements
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
       CategoryExtension.class);
-  private final SpendClient spendClient = new SpendJsonClient();
+  private final SpendClientJson spendClientJson = new SpendJsonClientJson();
 
   @Override
   public void beforeEach(ExtensionContext context) {
@@ -30,7 +30,7 @@ public class CategoryExtension implements
         User.class);
     if (user.isPresent() && user.get().categories().length > 0) {
       Category category = user.get().categories()[0];
-      CategoryJson created = spendClient.createCategory(
+      CategoryJson created = spendClientJson.createCategory(
           new CategoryJson(
               null,
               randomCategoryName(),
@@ -70,7 +70,7 @@ public class CategoryExtension implements
             category.username(),
             true
         );
-        spendClient.updateCategory(archivedCategory);
+        spendClientJson.updateCategory(archivedCategory);
       }
     } catch (Exception e) {
       System.err.println("Failed to archive category:" + e.getMessage());
