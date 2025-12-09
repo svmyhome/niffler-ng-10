@@ -19,6 +19,7 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.SpendDnEntityClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -282,5 +283,26 @@ public class TransactionTest {
     ue.setPhoto(new byte[0]);
     ue.setPhotoSmall(new byte[0]);
     return ue;
+  }
+
+  @Test
+  void updateAuthUserTest() {
+    UserDbClient dbClient = new UserDbClient();
+    String username = RandomDataUtils.randomUsername();
+    UserJson user = dbClient.createUser(
+        username,
+        "12345"
+    );
+    System.out.println(user.username());
+    Optional<AuthUserEntity> authUser = dbClient.findUserByUserName(user.username());
+    System.out.println(authUser);
+    
+    AuthUserEntity authUserEntity = null;
+    if (authUser.isPresent()) {
+      authUser.ifPresent(u -> { u.setEnabled(false); });
+      authUserEntity = authUser.get();
+    }
+
+    dbClient.update(authUserEntity);
   }
 }

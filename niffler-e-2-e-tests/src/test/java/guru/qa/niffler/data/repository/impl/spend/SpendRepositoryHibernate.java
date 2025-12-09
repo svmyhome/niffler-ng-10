@@ -24,16 +24,6 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
   @Override
   public SpendEntity update(SpendEntity spend) {
-//    entityManager.createQuery(
-//        "UPDATE SpendEntity s SET s.username = :username, s.spendDate = :spend_date, s.currency = :currency, s.amount = :amount, s.description = :description WHERE s.id = :id")
-//        .setParameter("username", spend.getUsername())
-//        .setParameter("spend_date", spend.getSpendDate())
-//        .setParameter("currency", spend.getCurrency())
-//        .setParameter("amount", spend.getAmount())
-//        .setParameter("description", spend.getDescription())
-//        .executeUpdate();
-//
-//    return entityManager.find(SpendEntity.class, spend.getId());
     return entityManager.merge(spend);
   }
 

@@ -13,7 +13,6 @@ import java.util.UUID;
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
   private final Config CFG = Config.getInstance();
-
   private final EntityManager entityManager = EntityManagers.em(CFG.userdataJdbcUrl());
 
   @Override

@@ -15,7 +15,6 @@ import java.util.UUID;
 public class AuthUserRepositoryHibernate implements AuthUserRepository {
 
   private final Config CFG = Config.getInstance();
-
   private final EntityManager entityManager = EntityManagers.em(CFG.authJdbcUrl());
 
   @Override
@@ -27,14 +26,14 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
 
   @Override
   public AuthUserEntity update(AuthUserEntity user) {
-    return null;
+    return entityManager.merge(user);
   }
 
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try {
       return Optional.of(
-          entityManager.createQuery("select u from UserEntity u where u.username = :username",
+          entityManager.createQuery("select u from AuthUserEntity u where u.username = :username",
                   AuthUserEntity.class)
               .setParameter("username", username)
               .getSingleResult());
@@ -69,7 +68,6 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
       // Удалить пользователя
       entityManager.remove(managedUser);
     }
-
   }
 
   @Override

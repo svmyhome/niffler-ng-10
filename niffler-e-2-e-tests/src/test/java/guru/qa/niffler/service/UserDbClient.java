@@ -75,13 +75,13 @@ public class UserDbClient implements UserClient {
   }
 
   public Optional<AuthUserEntity> findAuthUserById(UUID id) {
-     return authUserRepository.findById(id);
+    return authUserRepository.findById(id);
   }
 
   public void delete(AuthUserEntity user) {
     xaTransactionTemplate.execute(() -> {
-    authUserRepository.remove(user);
-    return  null;
+      authUserRepository.remove(user);
+      return null;
     });
   }
 
@@ -96,7 +96,7 @@ public class UserDbClient implements UserClient {
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
 //          userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
-          userdataUserRepository.sendInvitation(adressee,targetEntity);
+          userdataUserRepository.sendInvitation(adressee, targetEntity);
 
           return null;
         });
@@ -164,5 +164,17 @@ public class UserDbClient implements UserClient {
 
   public Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
+  }
+
+  public Optional<AuthUserEntity> findUserByUserName(String username) {
+    return authUserRepository.findByUsername(username);
+  }
+
+
+  public AuthUserEntity update(AuthUserEntity user) {
+    return xaTransactionTemplate.execute(() -> {
+      authUserRepository.update(user);
+      return null;
+    });
   }
 }
