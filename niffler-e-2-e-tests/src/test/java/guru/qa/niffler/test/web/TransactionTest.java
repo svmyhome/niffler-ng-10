@@ -132,7 +132,8 @@ public class TransactionTest {
   @Test
   public void findCategoryAndUserTest() {
     SpendJsonClientJson spendJsonClient = new SpendJsonClientJson();
-    Optional<CategoryJson> category = spendJsonClient.findCategoryByNameAndUsername("duck", "Машина");
+    Optional<CategoryJson> category = spendJsonClient.findCategoryByNameAndUsername("duck",
+        "Машина");
     category.stream().forEach(System.out::println);
   }
 
@@ -176,7 +177,8 @@ public class TransactionTest {
   @Test
   public void findSpendByIdTest() {
     SpendJsonClientJson spendJsonClient = new SpendJsonClientJson();
-    Optional<SpendJson> spend = spendJsonClient.findSpendById("1328a312-b5bc-11f0-a017-aa5c32f82d84");
+    Optional<SpendJson> spend = spendJsonClient.findSpendById(
+        "1328a312-b5bc-11f0-a017-aa5c32f82d84");
     System.out.println(spend);
   }
 

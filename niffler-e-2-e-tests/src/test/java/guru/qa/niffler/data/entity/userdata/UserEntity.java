@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.entity.userdata;
 
 import static jakarta.persistence.FetchType.EAGER;
-
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import jakarta.persistence.CascadeType;

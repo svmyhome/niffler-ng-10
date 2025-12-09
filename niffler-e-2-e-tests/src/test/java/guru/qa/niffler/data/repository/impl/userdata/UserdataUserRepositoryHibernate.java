@@ -1,13 +1,11 @@
 package guru.qa.niffler.data.repository.impl.userdata;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

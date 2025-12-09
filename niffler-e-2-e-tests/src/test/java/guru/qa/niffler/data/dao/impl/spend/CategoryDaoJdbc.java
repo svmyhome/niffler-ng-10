@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.dao.impl.spend;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.spend.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;

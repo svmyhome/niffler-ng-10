@@ -4,7 +4,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.auth.AuthUserRepository;
 import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryHibernate;
@@ -96,9 +95,7 @@ public class UserDbClient implements UserClient {
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
-//          userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
           userdataUserRepository.sendInvitation(adressee, targetEntity);
-
           return null;
         });
       }
@@ -115,7 +112,6 @@ public class UserDbClient implements UserClient {
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
-//          userdataUserRepository.addOutcomeInvitation(targetEntity, adressee);
           userdataUserRepository.sendInvitation(targetEntity, adressee);
           return null;
         });
@@ -138,30 +134,7 @@ public class UserDbClient implements UserClient {
         });
       }
     }
-  }//TODO объеденить с методами ниже
-
-//  public void addFriend(UserEntity requester, UserEntity addressee) {
-//    xaTransactionTemplate.execute(() -> {
-//    userdataUserRepositoryHibernate.addFriend(requester, addressee);
-//      return null;
-//    });
-//  }
-//
-//  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-//    userdataUserRepository.addIncomeInvitation(requester, addressee);
-//  }
-//
-//  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-//    userdataUserRepository.addOutcomeInvitation(requester, addressee);
-//  }
-
-//  public List<FriendshipEntity> findFriendshipsByRequesterId(UUID requesterId) {
-//    return friendshipDAO.findByRequester(requesterId);
-//  }
-//
-//  public void deleteFriendship(FriendshipEntity friendship) {
-//    friendshipDAO.delete(friendship);
-//  }
+  }
 
   public Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
@@ -179,22 +152,11 @@ public class UserDbClient implements UserClient {
   }
 
   public void remove(UserEntity user) {
-//    Optional<AuthUserEntity> byUsername = authUserRepository.findByUsername(user.getUsername());
-//    xaTransactionTemplate.execute(() -> {
-//      AuthUserEntity authUser = byUsername.orElseThrow();
-//      authUserRepository.remove(authUser);
-//      userdataUserRepository.remove(user);
-//      return null;
-//    });
     xaTransactionTemplate.execute(() -> {
-      // Используем репозитории для поиска managed сущностей
       UserEntity managedUser = userdataUserRepository.findById(user.getId())
           .orElseThrow(() -> new RuntimeException("User not found"));
-
       AuthUserEntity managedAuthUser = authUserRepository.findByUsername(user.getUsername())
           .orElseThrow(() -> new RuntimeException("AuthUser not found"));
-
-      // Удаляем через репозитории
       userdataUserRepository.remove(managedUser);
       authUserRepository.remove(managedAuthUser);
 

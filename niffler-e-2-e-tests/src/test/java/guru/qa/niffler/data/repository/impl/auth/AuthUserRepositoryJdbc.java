@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.repository.impl.auth;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;

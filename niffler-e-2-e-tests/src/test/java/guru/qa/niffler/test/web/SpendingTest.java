@@ -59,7 +59,7 @@ public class SpendingTest {
   }
 
   @Test
-  void findSpendByNameAndDescription()  {
+  void findSpendByNameAndDescription() {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<SpendEntity> duck = spendDbClient.findByUsernameAndSpendDescription("duck",
         "11111");
@@ -77,7 +77,7 @@ public class SpendingTest {
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
     entity.setSpendDate(new Date());
-    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setAmount(123.0);
     entity.setDescription("qazsdfg");
     entity.setCategory(categoryEntity);
     spendDbClient.create(entity);
@@ -116,7 +116,7 @@ public class SpendingTest {
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
     entity.setSpendDate(new Date());
-    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setAmount(123.0);
     entity.setDescription("777qazsdfg");
     entity.setCategory(categoryEntity);
 
@@ -151,15 +151,12 @@ public class SpendingTest {
   void removeSpendTest() {
     SpendRepositoryJdbc spendRepositoryJdbc = new SpendRepositoryJdbc();
     CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
-
-    // 1. Создаем категорию
     CategoryEntity categoryEntity = new CategoryEntity();
     categoryEntity.setName("7819");
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
     CategoryEntity savedCategory = categoryDaoJdbc.create(categoryEntity);
 
-    // 2. Создаем трату
     SpendEntity entity = new SpendEntity();
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
@@ -169,7 +166,6 @@ public class SpendingTest {
     entity.setCategory(savedCategory);
 
     SpendEntity savedSpend = spendRepositoryJdbc.create(entity);
-
     spendRepositoryJdbc.remove(savedSpend);
   }
 }
