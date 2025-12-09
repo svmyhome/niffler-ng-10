@@ -72,7 +72,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
+  public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username,
       String name) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE username = ? AND name = ?"

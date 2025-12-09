@@ -2,8 +2,10 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.impl.spend.CategoryDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.repository.impl.spend.SpendRepositoryJdbc;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
@@ -68,30 +70,10 @@ public class SpendingTest {
   @Test
   void createSpendingTest() {
     SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
-//    SpendEntity entity = new SpendEntity();
-//    CategoryJson  categoryJson = new CategoryJson(
-//        null,
-//        "1qaa",
-//        "duck",
-//        false
-//    );
-//    SpendJson spendJson = new SpendJson(
-//         null,
-//        new java.util.Date(),
-//        categoryJson,
-//        CurrencyValues.RUB,
-//        123.0,
-//        "qazsdfg",
-//        "duck"
-//    );
-//    entity.fromJson(spendJson);
-    // Создаем CategoryEntity напрямую
     CategoryEntity categoryEntity = new CategoryEntity();
     categoryEntity.setName("1qaa");
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
-
-    // Создаем SpendEntity напрямую
     SpendEntity entity = new SpendEntity();
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
@@ -99,7 +81,6 @@ public class SpendingTest {
     entity.setAmount(123.0); // ЯВНО устанавливаем
     entity.setDescription("qazsdfg");
     entity.setCategory(categoryEntity);
-
     spendDnEntityClient.create(entity);
   }
 
@@ -111,12 +92,11 @@ public class SpendingTest {
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
 
-    // Создаем SpendEntity напрямую
     SpendEntity entity = new SpendEntity();
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
     entity.setSpendDate(new Date());
-    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setAmount(123.0);
     entity.setDescription("55qazsdfg");
     entity.setCategory(categoryEntity);
 
@@ -133,7 +113,6 @@ public class SpendingTest {
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
 
-    // Создаем SpendEntity напрямую
     SpendEntity entity = new SpendEntity();
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
@@ -146,4 +125,53 @@ public class SpendingTest {
     entity.setAmount(222.0);
     spendDnEntityClient.update(entity);
   }
+
+  @Test
+  void createSpendTest() {
+    SpendRepositoryJdbc spendRepositoryJdbc = new SpendRepositoryJdbc();
+    CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setName("1234qaa");
+    categoryEntity.setUsername("duck");
+    categoryEntity.setArchived(false);
+    CategoryEntity savedCategory = categoryDaoJdbc.create(categoryEntity);
+
+    SpendEntity entity = new SpendEntity();
+    entity.setUsername("duck");
+    entity.setCurrency(CurrencyValues.RUB);
+    entity.setSpendDate(new Date());
+    entity.setAmount(123.0);
+    entity.setDescription("1234qazsdfg");
+    entity.setCategory(savedCategory);
+
+    spendRepositoryJdbc.create(entity);
+
+  }
+
+  @Test
+  void removeSpendTest() {
+    SpendRepositoryJdbc spendRepositoryJdbc = new SpendRepositoryJdbc();
+    CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
+
+    // 1. Создаем категорию
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setName("7819");
+    categoryEntity.setUsername("duck");
+    categoryEntity.setArchived(false);
+    CategoryEntity savedCategory = categoryDaoJdbc.create(categoryEntity);
+
+    // 2. Создаем трату
+    SpendEntity entity = new SpendEntity();
+    entity.setUsername("duck");
+    entity.setCurrency(CurrencyValues.RUB);
+    entity.setSpendDate(new Date());
+    entity.setAmount(123.0);
+    entity.setDescription("7819qazsdfg");
+    entity.setCategory(savedCategory);
+
+    SpendEntity savedSpend = spendRepositoryJdbc.create(entity);
+
+    spendRepositoryJdbc.remove(savedSpend);
+  }
 }
+

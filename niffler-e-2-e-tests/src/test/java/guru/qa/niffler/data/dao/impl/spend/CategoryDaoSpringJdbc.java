@@ -52,7 +52,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String categoryName,
+  public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String categoryName,
       String name
   ) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
