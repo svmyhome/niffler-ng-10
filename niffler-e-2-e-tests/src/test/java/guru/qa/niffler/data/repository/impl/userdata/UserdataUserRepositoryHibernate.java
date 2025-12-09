@@ -1,11 +1,13 @@
 package guru.qa.niffler.data.repository.impl.userdata;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,26 +31,23 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    return Optional.empty(); //TODO дописать
+    return entityManager
+        .createQuery("SELECT u FROM UserEntity u WHERE u.username = :username", UserEntity.class)
+        .setParameter("username", username)
+        .getResultStream()
+        .findFirst();
   }
 
   @Override
   public UserEntity update(UserEntity user) {
-    return null;
+    return entityManager.merge(user);
   }
 
   @Override
   public void remove(UserEntity user) {
-//    entityManager.joinTransaction();
-//    entityManager.remove(user);
-
     entityManager.joinTransaction();
-
-    // Найти managed сущность (обязательно!)
     UserEntity managedUser = entityManager.find(UserEntity.class, user.getId());
-
     if (managedUser != null) {
-      // Каскады удалят friendshipRequests, friendshipAddressees, pushTokens
       entityManager.remove(managedUser);
     }
   }
@@ -60,12 +59,10 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         .getResultList();
   }
 
-
   public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
     entityManager.joinTransaction();
     addressee.addFriends(FriendshipStatus.PENDING, requester);
   }
-
 
   public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
     entityManager.joinTransaction();
