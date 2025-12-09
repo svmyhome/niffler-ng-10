@@ -85,7 +85,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-
   }
 
   @Override

@@ -11,7 +11,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -69,6 +69,7 @@ public class TransactionTest {
   }
 
   UserDbClient dbClient = new UserDbClient();
+
   @ParameterizedTest
   @ValueSource(
       strings = {"vova1278"}
@@ -119,7 +120,8 @@ public class TransactionTest {
   @Test
   public void deleteTest() {
     UserDbClient dbClient = new UserDbClient();
-    Optional<AuthUserEntity> user = dbClient.findAuthUserById(UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
+    Optional<AuthUserEntity> user = dbClient.findAuthUserById(
+        UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
     if (user.isPresent()) {
       AuthUserEntity authUser = user.get();
       dbClient.delete(authUser);
@@ -299,7 +301,9 @@ public class TransactionTest {
 
     AuthUserEntity authUserEntity = null;
     if (authUser.isPresent()) {
-      authUser.ifPresent(u -> { u.setEnabled(false); });
+      authUser.ifPresent(u -> {
+        u.setEnabled(false);
+      });
       authUserEntity = authUser.get();
     }
     dbClient.update(authUserEntity);
@@ -320,17 +324,12 @@ public class TransactionTest {
   @Test
   void updateAuthUserJdbcTest() {
     UserDbClient dbClient = new UserDbClient();
-    Optional<AuthUserEntity> ae = dbClient.findAuthUserById(UUID.fromString("599dfd2d-691b-447e-af58-6e7fab52b368"));
-    ae.ifPresent(u -> {u.setEnabled(false);});
-    AuthUserRepositoryJdbc authUserRepositoryJdbc = new AuthUserRepositoryJdbc();
+    Optional<AuthUserEntity> ae = dbClient.findAuthUserById(
+        UUID.fromString("599dfd2d-691b-447e-af58-6e7fab52b368"));
+    ae.ifPresent(u -> {
+      u.setEnabled(true);
+    });
+    AuthUserRepositorySpringJdbc authUserRepositoryJdbc = new AuthUserRepositorySpringJdbc();
     authUserRepositoryJdbc.update(ae.orElse(null));
-
-//    String username = RandomDataUtils.randomUsername();
-//    UserJson user = dbClient.createUser(username, "12345");
-//    System.out.println(user.username());
-//    Optional<UserEntity> existingUser = dbClient.findUserById(user.id()); // если есть такой метод
-//    if (existingUser.isPresent()) {
-//      dbClient.remove(existingUser.orElse(null));
-    }
-//  }
+  }
 }
