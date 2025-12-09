@@ -2,14 +2,17 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.SpendDnEntityClient;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -52,5 +55,72 @@ public class SpendingTest {
     Optional<SpendEntity> byId = spendDnEntityClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(byId);
+  }
+
+  @Test
+  void findSpendByNameAndDescription()  {
+    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+    Optional<SpendEntity> duck = spendDnEntityClient.findByUsernameAndSpendDescription("duck",
+        "11111");
+    System.out.println(duck);
+  }
+
+  @Test
+  void createSpendingTest() {
+    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+//    SpendEntity entity = new SpendEntity();
+//    CategoryJson  categoryJson = new CategoryJson(
+//        null,
+//        "1qaa",
+//        "duck",
+//        false
+//    );
+//    SpendJson spendJson = new SpendJson(
+//         null,
+//        new java.util.Date(),
+//        categoryJson,
+//        CurrencyValues.RUB,
+//        123.0,
+//        "qazsdfg",
+//        "duck"
+//    );
+//    entity.fromJson(spendJson);
+    // Создаем CategoryEntity напрямую
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setName("1qaa");
+    categoryEntity.setUsername("duck");
+    categoryEntity.setArchived(false);
+
+    // Создаем SpendEntity напрямую
+    SpendEntity entity = new SpendEntity();
+    entity.setUsername("duck");
+    entity.setCurrency(CurrencyValues.RUB);
+    entity.setSpendDate(new Date());
+    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setDescription("qazsdfg");
+    entity.setCategory(categoryEntity);
+
+    spendDnEntityClient.create(entity);
+  }
+
+  @Test
+  void deleteSpendingTest() {
+    SpendDnEntityClient spendDnEntityClient = new SpendDnEntityClient();
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setName("555qaa");
+    categoryEntity.setUsername("duck");
+    categoryEntity.setArchived(false);
+
+    // Создаем SpendEntity напрямую
+    SpendEntity entity = new SpendEntity();
+    entity.setUsername("duck");
+    entity.setCurrency(CurrencyValues.RUB);
+    entity.setSpendDate(new Date());
+    entity.setAmount(123.0); // ЯВНО устанавливаем
+    entity.setDescription("55qazsdfg");
+    entity.setCategory(categoryEntity);
+
+    spendDnEntityClient.create(entity);
+    spendDnEntityClient.remove(entity);
   }
 }

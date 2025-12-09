@@ -1,17 +1,12 @@
 package guru.qa.niffler.data.repository.impl.spend;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.spend.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.spend.SpendDaoJdbc;
-import guru.qa.niffler.data.dao.spend.CategoryDao;
-import guru.qa.niffler.data.dao.spend.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.spend.SpendRepository;
 import jakarta.persistence.EntityManager;
-import java.util.List;
+import jakarta.persistence.NoResultException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,8 +17,10 @@ public class SpendRepositoryHibernate implements SpendRepository {
   private final EntityManager entityManager = EntityManagers.em(CFG.spendJdbcUrl());
 
   @Override
-  public SpendEntity createSpend(SpendEntity spend) {
-    return null;
+  public SpendEntity create(SpendEntity spend) {
+    entityManager.joinTransaction();
+    entityManager.persist(spend);
+    return spend;
   }
 
   @Override
@@ -39,17 +36,24 @@ public class SpendRepositoryHibernate implements SpendRepository {
   @Override
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
-    return Optional.empty();
-  }
-
-  @Override
-  public List<SpendEntity> findSpendsByUserName(String username) {
-    return List.of();
+    try {
+      return Optional.of(
+          entityManager.createQuery(
+                  "select s FROM SpendEntity s WHERE s.username =:username AND s.description = :description",
+                  SpendEntity.class)
+              .setParameter("username", username)
+              .setParameter("description", description)
+              .getSingleResult());
+    } catch (NoResultException e) {
+      return Optional.empty();
+    }
   }
 
   @Override
   public CategoryEntity createCategory(CategoryEntity category) {
-    return null;
+    entityManager.joinTransaction();
+    entityManager.persist(category);
+    return category;
   }
 
   @Override
@@ -59,26 +63,33 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
   @Override
   public Optional<CategoryEntity> findCategoryById(UUID id) {
-    return Optional.empty();
+    return Optional.ofNullable(entityManager.find(CategoryEntity.class, id));
   }
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
-    return Optional.empty();
-  }
-
-  @Override
-  public List<CategoryEntity> findAllCategories(String username) {
-    return List.of();
+    try {
+      return Optional.of(
+          entityManager.createQuery(
+                  "select c FROM CategoryEntity c WHERE c.username =:username AND c.name = :name",
+                  CategoryEntity.class)
+              .setParameter("username", username)
+              .setParameter("name", name)
+              .getSingleResult());
+    } catch (NoResultException e) {
+      return Optional.empty();
+    }
   }
 
   @Override
   public void remove(SpendEntity spend) {
-
+    entityManager.joinTransaction();
+    entityManager.remove(spend);
   }
 
   @Override
   public void removeCategory(CategoryEntity category) {
-
+    entityManager.joinTransaction();
+    entityManager.remove(category);
   }
 }

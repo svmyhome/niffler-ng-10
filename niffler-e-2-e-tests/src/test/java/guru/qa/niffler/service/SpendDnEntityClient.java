@@ -1,25 +1,30 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.spend.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.spend.SpendDaoJdbc;
-import guru.qa.niffler.data.dao.spend.CategoryDao;
-import guru.qa.niffler.data.dao.spend.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.impl.spend.SpendRepositoryHibernate;
 import guru.qa.niffler.data.repository.spend.SpendRepository;
+import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpendDnEntityClient implements SpendClientEntity{
+public class SpendDnEntityClient implements SpendClientEntity {
 
   private static final Config CFG = Config.getInstance();
   private final SpendRepository spendRepository = new SpendRepositoryHibernate();
 
+
+  private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
+      CFG.spendJdbcUrl());
+
+
   @Override
   public SpendEntity create(SpendEntity spend) {
-    return null;
+    return xaTransactionTemplate.execute(() -> {
+      SpendEntity entity = spendRepository.create(spend);
+      return entity;
+    });
   }
 
   @Override
@@ -29,7 +34,10 @@ public class SpendDnEntityClient implements SpendClientEntity{
 
   @Override
   public CategoryEntity createCategory(CategoryEntity category) {
-    return null;
+    return xaTransactionTemplate.execute(() -> {
+      CategoryEntity entity = spendRepository.createCategory(category);
+      return entity;
+    });
   }
 
   @Override
@@ -39,7 +47,7 @@ public class SpendDnEntityClient implements SpendClientEntity{
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
-    return Optional.empty();
+    return spendRepository.findCategoryByUsernameAndSpendName(username, name);
   }
 
   @Override
@@ -50,16 +58,22 @@ public class SpendDnEntityClient implements SpendClientEntity{
   @Override
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
-    return Optional.empty();
+    return spendRepository.findByUsernameAndSpendDescription(username, description);
   }
 
   @Override
   public void remove(SpendEntity spend) {
-
+    xaTransactionTemplate.execute(() -> {
+      spendRepository.remove(spend);
+      return null;
+    });
   }
 
   @Override
-  public void removeCategory(CategoryEntity spend) {
-
+  public void removeCategory(CategoryEntity category) {
+    xaTransactionTemplate.execute(() -> {
+      spendRepository.removeCategory(category);
+      return null;
+    });
   }
 }
