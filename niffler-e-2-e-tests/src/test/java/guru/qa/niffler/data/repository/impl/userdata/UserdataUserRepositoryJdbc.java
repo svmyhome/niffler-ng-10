@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.repository.impl.userdata;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
-
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -139,7 +138,22 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
   @Override
   public UserEntity update(UserEntity user) {
-    return null;
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+        "UPDATE \"user\" SET username =?, currency=?, firstname=?, surname=?, full_name=?, photo=?, photo_small=? WHERE id =?"
+    )) {
+      ps.setString(1, user.getUsername());
+      ps.setString(2, user.getCurrency().name());
+      ps.setString(3, user.getFirstname());
+      ps.setString(4, user.getSurname());
+      ps.setString(5, user.getFullname());
+      ps.setBytes(6, user.getPhoto());
+      ps.setBytes(7, user.getPhotoSmall());
+      ps.setObject(8, user.getId());
+      ps.executeUpdate();
+      return user;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -186,19 +200,9 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
   }
 
-//  @Override
-//  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-//    createFriendship(requester, addressee, FriendshipStatus.PENDING);
-//  }
-//
-//  @Override
-//  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-//    createFriendship(addressee, requester, FriendshipStatus.PENDING);
-//  }
-
   @Override
   public void sendInvitation(UserEntity requester, UserEntity addressee) {
-
+    createFriendship(requester, addressee, FriendshipStatus.PENDING);
   }
 
   @Override

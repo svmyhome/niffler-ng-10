@@ -77,7 +77,23 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
 
   @Override
   public UserEntity update(UserEntity user) {
-    return null;
+    JdbcTemplate template = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    template.update(conn -> {
+      PreparedStatement ps = conn.prepareStatement(
+          "UPDATE \"user\" SET username =?, currency=?, firstname=?, surname=?, full_name=?, photo=?, photo_small=? WHERE id =?"
+      );
+      ps.setString(1, user.getUsername());
+      ps.setString(2, user.getCurrency().name());
+      ps.setString(3, user.getFirstname());
+      ps.setString(4, user.getSurname());
+      ps.setString(5, user.getFullname());
+      ps.setBytes(6, user.getPhoto());
+      ps.setBytes(7, user.getPhotoSmall());
+      ps.setObject(8, user.getId());
+      return ps;
+    });
+    return user;
   }
 
   @Override
@@ -108,20 +124,10 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         UserdataUserEntityListResultSetExtractor.instance
     );
   }
-//
-//  @Override
-//  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-//    createFriendship(requester, addressee, FriendshipStatus.PENDING);
-//  }
-//
-//  @Override
-//  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-//    createFriendship(addressee, requester, FriendshipStatus.PENDING);
-//  }
 
   @Override
   public void sendInvitation(UserEntity requester, UserEntity addressee) {
-
+    createFriendship(requester, addressee, FriendshipStatus.PENDING);
   }
 
   @Override
