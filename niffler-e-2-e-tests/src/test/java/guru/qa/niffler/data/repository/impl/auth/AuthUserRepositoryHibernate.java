@@ -49,23 +49,33 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
 
   @Override
   public void remove(AuthUserEntity user) { //TODO возвожно нужно упростить
+//    entityManager.joinTransaction();
+//
+//    // Найти managed сущность
+//    AuthUserEntity managedUser = entityManager.find(AuthUserEntity.class, user.getId());
+//
+//    if (managedUser != null) {
+//      // Загрузить authorities
+//      managedUser.getAuthorities().size();
+//
+//      // Удалить authorities
+//      List<AuthorityEntity> authoritiesCopy = new ArrayList<>(managedUser.getAuthorities());
+//      for (AuthorityEntity authority : authoritiesCopy) {
+//        entityManager.remove(authority);
+//      }
+//      managedUser.getAuthorities().clear();
+//
+//      // Удалить пользователя
+//      entityManager.remove(managedUser);
+//    }
     entityManager.joinTransaction();
 
-    // Найти managed сущность
+    // Найти managed сущность (обязательно!)
     AuthUserEntity managedUser = entityManager.find(AuthUserEntity.class, user.getId());
 
     if (managedUser != null) {
-      // Загрузить authorities
-      managedUser.getAuthorities().size();
-
-      // Удалить authorities
-      List<AuthorityEntity> authoritiesCopy = new ArrayList<>(managedUser.getAuthorities());
-      for (AuthorityEntity authority : authoritiesCopy) {
-        entityManager.remove(authority);
-      }
-      managedUser.getAuthorities().clear();
-
-      // Удалить пользователя
+      // Каскад CascadeType.ALL автоматически удалит все связанные AuthorityEntity
+      // Не нужно удалять authorities вручную!
       entityManager.remove(managedUser);
     }
   }

@@ -39,12 +39,25 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
   @Override
   public void remove(UserEntity user) {
+//    entityManager.joinTransaction();
+//    entityManager.remove(user);
 
+    entityManager.joinTransaction();
+
+    // Найти managed сущность (обязательно!)
+    UserEntity managedUser = entityManager.find(UserEntity.class, user.getId());
+
+    if (managedUser != null) {
+      // Каскады удалят friendshipRequests, friendshipAddressees, pushTokens
+      entityManager.remove(managedUser);
+    }
   }
 
   @Override
   public List<UserEntity> findAll() {
-    return List.of();
+    return entityManager.createQuery("select u from UserEntity u ORDER BY u.username",
+            UserEntity.class)
+        .getResultList();
   }
 
 

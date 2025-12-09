@@ -19,7 +19,6 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
-import guru.qa.niffler.service.SpendDnEntityClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -296,7 +295,7 @@ public class TransactionTest {
     System.out.println(user.username());
     Optional<AuthUserEntity> authUser = dbClient.findUserByUserName(user.username());
     System.out.println(authUser);
-    
+
     AuthUserEntity authUserEntity = null;
     if (authUser.isPresent()) {
       authUser.ifPresent(u -> { u.setEnabled(false); });
@@ -304,5 +303,22 @@ public class TransactionTest {
     }
 
     dbClient.update(authUserEntity);
+  }
+
+  @Test
+  void removeUserTest() {
+    UserDbClient dbClient = new UserDbClient();
+    String username = RandomDataUtils.randomUsername();
+    UserJson user = dbClient.createUser(username, "12345");
+    System.out.println(user.username());
+    // Находим сущность в базе
+    Optional<UserEntity> existingUser = dbClient.findUserById(user.id()); // если есть такой метод
+
+    // ИЛИ используем EntityManager напрямую в тесте (если доступен)
+    // UserEntity existingUser = entityManager.find(UserEntity.class, user.id());
+
+    if (existingUser.isPresent()) {
+      dbClient.remove(existingUser.orElse(null));
+    }
   }
 }
