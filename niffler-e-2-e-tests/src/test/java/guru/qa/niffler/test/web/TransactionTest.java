@@ -11,6 +11,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -301,7 +302,6 @@ public class TransactionTest {
       authUser.ifPresent(u -> { u.setEnabled(false); });
       authUserEntity = authUser.get();
     }
-
     dbClient.update(authUserEntity);
   }
 
@@ -311,14 +311,26 @@ public class TransactionTest {
     String username = RandomDataUtils.randomUsername();
     UserJson user = dbClient.createUser(username, "12345");
     System.out.println(user.username());
-    // Находим сущность в базе
-    Optional<UserEntity> existingUser = dbClient.findUserById(user.id()); // если есть такой метод
-
-    // ИЛИ используем EntityManager напрямую в тесте (если доступен)
-    // UserEntity existingUser = entityManager.find(UserEntity.class, user.id());
-
+    Optional<UserEntity> existingUser = dbClient.findUserById(user.id());
     if (existingUser.isPresent()) {
       dbClient.remove(existingUser.orElse(null));
     }
   }
+
+  @Test
+  void updateAuthUserJdbcTest() {
+    UserDbClient dbClient = new UserDbClient();
+    Optional<AuthUserEntity> ae = dbClient.findAuthUserById(UUID.fromString("599dfd2d-691b-447e-af58-6e7fab52b368"));
+    ae.ifPresent(u -> {u.setEnabled(false);});
+    AuthUserRepositoryJdbc authUserRepositoryJdbc = new AuthUserRepositoryJdbc();
+    authUserRepositoryJdbc.update(ae.orElse(null));
+
+//    String username = RandomDataUtils.randomUsername();
+//    UserJson user = dbClient.createUser(username, "12345");
+//    System.out.println(user.username());
+//    Optional<UserEntity> existingUser = dbClient.findUserById(user.id()); // если есть такой метод
+//    if (existingUser.isPresent()) {
+//      dbClient.remove(existingUser.orElse(null));
+    }
+//  }
 }
