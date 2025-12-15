@@ -88,7 +88,7 @@ public class SpendRepositoryJdbc implements SpendRepository {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
-    return categoryDaoJdbc.findCategoryByUsernameAndSpendName(username, name);
+    return categoryDaoJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }
 
   @Override

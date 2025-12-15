@@ -88,9 +88,9 @@ public class UserDbClient implements UserClient {
   @Override
   public void createIncomeInvitations(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
+          UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
@@ -105,9 +105,9 @@ public class UserDbClient implements UserClient {
   @Override
   public void createOutcomeInvitations(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
+          UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
@@ -122,9 +122,9 @@ public class UserDbClient implements UserClient {
   @Override
   public void createFriends(UserJson targetUser, int count) {
     if (count > 0) {
-      UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
+          UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
           String username = RandomDataUtils.randomUsername();
           AuthUserEntity authUser = authUserEntity(username, "12345");
           authUserRepository.create(authUser);
@@ -159,7 +159,6 @@ public class UserDbClient implements UserClient {
           .orElseThrow(() -> new RuntimeException("AuthUser not found"));
       userdataUserRepository.remove(managedUser);
       authUserRepository.remove(managedAuthUser);
-
       return null;
     });
   }

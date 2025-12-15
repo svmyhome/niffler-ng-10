@@ -6,10 +6,8 @@ import guru.qa.niffler.data.dao.impl.spend.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.spend.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.spend.SpendRepository;
 import guru.qa.niffler.model.spend.CurrencyValues;
-import jakarta.persistence.EntityManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +17,6 @@ import java.util.UUID;
 public class SpendRepositorySpringJdbc implements SpendRepository {
 
   private final Config CFG = Config.getInstance();
-  private final EntityManager entityManager = EntityManagers.em(CFG.spendJdbcUrl());
   private final SpendDaoJdbc spendDaoJdbc = new SpendDaoJdbc();
   private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
 
@@ -88,7 +85,7 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
-    return categoryDaoJdbc.findCategoryByUsernameAndSpendName(username, name);
+    return categoryDaoJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }
 
   @Override

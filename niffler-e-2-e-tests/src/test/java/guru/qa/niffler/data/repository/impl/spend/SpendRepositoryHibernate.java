@@ -83,12 +83,18 @@ public class SpendRepositoryHibernate implements SpendRepository {
   @Override
   public void remove(SpendEntity spend) {
     entityManager.joinTransaction();
-    entityManager.remove(spend);
+    SpendEntity managedUser = entityManager.find(SpendEntity.class, spend.getId());
+    if (managedUser != null) {
+      entityManager.remove(managedUser);
+    }
   }
 
   @Override
   public void removeCategory(CategoryEntity category) {
     entityManager.joinTransaction();
-    entityManager.remove(category);
+    CategoryEntity managedUser = entityManager.find(CategoryEntity.class, category.getId());
+    if (managedUser != null) {
+      entityManager.remove(managedUser);
+    }
   }
 }

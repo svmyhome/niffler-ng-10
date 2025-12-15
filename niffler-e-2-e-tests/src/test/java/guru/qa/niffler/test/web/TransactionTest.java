@@ -72,7 +72,7 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova1278"}
+      strings = {"vova01278"}
   )
   public void addFriendTest(String username) {
     UserJson user = dbClient.createUser(
