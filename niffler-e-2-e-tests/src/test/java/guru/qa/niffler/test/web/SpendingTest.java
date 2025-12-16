@@ -53,7 +53,7 @@ public class SpendingTest {
   @Test
   void findSpendingByIdTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<SpendEntity> byId = spendDbClient.findById(
+    Optional<SpendJson> byId = spendDbClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(byId);
   }
@@ -61,7 +61,7 @@ public class SpendingTest {
   @Test
   void findSpendByNameAndDescription() {
     SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<SpendEntity> duck = spendDbClient.findByUsernameAndSpendDescription("duck",
+    Optional<SpendJson> duck = spendDbClient.findByUsernameAndSpendDescription("duck",
         "11111");
     System.out.println(duck);
   }
@@ -70,17 +70,19 @@ public class SpendingTest {
   void createSpendingTest() {
     SpendDbClient spendDbClient = new SpendDbClient();
     CategoryEntity categoryEntity = new CategoryEntity();
-    categoryEntity.setName("1qaa");
+    categoryEntity.setName("1111111222qaa");
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
+
     SpendEntity entity = new SpendEntity();
     entity.setUsername("duck");
     entity.setCurrency(CurrencyValues.RUB);
     entity.setSpendDate(new Date());
     entity.setAmount(123.0);
-    entity.setDescription("qazsdfg");
+    entity.setDescription("1111111222qaa");
     entity.setCategory(categoryEntity);
-    spendDbClient.create(entity);
+    SpendJson spendJson = SpendJson.fromEntity(entity);
+    spendDbClient.create(spendJson);
   }
 
   @Test
@@ -99,8 +101,10 @@ public class SpendingTest {
     entity.setDescription("55qazsdfg");
     entity.setCategory(categoryEntity);
 
-    spendDbClient.create(entity);
-    spendDbClient.remove(entity);
+    SpendJson spendJson = SpendJson.fromEntity(entity);
+
+    spendDbClient.create(spendJson);
+    spendDbClient.remove(spendJson);
   }
 
   @Test
@@ -119,10 +123,11 @@ public class SpendingTest {
     entity.setAmount(123.0);
     entity.setDescription("777qazsdfg");
     entity.setCategory(categoryEntity);
+    SpendJson spendJson = SpendJson.fromEntity(entity);
 
-    spendDbClient.create(entity);
+    spendDbClient.create(spendJson);
     entity.setAmount(222.0);
-    spendDbClient.update(entity);
+    spendDbClient.update(spendJson);
   }
 
   @Test

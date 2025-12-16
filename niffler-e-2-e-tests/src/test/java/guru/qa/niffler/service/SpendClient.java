@@ -9,8 +9,6 @@ public interface SpendClient {
 
   Optional<SpendJson> findSpendById(String id);
 
-  List<SpendJson> findSpendsByUserName(String username);
-
   SpendJson createSpend(SpendJson spend);
 
   SpendJson updateSpend(SpendJson spendJson);

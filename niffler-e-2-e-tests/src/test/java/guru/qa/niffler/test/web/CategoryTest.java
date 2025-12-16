@@ -64,7 +64,7 @@ public class CategoryTest {
   @Test
   void findCategoryById() {
     SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<CategoryEntity> categoryById = spendDbClient.findCategoryById(
+    Optional<CategoryJson> categoryById = spendDbClient.findCategoryById(
         UUID.fromString("0a091f06-b5bb-11f0-93fc-aa5c32f82d84"));
     System.out.println(categoryById);
   }
@@ -72,7 +72,7 @@ public class CategoryTest {
   @Test
   void findCategoryByUsernameAndSpendName() {
     SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<CategoryEntity> categoryByUsernameAndSpendName = spendDbClient.findCategoryByUsernameAndSpendName(
+    Optional<CategoryJson> categoryByUsernameAndSpendName = spendDbClient.findCategoryByUsernameAndSpendName(
         "duck", "Машина");
     System.out.println(categoryByUsernameAndSpendName);
   }
@@ -86,7 +86,7 @@ public class CategoryTest {
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
 
-    spendDbClient.createCategory(categoryEntity);
+    spendDbClient.createCategory(CategoryJson.fromEntity(categoryEntity));
   }
 
   @Test
@@ -97,8 +97,8 @@ public class CategoryTest {
     categoryEntity.setName("Test5qaa");
     categoryEntity.setUsername("duck");
     categoryEntity.setArchived(false);
-    spendDbClient.createCategory(categoryEntity);
-    spendDbClient.removeCategory(categoryEntity);
+    spendDbClient.createCategory(CategoryJson.fromEntity(categoryEntity));
+    spendDbClient.removeCategory(CategoryJson.fromEntity(categoryEntity));
   }
 
 }
