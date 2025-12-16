@@ -39,7 +39,7 @@ public class TransactionTest {
   @Test
   void txTest() {
     SpendJsonClient spendJsonClient = new SpendJsonClient();
-    SpendJson spendJson = spendJsonClient.createSpend(
+    SpendJson spendJson = spendJsonClient.create(
         new SpendJson(
             null,
             new Date(),
@@ -177,15 +177,15 @@ public class TransactionTest {
   @Test
   public void findSpendByIdTest() {
     SpendJsonClient spendJsonClient = new SpendJsonClient();
-    Optional<SpendJson> spend = spendJsonClient.findSpendById(
-        "1328a312-b5bc-11f0-a017-aa5c32f82d84");
+    Optional<SpendJson> spend = spendJsonClient.findById(
+        UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(spend);
   }
 
   @Test
   public void updateSpendByIdTest() {
     SpendJsonClient spendJsonClient = new SpendJsonClient();
-    SpendJson spend = spendJsonClient.updateSpend(
+    SpendJson spend = spendJsonClient.update(
         new SpendJson(UUID.fromString("888ca6da-b6e3-11f0-8e67-ea06c42c5790"),
             new Date(new Date().getTime()),
             new CategoryJson(UUID.fromString("888ba94c-b6e3-11f0-8e67-ea06c42c5790"), null, null,

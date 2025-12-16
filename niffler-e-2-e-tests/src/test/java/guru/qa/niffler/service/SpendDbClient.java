@@ -11,7 +11,7 @@ import guru.qa.niffler.model.spend.SpendJson;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpendDbClient implements SpendClientEntity {
+public class SpendDbClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
   private final SpendRepository spendRepository = new SpendRepositoryHibernate();
@@ -39,6 +39,15 @@ public class SpendDbClient implements SpendClientEntity {
   }
 
   @Override
+  public CategoryJson updateCategory(CategoryJson category) {
+    return xaTransactionTemplate.execute(() -> {
+      CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+      spendRepository.updateCategory(categoryEntity);
+      return CategoryJson.fromEntity(categoryEntity);
+    });
+  }
+
+  @Override
   public CategoryJson createCategory(CategoryJson category) {
     return xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
@@ -50,7 +59,8 @@ public class SpendDbClient implements SpendClientEntity {
   @Override
   public Optional<CategoryJson> findCategoryById(UUID id) {
     return spendRepository.findCategoryById(id)
-        .map(CategoryJson::fromEntity);  }
+        .map(CategoryJson::fromEntity);
+  }
 
   @Override
   public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {

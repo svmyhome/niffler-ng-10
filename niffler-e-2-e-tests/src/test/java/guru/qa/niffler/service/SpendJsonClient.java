@@ -25,18 +25,7 @@ public class SpendJsonClient implements SpendClient {
       CFG.authJdbcUrl());
 
   @Override
-  public Optional<SpendJson> findSpendById(String id) {
-    return spendDao.findById(UUID.fromString(id))
-        .map(SpendJson::fromEntity);
-  }
-
-  public List<SpendJson> findSpendsByUserName(String username) {
-    List<SpendEntity> entities = spendDao.findAllByUsername(username);
-    return entities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
-  }
-
-  @Override
-  public SpendJson createSpend(SpendJson spend) {
+  public SpendJson create(SpendJson spend) {
     return jdbcTxTemplate.execute(() -> {
           SpendEntity spendEntity = SpendEntity.fromJson(spend);
           if (spendEntity.getCategory().getId() == null) {
@@ -51,14 +40,8 @@ public class SpendJsonClient implements SpendClient {
   }
 
   @Override
-  public SpendJson updateSpend(SpendJson spend) {
+  public SpendJson update(SpendJson spend) {
     return SpendJson.fromEntity(spendDao.update(SpendEntity.fromJson(spend)));
-  }
-
-  @Override
-  public List<CategoryJson> findAllCategories(String username) {
-    List<CategoryEntity> entities = categoryDao.findAllByUsername(username);
-    return entities.stream().map(CategoryJson::fromEntity).collect(Collectors.toList());
   }
 
   @Override
@@ -75,6 +58,42 @@ public class SpendJsonClient implements SpendClient {
   }
 
   @Override
+  public Optional<SpendJson> findById(UUID id) {
+    return spendDao.findById(id)
+        .map(SpendJson::fromEntity);
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryById(UUID id) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
+      String description) {
+    return Optional.empty();
+  }
+
+  @Override
+  public void remove(SpendJson spend) {
+
+  }
+
+  @Override
+  public void removeCategory(CategoryJson category) {
+
+  }
+
+  public List<SpendJson> findSpendsByUserName(String username) {
+    List<SpendEntity> entities = spendDao.findAllByUsername(username);
+    return entities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
+  }
+
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
     Optional<CategoryEntity> categoryEntity = categoryDao.findCategoryByUsernameAndCategoryName(
@@ -93,5 +112,10 @@ public class SpendJsonClient implements SpendClient {
   public List<SpendJson> findAllSpends() {
     List<SpendEntity> spendEntities = spendDao.findAll();
     return spendEntities.stream().map(SpendJson::fromEntity).collect(Collectors.toList());
+  }
+
+  public List<CategoryJson> findAllCategories(String username) {
+    List<CategoryEntity> entities = categoryDao.findAllByUsername(username);
+    return entities.stream().map(CategoryJson::fromEntity).collect(Collectors.toList());
   }
 }
