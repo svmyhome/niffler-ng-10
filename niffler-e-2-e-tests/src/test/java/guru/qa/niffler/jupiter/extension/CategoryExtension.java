@@ -5,7 +5,7 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.SpendJsonClient;
+import guru.qa.niffler.service.SpendDbClient;
 import java.util.Optional;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -22,7 +22,7 @@ public class CategoryExtension implements
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
       CategoryExtension.class);
-  private final SpendClient spendClient = new SpendJsonClient();
+  private final SpendClient spendClient = new SpendDbClient();
 
   @Override
   public void beforeEach(ExtensionContext context) {

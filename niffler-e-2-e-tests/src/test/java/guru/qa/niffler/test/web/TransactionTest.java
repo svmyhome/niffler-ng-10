@@ -19,7 +19,8 @@ import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
-import guru.qa.niffler.service.SpendJsonClient;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,8 +39,8 @@ public class TransactionTest {
 
   @Test
   void txTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    SpendJson spendJson = spendJsonClient.create(
+    SpendClient spendClient = new SpendDbClient();
+    SpendJson spendJson = spendClient.create(
         new SpendJson(
             null,
             new Date(),
@@ -97,50 +98,17 @@ public class TransactionTest {
   }
 
   @Test
-  public void findCategoriesByUsernameTest() {
-    SpendJsonClient dbClient = new SpendJsonClient();
-    List<CategoryJson> user = dbClient.findAllCategories("duck");
-    System.out.println(user);
-  }
-
-  @Test
-  public void findSpendsByUsernameTest() {
-    SpendJsonClient dbClient = new SpendJsonClient();
-    List<SpendJson> user = dbClient.findSpendsByUserName("duck");
-    System.out.println(user);
-  }
-
-  @Test
-  public void findAllTest() {
-    UserDbClient userdbClient = new UserDbClient();
-    List<AuthUserJson> authorityJson = userdbClient.findAll();
-    System.out.println(authorityJson);
-  }
-
-  @Test
-  public void deleteTest() {
-    UserDbClient dbClient = new UserDbClient();
-    Optional<AuthUserEntity> user = dbClient.findAuthUserById(
-        UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
-    if (user.isPresent()) {
-      AuthUserEntity authUser = user.get();
-      dbClient.delete(authUser);
-    }
-    System.out.println();
-  }
-
-  @Test
   public void findCategoryAndUserTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    Optional<CategoryJson> category = spendJsonClient.findCategoryByNameAndUsername("duck",
+    SpendClient spendClient = new SpendDbClient();
+    Optional<CategoryJson> category = spendClient.findCategoryByUsernameAndSpendName("duck",
         "Машина");
     category.stream().forEach(System.out::println);
   }
 
   @Test
   public void createCategoryTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    CategoryJson categoryJson = spendJsonClient.createCategory(
+    SpendClient spendClient = new SpendDbClient();
+    CategoryJson categoryJson = spendClient.createCategory(
         new CategoryJson(
             null,
             "QAZ1qaz",
@@ -153,46 +121,41 @@ public class TransactionTest {
 
   @Test
   public void deleteCategoryTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
+    SpendClient spendClient = new SpendDbClient();
     CategoryEntity category = new CategoryEntity();
     category.setId(UUID.fromString("2a6a67f0-b5bb-11f0-8a0e-aa5c32f82d84"));
-    spendJsonClient.deleteCategory(category);
+    CategoryJson categoryJson = CategoryJson.fromEntity(category);
+    spendClient.removeCategory(categoryJson);
   }
 
   @Test
   public void deleteSpendTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
+    SpendClient spendClient = new SpendDbClient();
     SpendEntity spend = new SpendEntity();
     spend.setId(UUID.fromString("9d8cfc1e-b5bd-11f0-bfb0-aa5c32f82d84"));
-    spendJsonClient.deleteSpend(spend);
-  }
-
-  @Test
-  public void findAllSpendsTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    List<SpendJson> spends = spendJsonClient.findAllSpends();
-    System.out.println(spends);
+    SpendJson spendJson = SpendJson.fromEntity(spend);
+    spendClient.remove(spendJson);
   }
 
   @Test
   public void findSpendByIdTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    Optional<SpendJson> spend = spendJsonClient.findById(
+    SpendClient spendClient = new SpendDbClient();
+    Optional<SpendJson> spend = spendClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(spend);
   }
 
   @Test
   public void updateSpendByIdTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    SpendJson spend = spendJsonClient.update(
+    SpendClient spendClient = new SpendDbClient();
+    SpendJson spend = spendClient.update(
         new SpendJson(UUID.fromString("888ca6da-b6e3-11f0-8e67-ea06c42c5790"),
             new Date(new Date().getTime()),
             new CategoryJson(UUID.fromString("888ba94c-b6e3-11f0-8e67-ea06c42c5790"), null, null,
                 false),
             CurrencyValues.RUB,
             180.0,
-            "11111",
+            "1111212121211",
             "duck"
         )
     );
@@ -200,8 +163,8 @@ public class TransactionTest {
 
   @Test
   public void updateCategoryByIdTest() {
-    SpendJsonClient spendJsonClient = new SpendJsonClient();
-    CategoryJson category = spendJsonClient.updateCategory(
+    SpendClient spendClient = new SpendDbClient();
+    CategoryJson category = spendClient.updateCategory(
         new CategoryJson(
             UUID.fromString("9d8c393c-b5bd-11f0-bfb0-aa5c32f82d84"),
             "1q1a1a1", "duck", false)
@@ -333,5 +296,24 @@ public class TransactionTest {
     });
     AuthUserRepositorySpringJdbc authUserRepositoryJdbc = new AuthUserRepositorySpringJdbc();
     authUserRepositoryJdbc.update(ae.orElse(null));
+  }
+
+  @Test
+  public void findAllTest() {
+    UserDbClient userdbClient = new UserDbClient();
+    List<AuthUserJson> authorityJson = userdbClient.findAll();
+    System.out.println(authorityJson);
+  }
+
+  @Test
+  public void deleteTest() {
+    UserDbClient dbClient = new UserDbClient();
+    Optional<AuthUserEntity> user = dbClient.findAuthUserById(
+        UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
+    if (user.isPresent()) {
+      AuthUserEntity authUser = user.get();
+      dbClient.delete(authUser);
+    }
+    System.out.println();
   }
 }

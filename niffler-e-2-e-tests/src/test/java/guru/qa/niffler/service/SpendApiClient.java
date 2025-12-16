@@ -98,7 +98,8 @@ public class SpendApiClient implements SpendClient {
   public void remove(SpendJson spend) {
     final Response<Void> response;
     try {
-      response = spendApi.removeSpends(spend.username(), List.of(String.valueOf(spend.id()))).execute();
+      response = spendApi.removeSpends(spend.username(), List.of(String.valueOf(spend.id())))
+          .execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
