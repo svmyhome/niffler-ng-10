@@ -35,7 +35,6 @@ public class CategoryTest {
   }
 
   @User(
-      username = "cat",
       categories = {@Category()}
   )
   @Test
@@ -50,19 +49,18 @@ public class CategoryTest {
   }
 
   @User(
-      username = "dog",
       categories = {
           @Category(archived = true),
           @Category(archived = false)
       }
   )
   @Test
-  void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
+  void archivedCategoryShouldBePresentedInArchivedList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("dog", "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkArchivedCategoryExists(category.name());
+        .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
   }
 
   @Test
