@@ -39,12 +39,14 @@ public class CategoryTest {
       categories = {@Category()}
   )
   @Test
-  void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
+  void activeCategoryShouldPresentInCategoryList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("cat", "12345")
+        .login(user.username(), "12345")
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkCategoryIsDisplayed(category.name());
+        .checkCategoryIsDisplayed(user.testData().categories().getFirst().name());
+    System.out.println(user.username());
+    System.out.println(user.testData().categories().getFirst().name());
   }
 
   @User(

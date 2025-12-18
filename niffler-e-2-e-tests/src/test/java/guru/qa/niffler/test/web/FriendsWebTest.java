@@ -4,9 +4,11 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.UserType;
 import guru.qa.niffler.jupiter.annotation.UserType.FriendType;
+import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension;
 import guru.qa.niffler.model.user.StaticUser;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +18,19 @@ public class FriendsWebTest {
 
   private final static Config CFG = Config.getInstance();
 
+  @User(
+    friends = 1
+  )
   @Test
   public void friendShouldBePresentInFriendsTable(
-      @UserType(FriendType.WITH_FRIEND) StaticUser user) {
+      UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.password())
+        .login(user.username(), user.testData().password())
         .openFriends()
         .verifyMyFriendsSectionDisplayed()
-        .verifyUserHasNewFriend(user.friend());
+        .verifyUserHasNewFriend(user.testData().friends().getFirst().username());
+    System.out.println(user.username());
+    System.out.println(user.testData().friends().getFirst().username());
   }
 
   @Test
