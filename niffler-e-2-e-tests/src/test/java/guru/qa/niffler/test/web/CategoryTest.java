@@ -7,6 +7,7 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.SpendDbClient;
 import java.util.Optional;
@@ -20,16 +21,17 @@ public class CategoryTest {
   private static final Config CFG = Config.getInstance();
 
   @User(
-      username = "mouse",
       categories = {@Category(archived = true)}
   )
   @Test
-  void archivedCategoryShouldNotBePresentedInActiveCategoryList(CategoryJson category) {
+  void archivedCategoryShouldNotBePresentedInActiveCategoryList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("mouse", "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkCategoryIsNotDisplayed(category.name());
+        .checkCategoryIsNotDisplayed(user.testData().categories().getFirst().name());
+    System.out.println(user.username());
+    System.out.println(user.testData().categories().getFirst().name());
   }
 
   @User(

@@ -13,6 +13,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -86,7 +87,8 @@ public class UserDbClient implements UserClient {
   }
 
   @Override
-  public void createIncomeInvitations(UserJson targetUser, int count) {
+  public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
+    final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
@@ -96,14 +98,17 @@ public class UserDbClient implements UserClient {
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
           userdataUserRepository.sendInvitation(adressee, targetEntity);
+          users.add(UserJson.fromEntity(adressee));
           return null;
         });
       }
     }
+    return users;
   }
 
   @Override
-  public void createOutcomeInvitations(UserJson targetUser, int count) {
+  public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
+    final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
@@ -113,14 +118,17 @@ public class UserDbClient implements UserClient {
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
           userdataUserRepository.sendInvitation(targetEntity, adressee);
+          users.add(UserJson.fromEntity(adressee));
           return null;
         });
       }
     }
+    return users;
   }
 
   @Override
-  public void createFriends(UserJson targetUser, int count) {
+  public List<UserJson> createFriends(UserJson targetUser, int count) {
+    final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
       for (int i = 0; i < count; i++) {
         xaTransactionTemplate.execute(() -> {
@@ -130,10 +138,12 @@ public class UserDbClient implements UserClient {
           authUserRepository.create(authUser);
           UserEntity adressee = userdataUserRepository.create(userEntityRequiredField(username));
           userdataUserRepository.addFriend(targetEntity, adressee);
+          users.add(UserJson.fromEntity(adressee));
           return null;
         });
       }
     }
+    return users;
   }
 
   public Optional<UserEntity> findUserById(UUID id) {

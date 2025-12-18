@@ -73,15 +73,16 @@ public class TransactionTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"vova01278"}
+      strings = {"vova01111278"}
   )
   public void addFriendTest(String username) {
     UserJson user = dbClient.createUser(
         username,
         "12345"
     );
-    dbClient.createFriends(user, 1);
+    List<UserJson> friends = dbClient.createFriends(user, 1);
     System.out.println(user);
+    System.out.println(friends);
   }
 
   @ParameterizedTest
