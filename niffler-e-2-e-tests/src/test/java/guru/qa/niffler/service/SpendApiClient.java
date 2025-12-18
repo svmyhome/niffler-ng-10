@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -30,10 +31,10 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public Optional<SpendJson> findSpendById(String id) {
+  public Optional<SpendJson> findById(UUID id) {
     final Response<SpendJson> response;
     try {
-      response = spendApi.getSpend(id).execute();
+      response = spendApi.getSpend(String.valueOf(id)).execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -41,33 +42,8 @@ public class SpendApiClient implements SpendClient {
     return Optional.ofNullable(response.body());
   }
 
-
-  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
-      String from, String to) {
-    final Response<SpendJson[]> response;
-    try {
-      response = spendApi.getSpends(username, currencyValues, from, to).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
-  }
-
   @Override
-  public List<SpendJson> findSpendsByUserName(String username) {
-    final Response<SpendJson[]> response;
-    try {
-      response = spendApi.getSpends(username).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
-  }
-
-  @Override
-  public SpendJson createSpend(SpendJson spend) {
+  public SpendJson create(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.addSpend(spend).execute();
@@ -79,7 +55,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public SpendJson updateSpend(SpendJson spend) {
+  public SpendJson update(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.updateSpend(spend).execute();
@@ -87,29 +63,6 @@ public class SpendApiClient implements SpendClient {
       throw new AssertionError(e);
     }
     assertEquals(SC_OK, response.code());
-    return response.body();
-  }
-
-  public void deleteSpends(String username, List<String> ids) {
-    final Response<Void> response;
-    try {
-      response = spendApi.removeSpends(username, ids).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_ACCEPTED, response.code());
-  }
-
-  @Override
-  public List<CategoryJson> findAllCategories(String username) {
-    final Response<List<CategoryJson>> response;
-    try {
-      response = spendApi.getCategories(username).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    assert response.body() != null;
     return response.body();
   }
 
@@ -126,6 +79,60 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
+  public Optional<CategoryJson> findCategoryById(UUID id) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
+      String description) {
+    return Optional.empty();
+  }
+
+  @Override
+  public void remove(SpendJson spend) {
+    final Response<Void> response;
+    try {
+      response = spendApi.removeSpends(spend.username(), List.of(String.valueOf(spend.id())))
+          .execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_ACCEPTED, response.code());
+  }
+
+  @Override
+  public void removeCategory(CategoryJson category) {
+  }
+
+  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
+      String from, String to) {
+    final Response<SpendJson[]> response;
+    try {
+      response = spendApi.getSpends(username, currencyValues, from, to).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
+  }
+
+  public List<SpendJson> findSpendsByUserName(String username) {
+    final Response<SpendJson[]> response;
+    try {
+      response = spendApi.getSpends(username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
+  }
+
   public CategoryJson updateCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
@@ -137,7 +144,6 @@ public class SpendApiClient implements SpendClient {
     return response.body();
   }
 
-  @Override
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
     final Response<List<CategoryJson>> response;
@@ -154,5 +160,27 @@ public class SpendApiClient implements SpendClient {
     );
 
     return categories.stream().findFirst();
+  }
+
+  public List<CategoryJson> findAllCategories(String username) {
+    final Response<List<CategoryJson>> response;
+    try {
+      response = spendApi.getCategories(username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    assert response.body() != null;
+    return response.body();
+  }
+
+  public void deleteSpends(String username, List<String> ids) {
+    final Response<Void> response;
+    try {
+      response = spendApi.removeSpends(username, ids).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_ACCEPTED, response.code());
   }
 }

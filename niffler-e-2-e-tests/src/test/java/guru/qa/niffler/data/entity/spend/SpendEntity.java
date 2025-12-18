@@ -53,6 +53,20 @@ public class SpendEntity implements Serializable {
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private CategoryEntity category;
 
+  public static SpendEntity fromJson(SpendJson json) {
+    SpendEntity se = new SpendEntity();
+    se.setId(json.id());
+    se.setUsername(json.username());
+    se.setCurrency(json.currency());
+    se.setSpendDate(new Date(json.spendDate().getTime()));
+    se.setAmount(json.amount());
+    se.setDescription(json.description());
+    se.setCategory(
+        CategoryEntity.fromJson(json.category())
+    );
+    return se;
+  }
+
   @Override
   public final boolean equals(Object o) {
     if (this == o) {
@@ -78,19 +92,5 @@ public class SpendEntity implements Serializable {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public static SpendEntity fromJson(SpendJson json) {
-    SpendEntity se = new SpendEntity();
-    se.setId(json.id());
-    se.setUsername(json.username());
-    se.setCurrency(json.currency());
-    se.setSpendDate(new Date(json.spendDate().getTime()));
-    se.setAmount(json.amount());
-    se.setDescription(json.description());
-    se.setCategory(
-        CategoryEntity.fromJson(json.category())
-    );
-    return se;
   }
 }

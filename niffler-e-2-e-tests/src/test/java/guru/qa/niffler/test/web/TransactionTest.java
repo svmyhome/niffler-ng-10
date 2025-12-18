@@ -11,6 +11,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -18,6 +19,7 @@ import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
+import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
 import java.sql.Connection;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import utils.RandomDataUtils;
 
 public class TransactionTest {
@@ -35,8 +39,8 @@ public class TransactionTest {
 
   @Test
   void txTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    SpendJson spendJson = spendDbClient.createSpend(
+    SpendClient spendClient = new SpendDbClient();
+    SpendJson spendJson = spendClient.create(
         new SpendJson(
             null,
             new Date(),
@@ -56,100 +60,55 @@ public class TransactionTest {
   }
 
   @Test
-  void userDAOtest() {
+  public void successTransactionTest() {
     UserDbClient userDbClient = new UserDbClient();
     UserJson user = userDbClient.createUser(
-        new UserJson(
-            null,
-            RandomDataUtils.randomUsername(),
-            "First",
-            "Sure",
-            "Full",
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
+        RandomDataUtils.randomUsername(),
+        "12345"
     );
     System.out.println(user);
   }
 
-  @Test
-  public void successTransactionTest() {
+  UserDbClient dbClient = new UserDbClient();
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {"vova01278"}
+  )
+  public void addFriendTest(String username) {
+    UserJson user = dbClient.createUser(
+        username,
+        "12345"
+    );
+    dbClient.createFriends(user, 1);
+    System.out.println(user);
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {"vova111111114"}
+  )
+  public void createSimpleUserTest(String username) {
     UserDbClient dbClient = new UserDbClient();
     UserJson user = dbClient.createUser(
-        new UserJson(
-            null,
-            "valentin-6",
-            "First",
-            "Sure",
-            "Full",
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
+        username,
+        "12345"
     );
     System.out.println(user);
-  }
-
-  @Test
-  public void springJdbcTest() {
-    UserDbClient dbClient = new UserDbClient();
-    UserJson user = dbClient.createUser(
-        new UserJson(
-            null,
-            "petr-2222",
-            null,
-            null,
-            null,
-            CurrencyValues.RUB,
-            "123467890",
-            "123467890"
-        )
-    );
-    System.out.println(user);
-  }
-
-  @Test
-  public void findCategoriesByUsernameTest() {
-    SpendDbClient dbClient = new SpendDbClient();
-    List<CategoryJson> user = dbClient.findAllCategories("duck");
-    System.out.println(user);
-  }
-
-  @Test
-  public void findSpendsByUsernameTest() {
-    SpendDbClient dbClient = new SpendDbClient();
-    List<SpendJson> user = dbClient.findSpendsByUserName("duck");
-    System.out.println(user);
-  }
-
-  @Test
-  public void findAllTest() {
-    UserDbClient userdbClient = new UserDbClient();
-    List<AuthUserJson> authorityJson = userdbClient.findAll();
-    System.out.println(authorityJson);
-  }
-
-  @Test
-  public void deleteTest() {
-    UserDbClient dbClient = new UserDbClient();
-    AuthUserEntity ae = new AuthUserEntity();
-    ae.setId(UUID.fromString("2db76cc4-8de4-4eee-9fee-dacd3c44b5f6"));
-    dbClient.delete(ae);
-    System.out.println();
   }
 
   @Test
   public void findCategoryAndUserTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<CategoryJson> category = spendDbClient.findCategoryByNameAndUsername("duck", "Машина");
+    SpendClient spendClient = new SpendDbClient();
+    Optional<CategoryJson> category = spendClient.findCategoryByUsernameAndSpendName("duck",
+        "Машина");
     category.stream().forEach(System.out::println);
   }
 
   @Test
   public void createCategoryTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    CategoryJson categoryJson = spendDbClient.createCategory(
+    SpendClient spendClient = new SpendDbClient();
+    CategoryJson categoryJson = spendClient.createCategory(
         new CategoryJson(
             null,
             "QAZ1qaz",
@@ -162,45 +121,41 @@ public class TransactionTest {
 
   @Test
   public void deleteCategoryTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
+    SpendClient spendClient = new SpendDbClient();
     CategoryEntity category = new CategoryEntity();
     category.setId(UUID.fromString("2a6a67f0-b5bb-11f0-8a0e-aa5c32f82d84"));
-    spendDbClient.deleteCategory(category);
+    CategoryJson categoryJson = CategoryJson.fromEntity(category);
+    spendClient.removeCategory(categoryJson);
   }
 
   @Test
   public void deleteSpendTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
+    SpendClient spendClient = new SpendDbClient();
     SpendEntity spend = new SpendEntity();
     spend.setId(UUID.fromString("9d8cfc1e-b5bd-11f0-bfb0-aa5c32f82d84"));
-    spendDbClient.deleteSpend(spend);
-  }
-
-  @Test
-  public void findAllSpendsTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    List<SpendJson> spends = spendDbClient.findAllSpends();
-    System.out.println(spends);
+    SpendJson spendJson = SpendJson.fromEntity(spend);
+    spendClient.remove(spendJson);
   }
 
   @Test
   public void findSpendByIdTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    Optional<SpendJson> spend = spendDbClient.findSpendById("1328a312-b5bc-11f0-a017-aa5c32f82d84");
+    SpendClient spendClient = new SpendDbClient();
+    Optional<SpendJson> spend = spendClient.findById(
+        UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
     System.out.println(spend);
   }
 
   @Test
   public void updateSpendByIdTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    SpendJson spend = spendDbClient.updateSpend(
+    SpendClient spendClient = new SpendDbClient();
+    SpendJson spend = spendClient.update(
         new SpendJson(UUID.fromString("888ca6da-b6e3-11f0-8e67-ea06c42c5790"),
             new Date(new Date().getTime()),
             new CategoryJson(UUID.fromString("888ba94c-b6e3-11f0-8e67-ea06c42c5790"), null, null,
                 false),
             CurrencyValues.RUB,
             180.0,
-            "11111",
+            "1111212121211",
             "duck"
         )
     );
@@ -208,8 +163,8 @@ public class TransactionTest {
 
   @Test
   public void updateCategoryByIdTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
-    CategoryJson category = spendDbClient.updateCategory(
+    SpendClient spendClient = new SpendDbClient();
+    CategoryJson category = spendClient.updateCategory(
         new CategoryJson(
             UUID.fromString("9d8c393c-b5bd-11f0-bfb0-aa5c32f82d84"),
             "1q1a1a1", "duck", false)
@@ -295,5 +250,70 @@ public class TransactionTest {
     ue.setPhoto(new byte[0]);
     ue.setPhotoSmall(new byte[0]);
     return ue;
+  }
+
+  @Test
+  void updateAuthUserTest() {
+    UserDbClient dbClient = new UserDbClient();
+    String username = RandomDataUtils.randomUsername();
+    UserJson user = dbClient.createUser(
+        username,
+        "12345"
+    );
+    System.out.println(user.username());
+    Optional<AuthUserEntity> authUser = dbClient.findUserByUserName(user.username());
+    System.out.println(authUser);
+
+    AuthUserEntity authUserEntity = null;
+    if (authUser.isPresent()) {
+      authUser.ifPresent(u -> {
+        u.setEnabled(false);
+      });
+      authUserEntity = authUser.get();
+    }
+    dbClient.update(authUserEntity);
+  }
+
+  @Test
+  void removeUserTest() {
+    UserDbClient dbClient = new UserDbClient();
+    String username = RandomDataUtils.randomUsername();
+    UserJson user = dbClient.createUser(username, "12345");
+    System.out.println(user.username());
+    Optional<UserEntity> existingUser = dbClient.findUserById(user.id());
+    if (existingUser.isPresent()) {
+      dbClient.remove(existingUser.orElse(null));
+    }
+  }
+
+  @Test
+  void updateAuthUserJdbcTest() {
+    UserDbClient dbClient = new UserDbClient();
+    Optional<AuthUserEntity> ae = dbClient.findAuthUserById(
+        UUID.fromString("599dfd2d-691b-447e-af58-6e7fab52b368"));
+    ae.ifPresent(u -> {
+      u.setEnabled(true);
+    });
+    AuthUserRepositorySpringJdbc authUserRepositoryJdbc = new AuthUserRepositorySpringJdbc();
+    authUserRepositoryJdbc.update(ae.orElse(null));
+  }
+
+  @Test
+  public void findAllTest() {
+    UserDbClient userdbClient = new UserDbClient();
+    List<AuthUserJson> authorityJson = userdbClient.findAll();
+    System.out.println(authorityJson);
+  }
+
+  @Test
+  public void deleteTest() {
+    UserDbClient dbClient = new UserDbClient();
+    Optional<AuthUserEntity> user = dbClient.findAuthUserById(
+        UUID.fromString("b624f757-a7ed-4308-b213-3e3e07d884e1"));
+    if (user.isPresent()) {
+      AuthUserEntity authUser = user.get();
+      dbClient.delete(authUser);
+    }
+    System.out.println();
   }
 }

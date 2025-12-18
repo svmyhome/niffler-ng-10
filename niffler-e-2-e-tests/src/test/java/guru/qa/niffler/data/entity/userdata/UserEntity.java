@@ -69,6 +69,19 @@ public class UserEntity implements Serializable {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private List<PushTokenEntity> pushTokens = new ArrayList<>();
 
+  public static UserEntity fromJson(UserJson json) {
+    UserEntity ue = new UserEntity();
+    ue.setId(json.id());
+    ue.setUsername(json.username());
+    ue.setCurrency(json.currency());
+    ue.setFirstname(json.firstname());
+    ue.setSurname(json.surname());
+    ue.setFullname(json.fullname());
+    ue.setPhoto(json.photo().getBytes());
+    ue.setPhotoSmall(json.photoSmall().getBytes());
+    return ue;
+  }
+
   public void addFriends(FriendshipStatus status, UserEntity... friends) {
     List<FriendshipEntity> friendsEntities = Stream.of(friends)
         .map(f -> {
@@ -142,18 +155,5 @@ public class UserEntity implements Serializable {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public static UserEntity fromJson(UserJson json) {
-    UserEntity ue = new UserEntity();
-    ue.setId(json.id());
-    ue.setUsername(json.username());
-    ue.setCurrency(json.currency());
-    ue.setFirstname(json.firstname());
-    ue.setSurname(json.surname());
-    ue.setFullname(json.fullname());
-    ue.setPhoto(json.photo().getBytes());
-    ue.setPhotoSmall(json.photoSmall().getBytes());
-    return ue;
   }
 }

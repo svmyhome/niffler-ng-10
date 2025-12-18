@@ -62,6 +62,31 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   }
 
   @Override
+  public AuthUserEntity update(AuthUserEntity user) {
+    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+        "UPDATE \"user\" SET username=?, password=?, enabled=?, " +
+            "account_non_expired=?, account_non_locked=?, credentials_non_expired=? " +
+            "WHERE id=?"
+    )) {
+      ps.setString(1, user.getUsername());
+      ps.setString(2, user.getPassword());
+      ps.setBoolean(3, user.getEnabled());
+      ps.setBoolean(4, user.getAccountNonExpired());
+      ps.setBoolean(5, user.getAccountNonLocked());
+      ps.setBoolean(6, user.getCredentialsNonExpired());
+      ps.setObject(7, user.getId());
+
+      int rows = ps.executeUpdate();
+      if (rows == 0) {
+        throw new RuntimeException("User not found with id: " + user.getId());
+      }
+      return user;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT " +
@@ -132,7 +157,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   }
 
   @Override
-  public void delete(AuthUserEntity user) {
+  public void remove(AuthUserEntity user) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?"
     )) {

@@ -29,7 +29,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
     if (user.isPresent() && user.get().spendings().length > 0) {
       Spending spending = user.get().spendings()[0];
-      final SpendJson created = spendClient.createSpend(
+      final SpendJson created = spendClient.create(
           new SpendJson(
               null,
               new Date(),
