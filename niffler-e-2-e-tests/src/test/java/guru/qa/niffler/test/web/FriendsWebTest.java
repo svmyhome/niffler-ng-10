@@ -22,8 +22,7 @@ public class FriendsWebTest {
     friends = 1
   )
   @Test
-  public void friendShouldBePresentInFriendsTable(
-      UserJson user) {
+  public void friendShouldBePresentInFriendsTable(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openFriends()
