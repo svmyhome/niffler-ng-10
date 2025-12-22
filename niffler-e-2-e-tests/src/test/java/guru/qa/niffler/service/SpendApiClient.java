@@ -31,18 +31,6 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public Optional<SpendJson> findById(UUID id) {
-    final Response<SpendJson> response;
-    try {
-      response = spendApi.getSpend(String.valueOf(id)).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return Optional.ofNullable(response.body());
-  }
-
-  @Override
   public SpendJson create(SpendJson spend) {
     final Response<SpendJson> response;
     try {
@@ -76,6 +64,35 @@ public class SpendApiClient implements SpendClient {
     }
     assertEquals(SC_OK, response.code());
     return response.body();
+//    final Response<CategoryJson> response;
+//    try {
+//      response = spendApi.addCategory(category).execute();
+//
+//      if (!response.isSuccessful()) {
+//        String errorMessage = "Failed to create category. Code: " + response.code();
+//        if (response.errorBody() != null) {
+//          errorMessage += ", Error: " + response.errorBody().string();
+//        }
+//        throw new RuntimeException(errorMessage);
+//      }
+//
+//    } catch (IOException e) {
+//      throw new AssertionError("Error executing API call", e);
+//    }
+//
+//    return response.body();
+  }
+
+  @Override
+  public CategoryJson updateCategory(CategoryJson category) {
+    final Response<CategoryJson> response;
+    try {
+      response = spendApi.updateCategory(category).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return response.body();
   }
 
   @Override
@@ -84,8 +101,62 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
-    return Optional.empty();
+  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name, String username) {
+    final Response<List<CategoryJson>> response;
+    try {
+      response = spendApi.getCategories(name, username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+
+    List<CategoryJson> categories = Objects.requireNonNullElseGet(
+        response.body(),
+        ArrayList::new
+    );
+
+    return categories.stream().findFirst();
+  }
+
+  @Override
+  public Optional<SpendJson> findById(UUID id) {
+//    final Response<SpendJson> response;
+//    try {
+//      response = spendApi.getSpend(String.valueOf(id)).execute();
+//    } catch (IOException e) {
+//      throw new AssertionError(e);
+//    }
+//    assertEquals(SC_OK, response.code());
+//    return Optional.ofNullable(response.body());
+
+    final Response<SpendJson> response;
+    try {
+      String idString = id.toString();
+      System.out.println("Requesting spend with ID: " + idString);
+      System.out.println("Full URL would be: " + CFG.spendUrl() + "internal/spends/" + idString);
+
+      response = spendApi.getSpend(idString).execute();
+
+      System.out.println("Response code: " + response.code());
+      System.out.println("Response headers: " + response.headers());
+
+      if (!response.isSuccessful()) {
+        System.err.println("Request failed!");
+        if (response.errorBody() != null) {
+          System.err.println("Error body: " + response.errorBody().string());
+        }
+      }
+
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+
+    if (!response.isSuccessful()) {
+      // Вместо assertion бросаем исключение с информацией
+      throw new RuntimeException("Failed to find spend. HTTP " + response.code());
+    }
+
+    return Optional.ofNullable(response.body());
   }
 
   @Override
@@ -131,17 +202,6 @@ public class SpendApiClient implements SpendClient {
     }
     assertEquals(SC_OK, response.code());
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
-  }
-
-  public CategoryJson updateCategory(CategoryJson category) {
-    final Response<CategoryJson> response;
-    try {
-      response = spendApi.updateCategory(category).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return response.body();
   }
 
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
