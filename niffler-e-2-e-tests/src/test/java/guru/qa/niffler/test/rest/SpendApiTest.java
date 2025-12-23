@@ -9,12 +9,12 @@ import guru.qa.niffler.service.SpendApiClient;
 import guru.qa.niffler.service.SpendClient;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class SpendApiTest {
 
   private final SpendClient spendApi = new SpendApiClient();
-
 
   @Test
   public void createSpendFromApi() {
@@ -48,44 +48,12 @@ public class SpendApiTest {
     System.out.println(result.name());
   }
 
-//  @Test
-//  public void updateSpendFromApi() {
-//    CategoryEntity categoryEntity = new CategoryEntity();
-//    categoryEntity.setName("3edc");
-//    categoryEntity.setUsername("cat");
-//    categoryEntity.setArchived(false);
-//
-//    SpendEntity entity = new SpendEntity();
-//    entity.setUsername("cat");
-//    entity.setCurrency(CurrencyValues.RUB);
-//    entity.setSpendDate(new Date());
-//    entity.setAmount(123.0);
-//    entity.setDescription("908");
-//    entity.setCategory(categoryEntity);
-//    SpendJson spendJson = SpendJson.fromEntity(entity);
-//    SpendJson result = spendApi.update(spendJson);
-//    System.out.println(result.id());
-//    System.out.println(result.description());
-//  }
-//  @Test
-//  public void updateCategoryFromApi() {
-//    CategoryEntity categoryEntity = new CategoryEntity();
-//    categoryEntity.setName("1298761543218");
-//    categoryEntity.setUsername("mouse");
-//    categoryEntity.setArchived(true);
-//
-//    CategoryJson categoryJson = CategoryJson.fromEntity(categoryEntity);
-//    CategoryJson result = spendApi.updateCategory(categoryJson);
-//    System.out.println(result.id());
-//    System.out.println(result.name());
-//  }
-
-//  @Test
-//  public void findSpendByIdFromApi() {
-//    Optional<SpendJson> byId = spendApi.findById(
-//        UUID.fromString("da13d8e9-da7c-4883-b350-35716bec948e"));
-//    System.out.println(byId.get().description());
-//  }
+  @Test
+  public void findSpendByIdFromApi() {
+    Optional<SpendJson> byId = spendApi.findById(
+        UUID.fromString("d269a8ac-a428-4676-ad8c-dc8e4f1c8523"));
+    System.out.println(byId.get().description());
+  }
 
   @Test
   public void CategoryByUsernameAndSpendNameFromApi() {

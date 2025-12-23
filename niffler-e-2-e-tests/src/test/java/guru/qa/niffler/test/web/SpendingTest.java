@@ -53,6 +53,36 @@ public class SpendingTest {
     System.out.println(newDescription);
   }
 
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 89900,
+          currency = CurrencyValues.RUB,
+          description = "Обучение Niffler 2.0 юбилейный поток!"
+      ),
+          @Spending(
+              category = "Пиво",
+              amount = 100,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @Test
+  void spendingDescriptionShouldBeVisible(UserJson user) {
+    final String newDescription = "Обучение Niffler Next Generation 10";
+
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .editSpending(user.testData().spendings().getFirst().description())
+        .setNewSpendingDescription(newDescription)
+        .searchSpending(newDescription)
+        .checkThatTableContains(newDescription);
+    System.out.println(user.username());
+    System.out.println(user.testData().spendings().getFirst().description());
+    System.out.println(newDescription);
+  }
+
   @Test
   void findSpendingByIdTest() {
     SpendDbClient spendDbClient = new SpendDbClient();

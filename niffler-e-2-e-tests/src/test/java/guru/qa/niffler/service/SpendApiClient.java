@@ -64,23 +64,6 @@ public class SpendApiClient implements SpendClient {
     }
     assertEquals(SC_OK, response.code());
     return response.body();
-//    final Response<CategoryJson> response;
-//    try {
-//      response = spendApi.addCategory(category).execute();
-//
-//      if (!response.isSuccessful()) {
-//        String errorMessage = "Failed to create category. Code: " + response.code();
-//        if (response.errorBody() != null) {
-//          errorMessage += ", Error: " + response.errorBody().string();
-//        }
-//        throw new RuntimeException(errorMessage);
-//      }
-//
-//    } catch (IOException e) {
-//      throw new AssertionError("Error executing API call", e);
-//    }
-//
-//    return response.body();
   }
 
   @Override
@@ -97,7 +80,7 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public Optional<CategoryJson> findCategoryById(UUID id) {
-    return Optional.empty();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -114,55 +97,26 @@ public class SpendApiClient implements SpendClient {
         response.body(),
         ArrayList::new
     );
-
     return categories.stream().findFirst();
   }
 
   @Override
   public Optional<SpendJson> findById(UUID id) {
-//    final Response<SpendJson> response;
-//    try {
-//      response = spendApi.getSpend(String.valueOf(id)).execute();
-//    } catch (IOException e) {
-//      throw new AssertionError(e);
-//    }
-//    assertEquals(SC_OK, response.code());
-//    return Optional.ofNullable(response.body());
-
+    final String username = "duck";
     final Response<SpendJson> response;
     try {
-      String idString = id.toString();
-      System.out.println("Requesting spend with ID: " + idString);
-      System.out.println("Full URL would be: " + CFG.spendUrl() + "internal/spends/" + idString);
-
-      response = spendApi.getSpend(idString).execute();
-
-      System.out.println("Response code: " + response.code());
-      System.out.println("Response headers: " + response.headers());
-
-      if (!response.isSuccessful()) {
-        System.err.println("Request failed!");
-        if (response.errorBody() != null) {
-          System.err.println("Error body: " + response.errorBody().string());
-        }
-      }
-
+      response = spendApi.getSpend(String.valueOf(id), username).execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
-
-    if (!response.isSuccessful()) {
-      // Вместо assertion бросаем исключение с информацией
-      throw new RuntimeException("Failed to find spend. HTTP " + response.code());
-    }
-
+    assertEquals(SC_OK, response.code());
     return Optional.ofNullable(response.body());
   }
 
   @Override
   public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
-    return Optional.empty();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -179,6 +133,7 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public void removeCategory(CategoryJson category) {
+    throw new UnsupportedOperationException();
   }
 
   public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,

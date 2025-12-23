@@ -14,7 +14,8 @@ public class FriendsPage {
       friendsTable = $("#friends"),
       requestsTable = $("#requests"),
       allUsersTable = $("#all"),
-      emptyTable = $("#simple-tabpanel-friends");
+      emptyTable = $("#simple-tabpanel-friends"),
+      searchField = $("[placeholder='Search']");
 
   private final ElementsCollection sectionHeaders = $$("h2");
 
@@ -32,6 +33,7 @@ public class FriendsPage {
 
   @Step("Check that user has a new friend")
   public FriendsPage verifyUserHasNewFriend(String friendName) {
+    searchFriend(friendName);
     SelenideElement friendCell = getAcceptedFriends().find(text(friendName));
     friendCell.shouldBe(visible);
     return this;
@@ -70,6 +72,12 @@ public class FriendsPage {
   @Step("Verify My Friends request section is displayed")
   public FriendsPage verifyMyFriendsRequestSectionDisplayed() {
     sectionHeaders.find(text("Friend requests")).shouldBe(visible);
+    return this;
+  }
+
+  @Step("Find friend")
+  public FriendsPage searchFriend(String friendName) {
+    searchField.val(friendName).pressEnter();
     return this;
   }
 }
