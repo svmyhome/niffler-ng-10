@@ -5,7 +5,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class JdbcTransactionTemplate {
 
   private final JdbcConnectionHolder holder;
@@ -20,7 +23,7 @@ public class JdbcTransactionTemplate {
     return this;
   }
 
-  public <T> T execute(Supplier<T> action, int isolationLvl) {
+  public @Nullable <T> T execute(Supplier<T> action, int isolationLvl) {
     Connection connection = null;
     int initIsolationLevel = TRANSACTION_READ_COMMITTED;
     try {

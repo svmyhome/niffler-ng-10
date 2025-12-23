@@ -11,14 +11,19 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+@ParametersAreNonnullByDefault
 public class SpendApiClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
@@ -31,7 +36,7 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public SpendJson create(SpendJson spend) {
+  public @Nullable SpendJson create(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.addSpend(spend).execute();
@@ -43,7 +48,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public SpendJson update(SpendJson spend) {
+  public @Nullable SpendJson update(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.updateSpend(spend).execute();
@@ -55,7 +60,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public CategoryJson createCategory(CategoryJson category) {
+  public @Nullable CategoryJson createCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
       response = spendApi.addCategory(category).execute();
@@ -67,7 +72,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public CategoryJson updateCategory(CategoryJson category) {
+  public @Nullable CategoryJson updateCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
       response = spendApi.updateCategory(category).execute();
@@ -101,7 +106,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<SpendJson> findById(UUID id) {
+  public @Nullable Optional<SpendJson> findById(UUID id) {
     final String username = "duck";
     final Response<SpendJson> response;
     try {
@@ -136,8 +141,12 @@ public class SpendApiClient implements SpendClient {
     throw new UnsupportedOperationException();
   }
 
-  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
-      String from, String to) {
+  public @Nonnull List<SpendJson> findSpendsByUserName(
+      String username,
+      @Nullable CurrencyValues currencyValues,
+      @Nullable String from,
+      @Nullable String to
+  ) {
     final Response<SpendJson[]> response;
     try {
       response = spendApi.getSpends(username, currencyValues, from, to).execute();
@@ -148,7 +157,7 @@ public class SpendApiClient implements SpendClient {
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
-  public List<SpendJson> findSpendsByUserName(String username) {
+  public @Nonnull List<SpendJson> findSpendsByUserName(String username) {
     final Response<SpendJson[]> response;
     try {
       response = spendApi.getSpends(username).execute();
@@ -177,7 +186,7 @@ public class SpendApiClient implements SpendClient {
     return categories.stream().findFirst();
   }
 
-  public List<CategoryJson> findAllCategories(String username) {
+  public @Nonnull List<CategoryJson> findAllCategories(String username) {
     final Response<List<CategoryJson>> response;
     try {
       response = spendApi.getCategories(username).execute();
@@ -185,8 +194,7 @@ public class SpendApiClient implements SpendClient {
       throw new AssertionError(e);
     }
     assertEquals(SC_OK, response.code());
-    assert response.body() != null;
-    return response.body();
+    return response.body()!= null? response.body(): Collections.emptyList();
   }
 
   public void deleteSpends(String username, List<String> ids) {

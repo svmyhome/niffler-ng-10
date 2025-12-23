@@ -87,6 +87,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
     if (managedUser != null) {
       entityManager.remove(managedUser);
     }
+//    entityManager.remove(entityManager.contains(spend)? spend : entityManager.merge(spend));
   }
 
   @Override
@@ -96,5 +97,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
     if (managedUser != null) {
       entityManager.remove(managedUser);
     }
+    //    entityManager.remove(entityManager.contains(category)? spend : entityManager.merge(category));
+
   }
 }

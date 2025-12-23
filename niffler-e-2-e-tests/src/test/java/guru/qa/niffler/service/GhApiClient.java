@@ -5,9 +5,12 @@ import guru.qa.niffler.api.GhApi;
 import guru.qa.niffler.config.Config;
 import java.io.IOException;
 import java.util.Objects;
+import javax.annotation.ParametersAreNonnullByDefault;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+@ParametersAreNonnullByDefault
 public class GhApiClient {
 
   private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
@@ -20,17 +23,15 @@ public class GhApiClient {
   private final GhApi ghApi = retrofit.create(GhApi.class);
 
   public String issueState(String issueNumber) {
-    final JsonNode response;
+    final Response<JsonNode> response;
     try {
       response = ghApi.issue(
-              "Bearer " + System.getenv(GH_TOKEN_ENV),
-              issueNumber
-          )
-          .execute()
-          .body();
+          "Bearer " + System.getenv(GH_TOKEN_ENV),
+          issueNumber
+      ).execute();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return Objects.requireNonNull(response).get("state").asText();
+    return Objects.requireNonNull(response.body()).get("state").asText();
   }
 }

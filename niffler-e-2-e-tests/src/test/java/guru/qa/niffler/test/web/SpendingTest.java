@@ -131,7 +131,7 @@ public class SpendingTest {
     entity.setCurrency(CurrencyValues.RUB);
     entity.setSpendDate(new Date());
     entity.setAmount(123.0);
-    entity.setDescription("55qazsdfg");
+    entity.setDescription("55qa1zs1dfg");
     entity.setCategory(categoryEntity);
 
     SpendJson spendJson = SpendJson.fromEntity(entity);
