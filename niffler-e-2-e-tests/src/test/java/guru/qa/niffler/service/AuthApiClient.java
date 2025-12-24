@@ -5,12 +5,14 @@ import guru.qa.niffler.config.Config;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import javax.annotation.ParametersAreNonnullByDefault;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+@ParametersAreNonnullByDefault
 public class AuthApiClient {
 
   private static final Config CFG = Config.getInstance();

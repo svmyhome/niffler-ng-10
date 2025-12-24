@@ -8,6 +8,7 @@ import guru.qa.niffler.data.repository.spend.SpendRepository;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
+import io.qameta.allure.Step;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class SpendDbClient implements SpendClient {
       CFG.spendJdbcUrl());
 
   @Override
+  @Step("Create spending to DB")
   public SpendJson create(SpendJson spend) {
     return xaTransactionTemplate.execute(() -> {
       SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -30,6 +32,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Update spending in DB")
   public SpendJson update(SpendJson spend) {
     return xaTransactionTemplate.execute(() -> {
       SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -39,6 +42,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Update category in DB")
   public CategoryJson updateCategory(CategoryJson category) {
     return xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
@@ -48,6 +52,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Create category to DB")
   public CategoryJson createCategory(CategoryJson category) {
     return xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
@@ -57,23 +62,27 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Find category by ID in DB")
   public Optional<CategoryJson> findCategoryById(UUID id) {
     return spendRepository.findCategoryById(id)
         .map(CategoryJson::fromEntity);
   }
 
   @Override
+  @Step("Find category by username and spend name in DB")
   public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
     return spendRepository.findCategoryByUsernameAndSpendName(username, name)
         .map(CategoryJson::fromEntity);
   }
 
   @Override
+  @Step("Find spend by ID in DB")
   public Optional<SpendJson> findById(UUID id) {
     return spendRepository.findSpendById(id).map(SpendJson::fromEntity);
   }
 
   @Override
+  @Step("Find spend by username and spend description in DB")
   public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
     return spendRepository.findByUsernameAndSpendDescription(username, description)
@@ -81,6 +90,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Remove spend from DB")
   public void remove(SpendJson spend) {
     xaTransactionTemplate.execute(() -> {
       SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -90,6 +100,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
+  @Step("Remove category from DB")
   public void removeCategory(CategoryJson category) {
     xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);

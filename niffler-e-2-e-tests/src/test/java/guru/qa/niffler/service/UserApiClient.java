@@ -4,6 +4,7 @@ import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.UserApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.user.UserJson;
+import io.qameta.allure.Step;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -41,6 +42,7 @@ public class UserApiClient implements UserClient {
   private final AuthApi authApi = authRetrofit.create(AuthApi.class);
 
   @Override
+  @Step("Create user {username} via API")
   public UserJson createUser(String username, String password) {
     try {
       authApi.requestRegisterForm().execute();
@@ -69,6 +71,7 @@ public class UserApiClient implements UserClient {
   }
 
   @Override
+  @Step("Create income invitation for user {targetUser.username} via API")
   public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
@@ -84,6 +87,7 @@ public class UserApiClient implements UserClient {
   }
 
   @Override
+  @Step("Create outcome invitation for user {targetUser.username} via API")
   public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
@@ -99,7 +103,7 @@ public class UserApiClient implements UserClient {
   }
 
   @Override
-  public List<UserJson> createFriends(UserJson targetUser, int count) {
+  @Step("Create {count} friends for user {targetUser.username} via API")  public List<UserJson> createFriends(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {
