@@ -6,6 +6,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
 public class FriendsPage {
@@ -14,8 +15,9 @@ public class FriendsPage {
       friendsTable = $("#friends"),
       requestsTable = $("#requests"),
       allUsersTable = $("#all"),
-      emptyTable = $("#simple-tabpanel-friends"),
-      searchField = $("[placeholder='Search']");
+      emptyTable = $("#simple-tabpanel-friends");
+
+  private final SearchField searchField = new SearchField();
 
   private final ElementsCollection sectionHeaders = $$("h2");
 
@@ -30,6 +32,7 @@ public class FriendsPage {
   public ElementsCollection getAllUsers() {
     return allUsersTable.$$("tr td");
   }
+
 
   @Step("Check that user has a new friend")
   public FriendsPage verifyUserHasNewFriend(String friendName) {
@@ -77,7 +80,13 @@ public class FriendsPage {
 
   @Step("Find friend")
   public FriendsPage searchFriend(String friendName) {
-    searchField.val(friendName).pressEnter();
+    searchField.fill(friendName);
+    return this;
+  }
+
+  @Step("Clear friend by search")
+  public FriendsPage clearFriendBySearch() {
+    searchField.clear();
     return this;
   }
 }

@@ -30,6 +30,21 @@ public class FriendsWebTest {
   }
 
   @User(
+      friends = 1
+  )
+  @Test
+  public void friendShouldBePresentInFriendsTable1(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openFriends()
+        .verifyMyFriendsSectionDisplayed()
+        .verifyUserHasNewFriend(user.testData().friends().getFirst().username())
+        .clearFriendBySearch();
+    System.out.println(user.username());
+    System.out.println(user.testData().friends().getFirst().username());
+  }
+
+  @User(
       friends = 0
   )
   @Test

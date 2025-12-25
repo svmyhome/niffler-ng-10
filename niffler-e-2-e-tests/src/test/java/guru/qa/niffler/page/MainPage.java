@@ -6,6 +6,8 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
 public class MainPage {
@@ -16,8 +18,10 @@ public class MainPage {
   private final SelenideElement mainPage = $("#root"),
       menu = $(".MuiAvatar-root"),
       profile = $("[href='/profile']"),
-      friends = $("[href='/people/friends']"),
-      searchField = $("[placeholder='Search']");
+      friends = $("[href='/people/friends']");
+
+  Header header = new Header();
+  SearchField search = new SearchField();
 
   @Step("Edit spending: '{description}'")
   public EditSpendingPage editSpending(String description) {
@@ -45,7 +49,9 @@ public class MainPage {
 
   @Step("Switch to profile page")
   public ProfilePage openProfile() {
-    menu.click();
+//    menu.click();
+    header.openMenu();
+//    return header.newProfile();
     profile.click();
     return new ProfilePage();
   }
@@ -57,6 +63,12 @@ public class MainPage {
     return new FriendsPage();
   }
 
+  @Step("Switch to spending page")
+  public EditSpendingPage openNewSpending() {
+    return header.openNewSpending();
+//    return new EditSpendingPage();
+  }
+
   @Step("Open All People list")
   public MainPage historyOfSpendingIsVisible() {
     sectionHeaders.find(text("History of Spendings")).shouldBe(visible).click();
@@ -65,7 +77,7 @@ public class MainPage {
 
   @Step("Find friend")
   public MainPage searchSpending(String spendingName) {
-    searchField.val(spendingName).pressEnter();
+    search.fill(spendingName);
     return this;
   }
 }
