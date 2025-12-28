@@ -71,9 +71,6 @@ public class SpendingWebTest {
         .setNewSpendingDescription(newDescription)
         .searchSpending(newDescription)
         .checkThatTableContains(newDescription);
-    System.out.println(user.username());
-    System.out.println(user.testData().spendings().getFirst().description());
-    System.out.println(newDescription);
   }
 
   @User(

@@ -39,9 +39,10 @@ public class MainPage {
   }
 
   @Step("Successfully opened main page")
-  public void mainPageShouldBeDisplayed() {
+  public MainPage mainPageShouldBeDisplayed() {
     mainPage.shouldHave(text("Statistics"));
     mainPage.shouldHave(text("History of Spendings"));
+    return this;
   }
 
   @Step("Open menu")
@@ -50,24 +51,29 @@ public class MainPage {
     return this;
   }
 
-  @Step("Switch to profile page")
-  public ProfilePage openProfile() {
-    header.openMenu();
-//    return header.newProfile();
-    profile.click();
-    return new ProfilePage();
-  }
-
   @Step("Switch to friends page")
   public FriendsPage openFriends() {
-    menu.click();
-    friends.click();
-    return new FriendsPage();
+    return header.toFriendsPage();
+  }
+
+  @Step("Switch to All people page")
+  public AllPeoplesPage openAllPeople() {
+    return header.toAllPeoplesPage();
+  }
+
+  @Step("Switch to profile page")
+  public ProfilePage openProfile() {
+    return header.toProfilePage();
+  }
+
+  @Step("Switch to login page")
+  public LoginPage signOut() {
+    return header.signOut();
   }
 
   @Step("Switch to spending page")
   public EditSpendingPage openNewSpending() {
-    return header.openNewSpending();
+    return header.addSpendingPage();
   }
 
   @Step("Open All People list")
@@ -78,7 +84,7 @@ public class MainPage {
 
   @Step("Find friend")
   public MainPage searchSpending(String spendingName) {
-    search.fill(spendingName);
+    search.search(spendingName);
     return this;
   }
 
@@ -95,7 +101,7 @@ public class MainPage {
 
   @Step("Check spend is deleted")
   public void checkSpendIsDeleted() {
-      $(".MuiTypography-root").shouldHave(text("Spendings succesfully deleted"));
+    $(".MuiTypography-root").shouldHave(text("Spendings succesfully deleted"));
   }
 
   @Step("Edit spending from table")

@@ -20,6 +20,15 @@ public class LoginTest {
   }
 
   @Test
+  void shouldLoginUserSignOut() {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login("duck", "12345")
+        .mainPageShouldBeDisplayed()
+        .signOut()
+        .loginPageShouldBeDisplayed();
+  }
+
+  @Test
   void userStayOnLoginPageAfterLoginWithBadCredential() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .loginWithBadCredential("duck", "1234")

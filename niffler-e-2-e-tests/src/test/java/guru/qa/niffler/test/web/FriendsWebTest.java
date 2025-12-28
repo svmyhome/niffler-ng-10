@@ -40,8 +40,6 @@ public class FriendsWebTest {
         .verifyMyFriendsSectionDisplayed()
         .verifyUserHasNewFriend(user.testData().friends().getFirst().username())
         .clearFriendBySearch();
-    System.out.println(user.username());
-    System.out.println(user.testData().friends().getFirst().username());
   }
 
   @User(
@@ -80,10 +78,8 @@ public class FriendsWebTest {
         .login(user.username(), user.testData().password())
         .openFriends()
         .verifyFriendsTableIsEmpty()
-        .openAllPeopleList()
+        .openAllPeoplePage()
         .verifyUserHasNewOutcomingFriendRequest(
             user.testData().outcomeInvitation().getFirst().username());
-    System.out.println(user.username());
-    System.out.println(user.testData().outcomeInvitation().getFirst().username());
   }
 }

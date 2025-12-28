@@ -47,12 +47,12 @@ public class FriendsPage {
     getIncomingRequests().find(text(friendName)).shouldBe(visible);
     return this;
   }
-
-  @Step("Check that user has a new outcoming requests")
-  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName) {
-    getAllUsers().find(text(friendName)).shouldBe(visible);
-    return this;
-  }
+//
+//  @Step("Check that user has a new outcoming requests")
+//  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName) {
+//    getAllUsers().find(text(friendName)).shouldBe(visible);
+//    return this;
+//  }
 
   @Step("Check that friends table is empty")
   public FriendsPage verifyFriendsTableIsEmpty() {
@@ -61,9 +61,9 @@ public class FriendsPage {
   }
 
   @Step("Open All People list")
-  public FriendsPage openAllPeopleList() {
+  public AllPeoplesPage openAllPeoplePage() {
     sectionHeaders.find(text("All people")).shouldBe(visible).click();
-    return this;
+    return new AllPeoplesPage();
   }
 
   @Step("Verify My Friends section is displayed")
@@ -80,13 +80,13 @@ public class FriendsPage {
 
   @Step("Find friend")
   public FriendsPage searchFriend(String friendName) {
-    searchField.fill(friendName);
+    searchField.search(friendName);
     return this;
   }
 
   @Step("Clear friend by search")
   public FriendsPage clearFriendBySearch() {
-    searchField.clear();
+    searchField.clearIfNotEmpty();
     return this;
   }
 }
