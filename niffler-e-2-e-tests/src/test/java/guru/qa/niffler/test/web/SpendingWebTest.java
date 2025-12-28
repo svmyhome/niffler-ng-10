@@ -2,12 +2,14 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import java.util.Calendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -105,56 +107,91 @@ public class SpendingWebTest {
     System.out.println(newDescription);
   }
 
-//  @User
-//  @Test
-//  void createSpendingDescriptionShouldBeVisible(UserJson user) {
-//    final String newDescription = "Обучение Niffler Next Generation 10";
-//    Calendar cal = Calendar.getInstance();
-//    cal.set(2024, 11, 12);
-//
-//    Selenide.open(CFG.frontUrl(), LoginPage.class)
-//        .login(user.username(), user.testData().password())
-//        .historyOfSpendingIsVisible()
-//        .openNewSpending()
-//        .fillSpending(123.0, "QAZ", cal, "qaz");
+  @User
+  @Test
+  void createSpendingDescriptionShouldBeVisible(UserJson user) {
+    final String newDescription = "Обучение Niffler Next Generation 10";
+    Calendar cal = Calendar.getInstance();
+    cal.set(2024, 11, 12);
 
-  /// /        .createSpending() /
-  /// .editSpending(user.testData().spendings().getFirst().description()) /
-  /// .setNewSpendingDescription(newDescription) /        .searchSpending(newDescription) /
-  /// .checkThatTableContains(newDescription);
-//    System.out.println(user.username());
-//    System.out.println(user.testData().spendings().getFirst().description());
-//    System.out.println(newDescription);
-//  }
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .openNewSpending()
+        .fillSpending(123.0, "QAZ", cal, "qaz")
+        .checkThatTableContains("qaz");
+  }
+
   @User(
       spendings = {@Spending(
           category = "Машина",
           amount = 89900,
           currency = CurrencyValues.RUB,
           description = "Обучение Niffler 2.0 юбилейный поток!"
-      ),
-          @Spending(
-              category = "Пиво",
-              amount = 100,
-              currency = CurrencyValues.RUB,
-              description = "Обучение Niffler 2.0 юбилейный поток!"
-          )}
+      )}
   )
   @Test
-  void searchSpendingShouldBeVisible(UserJson user) {
+  void spendingShouldBeDeleted(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .deleteSpendingFromTable("Обучение Niffler 2.0 юбилейный поток!")
+        .checkSpendIsDeleted();
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 89900,
+          currency = CurrencyValues.RUB,
+          description = "Обучение Niffler 2.0 юбилейный поток!"
+      )}
+  )
+  @Test
+  void spendingShouldBeEdit(UserJson user) {
     final String newDescription = "Обучение Niffler Next Generation 10";
+    Calendar cal = Calendar.getInstance();
+    cal.set(2024, 11, 12);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
-//        .createNewSpending()
-        .editSpending(user.testData().spendings().getFirst().description())
-        .setNewSpendingDescription(newDescription)
-        .searchSpending(newDescription)
-        .checkThatTableContains(newDescription);
-    System.out.println(user.username());
-    System.out.println(user.testData().spendings().getFirst().description());
-    System.out.println(newDescription);
+        .editSpendingFromTable("Обучение Niffler 2.0 юбилейный поток!")
+        .fillSpending(123.0, "QAZ", cal, "qaz");
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 89900,
+          currency = CurrencyValues.RUB,
+          description = "Обучение Niffler 2.0 юбилейный поток!"
+      )}
+  )
+  @Test
+  void selectPeriodSpending(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .selectPeriodSpendingFromTable(DataFilterValues.WEEK)
+        .checkSelectPeriodSpendingFromTable(DataFilterValues.WEEK);
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 89900,
+          currency = CurrencyValues.RUB,
+          description = "Обучение Niffler 2.0 юбилейный поток!"
+      )}
+  )
+  @Test
+  void checkTableContains(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .checkTableContent("Машина", "89900", String.valueOf(CurrencyValues.RUB), "Обучение Niffler 2.0 юбилейный поток!");
   }
 }
+
 

@@ -1,22 +1,59 @@
 package guru.qa.niffler.page.component;
 
+import static com.codeborne.selenide.CollectionCondition.texts;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.data.constants.DataFilterValues;
+import java.util.Arrays;
+import java.util.List;
 
 public class SpendingTable {
-    private final SelenideElement self = $("#spendings .MuiTableContainer-root");
+
+  private final SelenideElement self = $("#spendings .MuiTableContainer-root");
+
+    private final ElementsCollection rows = $$("tbody tr");
+  private final SelenideElement row = $("tbody tr");
+
+
+  public SpendingTable selectPeriod(DataFilterValues period) {
+    $("#period").click();
+    $(String.format("[data-value='%s']", period)).click();
+    return this;
+  }
+
+  public SpendingTable checkPeriodIsSelected(DataFilterValues period) {
+    $("#period").shouldHave(text(period.getPeriod()));
+    return this;
+  }
 
   public SpendingTable searchSpendingByDescription(String description) {
     self.$("[placeholder='Search']").val(description);
     return this;
   }
+
+  public SpendingTable deleteSpending(String description) {
+    searchSpendingByDescription(description);
+    $(".PrivateSwitchBase-input[type='checkbox']").click();
+    $("#delete").click();
+    $(".MuiDialogActions-root").$(byText("Delete")).click();
+    return this;
+  }
+
+  public SpendingTable editSpending(String description) {
+    searchSpendingByDescription(description);
+    $("[aria-label*='Edit spending']").click();
+    return this;
+  }
+
+  public SpendingTable checkTableContains(String... expectedSpends) {
+    List<String> spends = Arrays.asList(expectedSpends);
+//    rows.forEach(row -> {$("tr");});
+    rows.shouldHave(texts(expectedSpends));
+    return this;
+  }
+
 }
-
-
-//public class SpendingTable {
-//  public SpendingTable selectPeriod(DataFilterValues period) { }
-//  public EditSpendingPage editSpending(String description) { }
-//  public SpendingTable deleteSpending(String description) { }
-//  public SpendingTable searchSpendingByDescription(String description) {}
-//  public SpendingTable checkTableContains(String... expectedSpends) { }
-//

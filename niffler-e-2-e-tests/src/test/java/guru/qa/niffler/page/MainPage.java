@@ -6,8 +6,10 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
+import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
 
 public class MainPage {
@@ -22,6 +24,7 @@ public class MainPage {
 
   Header header = new Header();
   SearchField search = new SearchField();
+  SpendingTable spendingTable = new SpendingTable();
 
   @Step("Edit spending: '{description}'")
   public EditSpendingPage editSpending(String description) {
@@ -49,7 +52,6 @@ public class MainPage {
 
   @Step("Switch to profile page")
   public ProfilePage openProfile() {
-//    menu.click();
     header.openMenu();
 //    return header.newProfile();
     profile.click();
@@ -66,7 +68,6 @@ public class MainPage {
   @Step("Switch to spending page")
   public EditSpendingPage openNewSpending() {
     return header.openNewSpending();
-//    return new EditSpendingPage();
   }
 
   @Step("Open All People list")
@@ -80,4 +81,46 @@ public class MainPage {
     search.fill(spendingName);
     return this;
   }
+
+  @Step("Check spending description from table")
+  public void checkSpendingDescriptionTable(String description) {
+    spendingTable.searchSpendingByDescription(description);
+  }
+
+  @Step("Delete spending from table")
+  public MainPage deleteSpendingFromTable(String description) {
+    spendingTable.deleteSpending(description);
+    return this;
+  }
+
+  @Step("Check spend is deleted")
+  public void checkSpendIsDeleted() {
+      $(".MuiTypography-root").shouldHave(text("Spendings succesfully deleted"));
+  }
+
+  @Step("Edit spending from table")
+  public EditSpendingPage editSpendingFromTable(String description) {
+    spendingTable.editSpending(description);
+    return new EditSpendingPage();
+  }
+
+  @Step("Select period spendings")
+  public MainPage selectPeriodSpendingFromTable(DataFilterValues period) {
+    spendingTable.selectPeriod(period);
+    return this;
+  }
+
+  @Step("Check period is selected")
+  public MainPage checkSelectPeriodSpendingFromTable(DataFilterValues period) {
+    spendingTable.checkPeriodIsSelected(period);
+    return this;
+  }
+
+  @Step("Check period is selected")
+  public MainPage checkTableContent(String... expectedSpends) {
+    spendingTable.checkTableContains(expectedSpends);
+    return this;
+  }
+
+
 }
