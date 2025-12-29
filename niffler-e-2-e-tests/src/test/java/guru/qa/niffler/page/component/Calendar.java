@@ -4,19 +4,23 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-
+@ParametersAreNonnullByDefault
 public class Calendar {
 
   private final SelenideElement self = $("[name='date']").parent();
 
-  public Calendar selectDateInCalendar(Date date) {
+  @Step("Select date in calendar {date}")
+  public @Nonnull Calendar selectDateInCalendar(Date date) {
     LocalDate localDate = date.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate();
@@ -43,11 +47,10 @@ public class Calendar {
     return this;
   }
 
-  private int getCurrentMonth() {
+  private @Nonnull int getCurrentMonth() {
     String currentMonthYear = $(".MuiPickersCalendarHeader-label").shouldBe(visible).getText();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
     YearMonth yearMonth = YearMonth.parse(currentMonthYear, formatter);
-    int result = yearMonth.getMonthValue();
-    return result;
+    return yearMonth.getMonthValue();
   }
 }
