@@ -9,7 +9,10 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Locale;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -94,29 +97,25 @@ public class SpendingWebTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
-//        .createNewSpending()
         .editSpending(user.testData().spendings().getFirst().description())
         .setNewSpendingDescription(newDescription)
         .searchSpending(newDescription)
         .checkThatTableContains(newDescription);
-    System.out.println(user.username());
-    System.out.println(user.testData().spendings().getFirst().description());
-    System.out.println(newDescription);
   }
 
   @User
   @Test
-  void createSpendingDescriptionShouldBeVisible(UserJson user) {
-    final String newDescription = "Обучение Niffler Next Generation 10";
+  void createSpendingDescriptionShouldBeVisible(UserJson user) throws InterruptedException {
+    final String newDescription = "qaz";
     Calendar cal = Calendar.getInstance();
-    cal.set(2024, 11, 12);
+    cal.set(2011,  Calendar.NOVEMBER, 12);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .openNewSpending()
-        .fillSpending(123.0, "QAZ", cal, "qaz")
-        .checkThatTableContains("qaz");
+        .fillSpending(123.0, "QAZ", cal, newDescription)
+        .checkThatTableContains(newDescription);
   }
 
   @User(
@@ -145,16 +144,17 @@ public class SpendingWebTest {
       )}
   )
   @Test
-  void spendingShouldBeEdit(UserJson user) {
-    final String newDescription = "Обучение Niffler Next Generation 10";
+  void spendingShouldBeEdit(UserJson user) throws InterruptedException {
+    final String newDescription = "Обучение Niffler 2.0 юбилейный поток!";
     Calendar cal = Calendar.getInstance();
     cal.set(2024, 11, 12);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
-        .editSpendingFromTable("Обучение Niffler 2.0 юбилейный поток!")
-        .fillSpending(123.0, "QAZ", cal, "qaz");
+        .editSpendingFromTable(newDescription)
+        .fillSpending(123.0, "QAZ", cal, "qaz")
+        .checkSpendingDescriptionTable(newDescription);
   }
 
   @User(
@@ -184,10 +184,14 @@ public class SpendingWebTest {
   )
   @Test
   void checkTableContains(UserJson user) {
+    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH));
+
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
-        .checkTableContent("Машина", "89900", String.valueOf(CurrencyValues.RUB), "Обучение Niffler 2.0 юбилейный поток!");
+        .checkTableContent("Машина", "89900", String.valueOf(CurrencyValues.RUB),
+            "Обучение Niffler 2.0 юбилейный поток!", today)
+        .checkTableSize(1);
   }
 }
 

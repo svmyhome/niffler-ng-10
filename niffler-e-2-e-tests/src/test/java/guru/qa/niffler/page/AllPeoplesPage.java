@@ -29,12 +29,6 @@ public class AllPeoplesPage {
     return this;
   }
 
-//  @Step("Open All People list")
-//  public AllPeoplesPage openAllPeopleList() {
-//    sectionHeaders.find(text("All people")).shouldBe(visible).click();
-//    return this;
-//  }
-
   @Step("Find friend")
   public AllPeoplesPage searchFriend(String friendName) {
     searchField.search(friendName);

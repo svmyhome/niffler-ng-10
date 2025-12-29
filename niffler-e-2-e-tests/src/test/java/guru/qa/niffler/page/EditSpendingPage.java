@@ -24,7 +24,8 @@ public class EditSpendingPage {
   }
 
   @Step("Add new spending")
-  public MainPage fillSpending(double amount, String category, java.util.Calendar cal, String description) {
+  public MainPage fillSpending(double amount, String category, java.util.Calendar cal, String description)
+      throws InterruptedException {
     amountInput.setValue(String.valueOf(amount));
     currency.click();
     rub.click();

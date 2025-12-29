@@ -128,5 +128,11 @@ public class MainPage {
     return this;
   }
 
+  @Step("Check table have {count} rows")
+  public MainPage checkTableSize(int count) {
+    spendingTable.checkTableSize(count);
+    return this;
+  }
+
 
 }
