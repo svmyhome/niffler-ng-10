@@ -105,10 +105,10 @@ public class SpendingWebTest {
 
   @User
   @Test
-  void createSpendingDescriptionShouldBeVisible(UserJson user) throws InterruptedException {
+  void createSpendingDescriptionShouldBeVisible(UserJson user) {
     final String newDescription = "qaz";
     Calendar cal = Calendar.getInstance();
-    cal.set(2011,  Calendar.NOVEMBER, 12);
+    cal.set(2011, Calendar.NOVEMBER, 12);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
@@ -144,7 +144,7 @@ public class SpendingWebTest {
       )}
   )
   @Test
-  void spendingShouldBeEdit(UserJson user) throws InterruptedException {
+  void spendingShouldBeEdit(UserJson user) {
     final String newDescription = "Обучение Niffler 2.0 юбилейный поток!";
     Calendar cal = Calendar.getInstance();
     cal.set(2024, 11, 12);
@@ -184,7 +184,8 @@ public class SpendingWebTest {
   )
   @Test
   void checkTableContains(UserJson user) {
-    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH));
+    String today = LocalDate.now()
+        .format(DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH));
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())

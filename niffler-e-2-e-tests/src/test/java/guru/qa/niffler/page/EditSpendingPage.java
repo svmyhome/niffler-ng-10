@@ -9,9 +9,9 @@ public class EditSpendingPage {
 
   private final SelenideElement
       amountInput = $("#amount"),
-      currency= $("#currency"),
-  rub = $("[data-value='RUB']"),
-  categoryInput = $("#category"), descriptionInput = $("#description");
+      currency = $("#currency"),
+      rub = $("[data-value='RUB']"),
+      categoryInput = $("#category"), descriptionInput = $("#description");
   private final SelenideElement saveBtn = $("#save");
 
   Calendar calendar = new Calendar();
@@ -24,8 +24,8 @@ public class EditSpendingPage {
   }
 
   @Step("Add new spending")
-  public MainPage fillSpending(double amount, String category, java.util.Calendar cal, String description)
-      throws InterruptedException {
+  public MainPage fillSpending(double amount, String category, java.util.Calendar cal,
+      String description) {
     amountInput.setValue(String.valueOf(amount));
     currency.click();
     rub.click();
