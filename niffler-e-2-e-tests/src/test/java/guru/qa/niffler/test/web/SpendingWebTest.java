@@ -105,7 +105,7 @@ public class SpendingWebTest {
 
   @User
   @Test
-  void createSpendingDescriptionShouldBeVisible(UserJson user) {
+  void shouldCreateNewSpendingWithValidData(UserJson user) {
     final String newDescription = "qaz";
     Calendar cal = Calendar.getInstance();
     cal.set(2011, Calendar.NOVEMBER, 12);

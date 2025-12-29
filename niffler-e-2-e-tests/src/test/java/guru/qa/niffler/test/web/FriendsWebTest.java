@@ -65,9 +65,38 @@ public class FriendsWebTest {
         .verifyMyFriendsRequestSectionDisplayed()
         .verifyUserHasNewIncomingFriendRequest(
             user.testData().incomeInvitation().getFirst().username());
-    System.out.println(user.username());
-    System.out.println(user.testData().incomeInvitation().getFirst().username());
   }
+
+  @User(
+      incomeInvitations = 1
+  )
+  @Test
+  public void shouldDeclineFriendRequest(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openFriends()
+        .verifyMyFriendsRequestSectionDisplayed()
+        .verifyUserHasNewIncomingFriendRequest(
+            user.testData().incomeInvitation().getFirst().username())
+        .declineFriendRequest()
+        .verifyFriendsTableIsEmpty();
+  }
+
+  @User(
+      incomeInvitations = 1
+  )
+  @Test
+  public void shouldAcceptFriendRequest(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openFriends()
+        .verifyMyFriendsRequestSectionDisplayed()
+        .verifyUserHasNewIncomingFriendRequest(
+            user.testData().incomeInvitation().getFirst().username())
+        .acceptFriendRequest()
+        .verifyUserHaveFriend();
+  }
+
 
   @User(
       outcomeInvitations = 1

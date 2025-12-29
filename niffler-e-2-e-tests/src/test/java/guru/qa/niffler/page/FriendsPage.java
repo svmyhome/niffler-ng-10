@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
@@ -47,12 +48,25 @@ public class FriendsPage {
     getIncomingRequests().find(text(friendName)).shouldBe(visible);
     return this;
   }
-//
-//  @Step("Check that user has a new outcoming requests")
-//  public FriendsPage verifyUserHasNewOutcomingFriendRequest(String friendName) {
-//    getAllUsers().find(text(friendName)).shouldBe(visible);
-//    return this;
-//  }
+
+  @Step("User accept friendship request")
+  public FriendsPage acceptFriendRequest() {
+    $(byText("Accept")).click();
+    return this;
+  }
+
+  @Step("Check user have friend")
+  public FriendsPage verifyUserHaveFriend() {
+    $(byText("Unfriend")).shouldBe(visible);
+    return this;
+  }
+
+  @Step("User decline friendship request")
+  public FriendsPage declineFriendRequest() {
+    $(byText("Decline")).click();
+    $("[role='dialog']").$$("button").findBy(text("Decline")).click();
+    return this;
+  }
 
   @Step("Check that friends table is empty")
   public FriendsPage verifyFriendsTableIsEmpty() {
