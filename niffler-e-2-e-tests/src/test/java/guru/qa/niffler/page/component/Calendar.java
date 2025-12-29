@@ -10,7 +10,9 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -18,33 +20,48 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class Calendar {
 
   private final SelenideElement self = $("[name='date']").parent();
+  private final SelenideElement calendarButton = self.$("[aria-label*='Choose date']"),
+      selectYearButton = $("[aria-label*='calendar view is open']"),
+      previousMonthButton = $("[data-testid='ArrowLeftIcon']"),
+      nextMonthButton = $("[data-testid='ArrowRightIcon']");
 
   @Step("Select date in calendar {date}")
   public @Nonnull Calendar selectDateInCalendar(Date date) {
-    LocalDate localDate = date.toInstant()
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate();
+    Map<String, String> expectedDate = getMonths(date);
+    int expectedMonth = Integer.parseInt(expectedDate.get("expectedMonth"));
+    String year = expectedDate.get("year");
+    String day = expectedDate.get("day");
 
-    int day = localDate.getDayOfMonth();
-    int year = localDate.getYear();
-    int expectedMonth = localDate.getMonthValue();
+    calendarButton.click();
+    selectYearButton.click();
+    $(byText(year)).click();
+    selectMonth(expectedMonth);
+    $(byText(day)).click();
+    return this;
+  }
 
-    self.$("[aria-label*='Choose date']").click();
-    $("[aria-label*='calendar view is open']").click();
-    $(byText(String.valueOf(year))).click();
+  private void selectMonth(int expectedMonth) {
     int currentMonth = getCurrentMonth();
-
     while (currentMonth != expectedMonth) {
       if (currentMonth > expectedMonth) {
-        $("[data-testid='ArrowLeftIcon']").click();
+        previousMonthButton.click();
       } else {
-        $("[data-testid='ArrowRightIcon']").click();
+        nextMonthButton.click();
       }
       currentMonth = getCurrentMonth();
     }
+  }
 
-    $(byText(String.valueOf(day))).click();
-    return this;
+  private @Nonnull
+  Map<String, String> getMonths(Date date) {
+    LocalDate localDate = date.toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate();
+    Map<String, String> months = new HashMap<>();
+    months.put("day", String.valueOf(localDate.getDayOfMonth()));
+    months.put("year", String.valueOf(localDate.getYear()));
+    months.put("expectedMonth", String.valueOf(localDate.getMonthValue()));
+    return months;
   }
 
   private @Nonnull int getCurrentMonth() {
