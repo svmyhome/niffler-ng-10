@@ -39,7 +39,8 @@ public class FriendsWebTest {
         .openFriends()
         .verifyMyFriendsSectionDisplayed()
         .verifyUserHasNewFriend(user.testData().friends().getFirst().username())
-        .clearFriendBySearch();
+        .clearFriendBySearch()
+        .checkSearchFieldIsCleared();
   }
 
   @User(

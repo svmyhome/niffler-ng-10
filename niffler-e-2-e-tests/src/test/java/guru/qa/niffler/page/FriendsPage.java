@@ -103,4 +103,10 @@ public class FriendsPage {
     searchField.clearIfNotEmpty();
     return this;
   }
+
+  @Step("Check search field is cleared from friend name")
+  public FriendsPage checkSearchFieldIsCleared() {
+    searchField.checkSearchFieldEmpty();
+    return this;
+  }
 }
