@@ -11,7 +11,11 @@ import guru.qa.niffler.model.spend.SpendJson;
 import io.qameta.allure.Step;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
@@ -23,7 +27,7 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   @Step("Create spending to DB")
-  public SpendJson create(SpendJson spend) {
+  public @Nonnull SpendJson create(SpendJson spend) {
     return xaTransactionTemplate.execute(() -> {
       SpendEntity spendEntity = SpendEntity.fromJson(spend);
       spendRepository.create(spendEntity);
@@ -33,7 +37,7 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   @Step("Update spending in DB")
-  public SpendJson update(SpendJson spend) {
+  public @Nonnull SpendJson update(SpendJson spend) {
     return xaTransactionTemplate.execute(() -> {
       SpendEntity spendEntity = SpendEntity.fromJson(spend);
       spendRepository.update(spendEntity);
@@ -43,7 +47,7 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   @Step("Update category in DB")
-  public CategoryJson updateCategory(CategoryJson category) {
+  public @Nonnull CategoryJson updateCategory(CategoryJson category) {
     return xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
       spendRepository.updateCategory(categoryEntity);
@@ -53,7 +57,7 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   @Step("Create category to DB")
-  public CategoryJson createCategory(CategoryJson category) {
+  public @Nonnull CategoryJson createCategory(CategoryJson category) {
     return xaTransactionTemplate.execute(() -> {
       CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
       spendRepository.createCategory(categoryEntity);
@@ -63,27 +67,28 @@ public class SpendDbClient implements SpendClient {
 
   @Override
   @Step("Find category by ID in DB")
-  public Optional<CategoryJson> findCategoryById(UUID id) {
+  public @Nullable Optional<CategoryJson> findCategoryById(UUID id) {
     return spendRepository.findCategoryById(id)
         .map(CategoryJson::fromEntity);
   }
 
   @Override
   @Step("Find category by username and spend name in DB")
-  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
+  public @Nullable Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username,
+      String name) {
     return spendRepository.findCategoryByUsernameAndSpendName(username, name)
         .map(CategoryJson::fromEntity);
   }
 
   @Override
   @Step("Find spend by ID in DB")
-  public Optional<SpendJson> findById(UUID id) {
+  public @Nullable Optional<SpendJson> findById(UUID id) {
     return spendRepository.findSpendById(id).map(SpendJson::fromEntity);
   }
 
   @Override
   @Step("Find spend by username and spend description in DB")
-  public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
+  public @Nullable Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
     return spendRepository.findByUsernameAndSpendDescription(username, description)
         .map(SpendJson::fromEntity);

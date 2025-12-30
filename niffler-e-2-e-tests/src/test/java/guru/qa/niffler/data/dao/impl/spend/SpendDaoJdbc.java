@@ -14,13 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public SpendEntity create(SpendEntity spend) {
+  public @Nonnull SpendEntity create(SpendEntity spend) {
 
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "INSERT INTO spend (username, spend_date, currency, amount, description, category_id)" +
@@ -52,7 +56,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public Optional<SpendEntity> findById(UUID id) {
+  public @Nullable Optional<SpendEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE id = ?"
     )) {
@@ -83,7 +87,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
+  public @Nonnull List<SpendEntity> findAllByCategoryId(UUID categoryId) {
     List<SpendEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE category_id = ?"
@@ -111,7 +115,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public List<SpendEntity> findAllByUsername(String username) {
+  public @Nonnull List<SpendEntity> findAllByUsername(String username) {
     List<SpendEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend WHERE username = ?"
@@ -151,7 +155,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public List<SpendEntity> findAll() {
+  public @Nonnull List<SpendEntity> findAll() {
     List<SpendEntity> spends = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM spend"
@@ -178,7 +182,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public SpendEntity update(SpendEntity spend) {
+  public @Nonnull SpendEntity update(SpendEntity spend) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "UPDATE spend SET currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?",
         Statement.RETURN_GENERATED_KEYS

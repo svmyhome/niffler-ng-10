@@ -2,6 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.service.GhApiClient;
+import javax.annotation.Nonnull;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -13,6 +14,7 @@ public class IssueExtension implements ExecutionCondition {
   private final GhApiClient ghApiClient = new GhApiClient();
 
   @Override
+  @Nonnull
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     return AnnotationSupport.findAnnotation(
         context.getRequiredTestMethod(),

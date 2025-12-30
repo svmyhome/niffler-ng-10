@@ -10,16 +10,20 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public AuthUserEntity create(AuthUserEntity user) {
+  public @Nonnull AuthUserEntity create(AuthUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {
@@ -44,7 +48,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
   }
 
   @Override
-  public Optional<AuthUserEntity> findByUsername(String username) {
+  public @Nullable Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.queryForObject(
         "SELECT * FROM \"user\" WHERE username = ?",
@@ -54,7 +58,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
   }
 
   @Override
-  public Optional<AuthUserEntity> findById(UUID id) {
+  public @Nullable Optional<AuthUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.queryForObject(
         "SELECT * FROM \"user\" WHERE id = ?",
@@ -73,7 +77,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
   }
 
   @Override
-  public List<AuthUserEntity> findAll() {
+  public @Nonnull List<AuthUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
     return jdbcTemplate.query(
         "SELECT * FROM \"user\"",

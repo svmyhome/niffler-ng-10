@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -67,6 +68,7 @@ public class PushTokenEntity {
   }
 
   @Override
+  @Nonnull
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();

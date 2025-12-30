@@ -17,12 +17,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
+  @Nonnull
   public UserEntity create(UserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
@@ -55,6 +60,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nullable
   public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -108,6 +114,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nullable
   public Optional<UserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
@@ -137,6 +144,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public UserEntity update(UserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "UPDATE \"user\" SET username =?, currency=?, firstname=?, surname=?, full_name=?, photo=?, photo_small=? WHERE id =?"
@@ -169,6 +177,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public List<UserEntity> findAll() {
     List<UserEntity> userEntities = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

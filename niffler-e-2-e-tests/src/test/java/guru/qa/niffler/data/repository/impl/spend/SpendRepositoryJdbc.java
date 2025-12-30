@@ -15,7 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryJdbc implements SpendRepository {
 
   private final Config CFG = Config.getInstance();
@@ -24,21 +28,25 @@ public class SpendRepositoryJdbc implements SpendRepository {
   private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
 
   @Override
+  @Nonnull
   public SpendEntity create(SpendEntity spend) {
     return spendDaoJdbc.create(spend);
   }
 
   @Override
+  @Nonnull
   public SpendEntity update(SpendEntity spend) {
     return spendDaoJdbc.update(spend);
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return spendDaoJdbc.findById(id);
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -72,21 +80,25 @@ public class SpendRepositoryJdbc implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public CategoryEntity createCategory(CategoryEntity category) {
     return categoryDaoJdbc.create(category);
   }
 
   @Override
+  @Nonnull
   public CategoryEntity updateCategory(CategoryEntity category) {
     return categoryDaoJdbc.update(category);
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return categoryDaoJdbc.findById(id);
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     return categoryDaoJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }

@@ -10,8 +10,12 @@ import guru.qa.niffler.data.repository.spend.SpendRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.lang.Nullable;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositorySpringJdbc implements SpendRepository {
 
   private final Config CFG = Config.getInstance();
@@ -19,21 +23,25 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   private final CategoryDaoSpringJdbc categoryDaoSpringJdbc = new CategoryDaoSpringJdbc();
 
   @Override
+  @Nonnull
   public SpendEntity create(SpendEntity spend) {
     return spendDaoSpringJdbc.create(spend);
   }
 
   @Override
+  @Nonnull
   public SpendEntity update(SpendEntity spend) {
     return spendDaoSpringJdbc.update(spend);
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return spendDaoSpringJdbc.findById(id);
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
@@ -48,21 +56,25 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public CategoryEntity createCategory(CategoryEntity category) {
     return categoryDaoSpringJdbc.create(category);
   }
 
   @Override
+  @Nonnull
   public CategoryEntity updateCategory(CategoryEntity category) {
     return categoryDaoSpringJdbc.update(category);
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return categoryDaoSpringJdbc.findById(id);
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     return categoryDaoSpringJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }

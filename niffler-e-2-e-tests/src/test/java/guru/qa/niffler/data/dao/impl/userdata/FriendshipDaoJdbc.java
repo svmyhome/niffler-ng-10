@@ -12,7 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class FriendshipDaoJdbc implements FriendshipDao {
 
   private static final Config CFG = Config.getInstance();
@@ -33,7 +36,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
   }
 
   @Override
-  public List<FriendshipEntity> findByRequester(UUID requesterId) {
+  public @Nonnull List<FriendshipEntity> findByRequester(UUID requesterId) {
     List<FriendshipEntity> result = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM friendship WHERE requester_id = ?"
@@ -62,7 +65,7 @@ public class FriendshipDaoJdbc implements FriendshipDao {
   }
 
   @Override
-  public List<FriendshipEntity> findByAddressee(UUID addresseeId) {
+  public @Nonnull List<FriendshipEntity> findByAddressee(UUID addresseeId) {
     List<FriendshipEntity> result = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM friendship WHERE addressee_id = ?"

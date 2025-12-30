@@ -25,13 +25,16 @@ import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class ThreadSafeEntityManager implements EntityManager {
 
   private final ThreadLocal<EntityManager> threadEm = new ThreadLocal<>();
   private final EntityManagerFactory emf;
 
-
+  @Nonnull
   public ThreadSafeEntityManager(EntityManager delegate) {
     threadEm.set(delegate);
     emf = delegate.getEntityManagerFactory();

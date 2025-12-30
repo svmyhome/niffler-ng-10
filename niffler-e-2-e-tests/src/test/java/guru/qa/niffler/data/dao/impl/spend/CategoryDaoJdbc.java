@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public CategoryEntity create(CategoryEntity category) {
+  public @Nonnull CategoryEntity create(CategoryEntity category) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "INSERT INTO category (name, username, archived)" +
             "VALUES(?,?,?)",
@@ -46,7 +50,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findById(UUID id) {
+  public @Nullable Optional<CategoryEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
@@ -71,7 +75,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
+  public @Nullable Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
       String name) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE username = ? AND name = ?"
@@ -97,7 +101,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public List<CategoryEntity> findAllByUsername(String username) {
+  public @Nonnull List<CategoryEntity> findAllByUsername(String username) {
     List<CategoryEntity> entityList = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE username = ?"
@@ -132,7 +136,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public List<CategoryEntity> findAll() {
+  public @Nonnull List<CategoryEntity> findAll() {
     List<CategoryEntity> categoryEntities = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category"
@@ -154,7 +158,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public CategoryEntity update(CategoryEntity category) {
+  public @Nonnull CategoryEntity update(CategoryEntity category) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "UPDATE category SET name = ?, archived = ? WHERE id = ?",
         Statement.RETURN_GENERATED_KEYS

@@ -20,10 +20,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import utils.RandomDataUtils;
 
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 
   private static final Config CFG = Config.getInstance();
@@ -36,14 +40,14 @@ public class UserDbClient implements UserClient {
       CFG.authJdbcUrl(),
       CFG.userdataJdbcUrl());
 
-  public static UserEntity userEntityRequiredField(String username) {
+  public @Nonnull static UserEntity userEntityRequiredField(String username) {
     UserEntity ue = new UserEntity();
     ue.setUsername(username);
     ue.setCurrency(CurrencyValues.RUB);
     return ue;
   }
 
-  private AuthUserEntity authUserEntity(String username, String password) {
+  private @Nonnull AuthUserEntity authUserEntity(String username, String password) {
     AuthUserEntity authUser = new AuthUserEntity();
     authUser.setUsername(username);
     authUser.setPassword(pe.encode(password));
@@ -64,7 +68,7 @@ public class UserDbClient implements UserClient {
 
   @Override
   @Step("Create user to DB")
-  public UserJson createUser(String username, String password) {
+  public @Nonnull UserJson createUser(String username, String password) {
     return xaTransactionTemplate.execute(() -> {
       AuthUserEntity authUser = authUserEntity(username, password);
       authUserRepository.create(authUser);
@@ -79,7 +83,7 @@ public class UserDbClient implements UserClient {
   }
 
   @Step("Find user by ID in DB")
-  public Optional<AuthUserEntity> findAuthUserById(UUID id) {
+  public @Nullable Optional<AuthUserEntity> findAuthUserById(UUID id) {
     return authUserRepository.findById(id);
   }
 
@@ -154,12 +158,12 @@ public class UserDbClient implements UserClient {
   }
 
   @Step("Find user by ID in DB")
-  public Optional<UserEntity> findUserById(UUID id) {
+  public @Nullable Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
   }
 
   @Step("Find user by username in DB")
-  public Optional<AuthUserEntity> findUserByUserName(String username) {
+  public @Nullable Optional<AuthUserEntity> findUserByUserName(String username) {
     return authUserRepository.findByUsername(username);
   }
 

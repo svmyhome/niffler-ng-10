@@ -13,13 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public void create(AuthorityEntity... authorities) {
+  public @Nonnull void create(AuthorityEntity... authorities) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "INSERT INTO authority (user_id, authority) VALUES(?,?)"
     )) {
@@ -35,7 +39,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public List<AuthorityEntity> findAllByUserId(UUID userId) {
+  public @Nonnull List<AuthorityEntity> findAllByUserId(UUID userId) {
     List<AuthorityEntity> authorities = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM authority WHERE user_id = ?"
@@ -59,7 +63,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public Optional<AuthorityEntity> findById(UUID id) {
+  public @Nullable Optional<AuthorityEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM authority WHERE id = ?"
     )) {
@@ -98,7 +102,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public List<AuthorityEntity> findAll() {
+  public @Nonnull List<AuthorityEntity> findAll() {
     List<AuthorityEntity> authorities = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM authority"

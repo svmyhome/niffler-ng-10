@@ -10,6 +10,8 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
@@ -17,6 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import utils.RandomDataUtils;
 
+@ParametersAreNonnullByDefault
 public class UserApiClient implements UserClient {
 
   private static final Config CFG = Config.getInstance();
@@ -43,7 +46,7 @@ public class UserApiClient implements UserClient {
 
   @Override
   @Step("Create user {username} via API")
-  public UserJson createUser(String username, String password) {
+  public @Nullable UserJson createUser(String username, String password) {
     try {
       authApi.requestRegisterForm().execute();
       authApi.register(
@@ -118,5 +121,4 @@ public class UserApiClient implements UserClient {
     }
     return resultList;
   }
-
 }

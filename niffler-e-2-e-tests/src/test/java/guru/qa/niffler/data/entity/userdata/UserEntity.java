@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -69,6 +70,7 @@ public class UserEntity implements Serializable {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private List<PushTokenEntity> pushTokens = new ArrayList<>();
 
+  @Nonnull
   public static UserEntity fromJson(UserJson json) {
     UserEntity ue = new UserEntity();
     ue.setId(json.id());
@@ -152,6 +154,7 @@ public class UserEntity implements Serializable {
   }
 
   @Override
+  @Nonnull
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();

@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.constants.Currency;
 import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
@@ -114,7 +115,7 @@ public class SpendingWebTest {
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .openNewSpending()
-        .fillSpending(123.0, "QAZ", cal, newDescription)
+        .fillSpending(123.0, Currency.RUB,"QAZ", cal, newDescription)
         .checkThatTableContains(newDescription);
   }
 
@@ -146,14 +147,14 @@ public class SpendingWebTest {
   @Test
   void spendingShouldBeEdit(UserJson user) {
     final String newDescription = "Обучение Niffler 2.0 юбилейный поток!";
-    Calendar cal = Calendar.getInstance();
-    cal.set(2024, 11, 12);
+    Calendar date = Calendar.getInstance();
+    date.set(2024, 11, 12);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .editSpendingFromTable(newDescription)
-        .fillSpending(123.0, "QAZ", cal, "qaz")
+        .fillSpending(123.0, Currency.RUB, "QAZ", date, "qaz")
         .checkSpendingDescriptionTable(newDescription);
   }
 

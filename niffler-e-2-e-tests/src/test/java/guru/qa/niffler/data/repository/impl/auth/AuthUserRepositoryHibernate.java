@@ -9,13 +9,18 @@ import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryHibernate implements AuthUserRepository {
 
   private final Config CFG = Config.getInstance();
   private final EntityManager entityManager = EntityManagers.em(CFG.authJdbcUrl());
 
   @Override
+  @Nonnull
   public AuthUserEntity create(AuthUserEntity user) {
     entityManager.joinTransaction();
     entityManager.persist(user);
@@ -23,11 +28,13 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
+  @Nonnull
   public AuthUserEntity update(AuthUserEntity user) {
     return entityManager.merge(user);
   }
 
   @Override
+  @Nullable
   public Optional<AuthUserEntity> findByUsername(String username) {
     try {
       return Optional.of(
@@ -41,6 +48,7 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
+  @Nullable
   public Optional<AuthUserEntity> findById(UUID id) {
     return Optional.ofNullable(entityManager.find(AuthUserEntity.class, id));
   }
@@ -55,6 +63,7 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
+  @Nonnull
   public List<AuthUserEntity> findAll() {
     return entityManager.createQuery("select u from AuthUserEntity u ORDER BY u.username",
             AuthUserEntity.class)

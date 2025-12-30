@@ -11,79 +11,79 @@ import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class MainPage {
 
   private final ElementsCollection tableRows = $$("#spendings tr"),
       sectionHeaders = $$("h2");
 
-  private final SelenideElement mainPage = $("#root"),
-      menu = $(".MuiAvatar-root"),
-      profile = $("[href='/profile']"),
-      friends = $("[href='/people/friends']");
+  private final SelenideElement mainPage = $("#root");
 
   Header header = new Header();
   SearchField search = new SearchField();
   SpendingTable spendingTable = new SpendingTable();
 
   @Step("Edit spending: '{description}'")
-  public EditSpendingPage editSpending(String description) {
+  public @Nonnull EditSpendingPage editSpending(String description) {
     tableRows.find(text(description)).$$("td").get(5).click();
     return new EditSpendingPage();
   }
 
   @Step("Table should have '{description}'")
-  public MainPage checkThatTableContains(String description) {
+  public @Nonnull MainPage checkThatTableContains(String description) {
     tableRows.find(text(description)).should(visible);
     return this;
   }
 
   @Step("Successfully opened main page")
-  public MainPage mainPageShouldBeDisplayed() {
+  public @Nonnull MainPage mainPageShouldBeDisplayed() {
     mainPage.shouldHave(text("Statistics"));
     mainPage.shouldHave(text("History of Spendings"));
     return this;
   }
 
   @Step("Open menu")
-  public MainPage openMenu() {
-    menu.click();
+  public @Nonnull MainPage openMenu() {
+    header.openMenu();
     return this;
   }
 
   @Step("Switch to friends page")
-  public FriendsPage openFriends() {
+  public @Nonnull FriendsPage openFriends() {
     return header.toFriendsPage();
   }
 
   @Step("Switch to All people page")
-  public AllPeoplesPage openAllPeople() {
+  public @Nonnull AllPeoplesPage openAllPeople() {
     return header.toAllPeoplesPage();
   }
 
   @Step("Switch to profile page")
-  public ProfilePage openProfile() {
+  public @Nonnull ProfilePage openProfile() {
     return header.toProfilePage();
   }
 
   @Step("Switch to login page")
-  public LoginPage signOut() {
+  public @Nonnull LoginPage signOut() {
     return header.signOut();
   }
 
   @Step("Switch to spending page")
-  public EditSpendingPage openNewSpending() {
+  public @Nonnull EditSpendingPage openNewSpending() {
     return header.addSpendingPage();
   }
 
   @Step("Open All People list")
-  public MainPage historyOfSpendingIsVisible() {
+  public @Nonnull MainPage historyOfSpendingIsVisible() {
     sectionHeaders.find(text("History of Spendings")).shouldBe(visible).click();
     return this;
   }
 
   @Step("Find friend")
-  public MainPage searchSpending(String spendingName) {
+  public @Nonnull MainPage searchSpending(String spendingName) {
     search.search(spendingName);
     return this;
   }
@@ -94,7 +94,7 @@ public class MainPage {
   }
 
   @Step("Delete spending from table")
-  public MainPage deleteSpendingFromTable(String description) {
+  public @Nonnull MainPage deleteSpendingFromTable(String description) {
     spendingTable.deleteSpending(description);
     return this;
   }
@@ -105,34 +105,32 @@ public class MainPage {
   }
 
   @Step("Edit spending from table")
-  public EditSpendingPage editSpendingFromTable(String description) {
+  public @Nonnull EditSpendingPage editSpendingFromTable(String description) {
     spendingTable.editSpending(description);
     return new EditSpendingPage();
   }
 
   @Step("Select period spendings")
-  public MainPage selectPeriodSpendingFromTable(DataFilterValues period) {
+  public @Nonnull MainPage selectPeriodSpendingFromTable(DataFilterValues period) {
     spendingTable.selectPeriod(period);
     return this;
   }
 
   @Step("Check period is selected")
-  public MainPage checkSelectPeriodSpendingFromTable(DataFilterValues period) {
+  public @Nonnull MainPage checkSelectPeriodSpendingFromTable(DataFilterValues period) {
     spendingTable.checkPeriodIsSelected(period);
     return this;
   }
 
   @Step("Check period is selected")
-  public MainPage checkTableContent(String... expectedSpends) {
+  public @Nonnull MainPage checkTableContent(String... expectedSpends) {
     spendingTable.checkTableContains(expectedSpends);
     return this;
   }
 
   @Step("Check table have {count} rows")
-  public MainPage checkTableSize(int count) {
+  public @Nonnull MainPage checkTableSize(int count) {
     spendingTable.checkTableSize(count);
     return this;
   }
-
-
 }

@@ -8,6 +8,7 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 public record UserJson(
     UUID id,
@@ -23,7 +24,8 @@ public record UserJson(
     @JsonIgnore
     TestData testData) {
 
-  public static UserJson fromEntity(UserEntity entity) {
+  @Nonnull
+  public static UserJson fromEntity(@Nonnull UserEntity entity) {
     return new UserJson(
         entity.getId(),
         entity.getUsername(),
@@ -40,7 +42,8 @@ public record UserJson(
     );
   }
 
-  public UserJson addTestData(TestData testData) {
+  @Nonnull
+  public UserJson addTestData(@Nonnull TestData testData) {
     return new UserJson(
         id,
         username,

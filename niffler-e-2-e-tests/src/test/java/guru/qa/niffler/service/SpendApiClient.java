@@ -95,7 +95,8 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   @Step("Send REST POST('/internal/categories/all') request to niffler-spend")
-  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name, String username) {
+  public @Nullable Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name,
+      String username) {
     final Response<List<CategoryJson>> response;
     try {
       response = spendApi.getCategories(name, username).execute();
@@ -126,7 +127,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
+  public @Nullable Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
     throw new UnsupportedOperationException();
   }
@@ -179,7 +180,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Step("Send REST POST('/internal/categories/all') request to niffler-spend")
-  public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
+  public @Nullable Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
     final Response<List<CategoryJson>> response;
     try {

@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import java.util.Date;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 public record SpendJson(
     @JsonProperty("id")
@@ -22,7 +23,8 @@ public record SpendJson(
     @JsonProperty("username")
     String username) {
 
-  public static SpendJson fromEntity(SpendEntity entity) {
+  @Nonnull
+  public static SpendJson fromEntity(@Nonnull SpendEntity entity) {
     final CategoryEntity category = entity.getCategory();
     final String username = entity.getUsername();
 

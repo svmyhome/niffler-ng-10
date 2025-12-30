@@ -9,13 +9,18 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryHibernate implements SpendRepository {
 
   private final Config CFG = Config.getInstance();
   private final EntityManager entityManager = EntityManagers.em(CFG.spendJdbcUrl());
 
   @Override
+  @Nonnull
   public SpendEntity create(SpendEntity spend) {
     entityManager.joinTransaction();
     entityManager.persist(spend);
@@ -23,16 +28,19 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public SpendEntity update(SpendEntity spend) {
     return entityManager.merge(spend);
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return Optional.ofNullable(entityManager.find(SpendEntity.class, id));
   }
 
   @Override
+  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     try {
@@ -49,6 +57,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public CategoryEntity createCategory(CategoryEntity category) {
     entityManager.joinTransaction();
     entityManager.persist(category);
@@ -56,16 +65,19 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public CategoryEntity updateCategory(CategoryEntity category) {
     return entityManager.merge(category);
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return Optional.ofNullable(entityManager.find(CategoryEntity.class, id));
   }
 
   @Override
+  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     try {
       return Optional.of(
@@ -87,7 +99,6 @@ public class SpendRepositoryHibernate implements SpendRepository {
     if (managedUser != null) {
       entityManager.remove(managedUser);
     }
-//    entityManager.remove(entityManager.contains(spend)? spend : entityManager.merge(spend));
   }
 
   @Override
@@ -97,7 +108,5 @@ public class SpendRepositoryHibernate implements SpendRepository {
     if (managedUser != null) {
       entityManager.remove(managedUser);
     }
-    //    entityManager.remove(entityManager.contains(category)? spend : entityManager.merge(category));
-
   }
 }

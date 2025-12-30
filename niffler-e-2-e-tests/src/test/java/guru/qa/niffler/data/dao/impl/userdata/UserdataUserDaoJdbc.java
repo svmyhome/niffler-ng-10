@@ -13,13 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserDaoJdbc implements UserdataUserDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public UserEntity create(UserEntity user) {
+  public @Nonnull UserEntity create(UserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)"
             +
@@ -51,7 +55,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
-  public Optional<UserEntity> findById(UUID id) {
+  public @Nullable Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE id = ?"
     )) {
@@ -80,7 +84,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
-  public Optional<UserEntity> findByUsername(String username) {
+  public @Nullable Optional<UserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {
@@ -121,7 +125,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
-  public List<UserEntity> findAll() {
+  public @Nonnull List<UserEntity> findAll() {
     List<UserEntity> userEntities = new ArrayList<>();
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\""
