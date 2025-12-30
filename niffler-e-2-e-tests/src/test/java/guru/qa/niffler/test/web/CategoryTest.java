@@ -30,8 +30,6 @@ public class CategoryTest {
         .openProfile()
         .checkProfileIsDisplayed()
         .checkCategoryIsNotDisplayed(user.testData().categories().getFirst().name());
-    System.out.println(user.username());
-    System.out.println(user.testData().categories().getFirst().name());
   }
 
   @User(
@@ -40,12 +38,10 @@ public class CategoryTest {
   @Test
   void activeCategoryShouldPresentInCategoryList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
         .checkCategoryIsDisplayed(user.testData().categories().getFirst().name());
-    System.out.println(user.username());
-    System.out.println(user.testData().categories().getFirst().name());
   }
 
   @User(

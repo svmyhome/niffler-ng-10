@@ -22,11 +22,6 @@ public interface UserApi {
       @Query("searchQuery") String searchQuery
   );
 
-  @GET("internal/users/all")
-  Call<List<UserJson>> getAllUsers(
-      @Query("username") String username
-  );
-
   @POST("internal/users/update")
   Call<UserJson> updateUser(@Body UserJson user);
 
@@ -34,11 +29,6 @@ public interface UserApi {
   Call<List<UserJson>> getFriends(
       @Query("username") String username,
       @Query("searchQuery") String searchQuery
-  );
-
-  @GET("internal/friends/all")
-  Call<List<UserJson>> getFriends(
-      @Query("username") String username
   );
 
   @DELETE("internal/friends/all")

@@ -57,9 +57,9 @@ public class MainPage {
     return new FriendsPage();
   }
 
-  @Step("Open All People list")
+  @Step("Check that 'History of Spendings' header is visible")
   public MainPage historyOfSpendingIsVisible() {
-    sectionHeaders.find(text("History of Spendings")).shouldBe(visible).click();
+    sectionHeaders.find(text("History of Spendings")).shouldBe(visible);
     return this;
   }
 

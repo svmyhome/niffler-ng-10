@@ -102,7 +102,10 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public Optional<SpendJson> findById(UUID id) {
-    final String username = "duck";
+    throw new UnsupportedOperationException();
+  }
+
+  public Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
     final Response<SpendJson> response;
     try {
       response = spendApi.getSpend(String.valueOf(id), username).execute();

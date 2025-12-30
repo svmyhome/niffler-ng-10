@@ -49,10 +49,12 @@ public class SpendApiTest {
   }
 
   @Test
-  public void findSpendByIdFromApi() {
-    Optional<SpendJson> byId = spendApi.findById(
-        UUID.fromString("d269a8ac-a428-4676-ad8c-dc8e4f1c8523"));
-    System.out.println(byId.get().description());
+  public void findSpendByIdAndNameFromApi() {
+    SpendApiClient spendApiClient = new SpendApiClient();
+    spendApiClient.findByIdAndUsername(
+        UUID.fromString("5a39bd6e-ebe9-4dff-a98b-535fcf844969"),
+        "duck"
+    );
   }
 
   @Test
@@ -63,6 +65,5 @@ public class SpendApiTest {
     System.out.println(categoryByUsernameAndSpendName.get().username());
     System.out.println(categoryByUsernameAndSpendName.get().id());
   }
-
 
 }
