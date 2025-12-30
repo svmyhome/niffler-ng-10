@@ -13,5 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
 
+  String name() default "";
+
   boolean archived() default false;
 }

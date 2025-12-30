@@ -7,6 +7,7 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.SpendDbClient;
 import java.util.Optional;
@@ -20,45 +21,42 @@ public class CategoryTest {
   private static final Config CFG = Config.getInstance();
 
   @User(
-      username = "mouse",
       categories = {@Category(archived = true)}
   )
   @Test
-  void archivedCategoryShouldNotBePresentedInActiveCategoryList(CategoryJson category) {
+  void archivedCategoryShouldNotBePresentedInActiveCategoryList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("mouse", "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkCategoryIsNotDisplayed(category.name());
+        .checkCategoryIsNotDisplayed(user.testData().categories().getFirst().name());
   }
 
   @User(
-      username = "cat",
       categories = {@Category()}
   )
   @Test
-  void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
+  void activeCategoryShouldPresentInCategoryList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("cat", "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkCategoryIsDisplayed(category.name());
+        .checkCategoryIsDisplayed(user.testData().categories().getFirst().name());
   }
 
   @User(
-      username = "dog",
       categories = {
           @Category(archived = true),
           @Category(archived = false)
       }
   )
   @Test
-  void archivedCategoryShouldBePresentedInArchivedList(CategoryJson category) {
+  void archivedCategoryShouldBePresentedInArchivedList(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("dog", "12345")
+        .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .checkArchivedCategoryExists(category.name());
+        .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
   }
 
   @Test

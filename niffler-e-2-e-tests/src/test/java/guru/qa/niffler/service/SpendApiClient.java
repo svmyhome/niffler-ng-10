@@ -31,18 +31,6 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public Optional<SpendJson> findById(UUID id) {
-    final Response<SpendJson> response;
-    try {
-      response = spendApi.getSpend(String.valueOf(id)).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return Optional.ofNullable(response.body());
-  }
-
-  @Override
   public SpendJson create(SpendJson spend) {
     final Response<SpendJson> response;
     try {
@@ -79,19 +67,59 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<CategoryJson> findCategoryById(UUID id) {
-    return Optional.empty();
+  public CategoryJson updateCategory(CategoryJson category) {
+    final Response<CategoryJson> response;
+    try {
+      response = spendApi.updateCategory(category).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return response.body();
   }
 
   @Override
-  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
-    return Optional.empty();
+  public Optional<CategoryJson> findCategoryById(UUID id) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name, String username) {
+    final Response<List<CategoryJson>> response;
+    try {
+      response = spendApi.getCategories(name, username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+
+    List<CategoryJson> categories = Objects.requireNonNullElseGet(
+        response.body(),
+        ArrayList::new
+    );
+    return categories.stream().findFirst();
+  }
+
+  @Override
+  public Optional<SpendJson> findById(UUID id) {
+    throw new UnsupportedOperationException();
+  }
+
+  public Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
+    final Response<SpendJson> response;
+    try {
+      response = spendApi.getSpend(String.valueOf(id), username).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(SC_OK, response.code());
+    return Optional.ofNullable(response.body());
   }
 
   @Override
   public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
-    return Optional.empty();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -108,6 +136,7 @@ public class SpendApiClient implements SpendClient {
 
   @Override
   public void removeCategory(CategoryJson category) {
+    throw new UnsupportedOperationException();
   }
 
   public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
@@ -131,17 +160,6 @@ public class SpendApiClient implements SpendClient {
     }
     assertEquals(SC_OK, response.code());
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
-  }
-
-  public CategoryJson updateCategory(CategoryJson category) {
-    final Response<CategoryJson> response;
-    try {
-      response = spendApi.updateCategory(category).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(SC_OK, response.code());
-    return response.body();
   }
 
   public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,

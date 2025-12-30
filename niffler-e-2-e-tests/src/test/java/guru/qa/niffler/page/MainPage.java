@@ -10,11 +10,14 @@ import io.qameta.allure.Step;
 
 public class MainPage {
 
-  private final ElementsCollection tableRows = $$("#spendings tr");
+  private final ElementsCollection tableRows = $$("#spendings tr"),
+      sectionHeaders = $$("h2");
+
   private final SelenideElement mainPage = $("#root"),
       menu = $(".MuiAvatar-root"),
       profile = $("[href='/profile']"),
-      friends = $("[href='/people/friends']");
+      friends = $("[href='/people/friends']"),
+      searchField = $("[placeholder='Search']");
 
   @Step("Edit spending: '{description}'")
   public EditSpendingPage editSpending(String description) {
@@ -52,5 +55,17 @@ public class MainPage {
     menu.click();
     friends.click();
     return new FriendsPage();
+  }
+
+  @Step("Check that 'History of Spendings' header is visible")
+  public MainPage historyOfSpendingIsVisible() {
+    sectionHeaders.find(text("History of Spendings")).shouldBe(visible);
+    return this;
+  }
+
+  @Step("Find friend")
+  public MainPage searchSpending(String spendingName) {
+    searchField.val(spendingName).pressEnter();
+    return this;
   }
 }

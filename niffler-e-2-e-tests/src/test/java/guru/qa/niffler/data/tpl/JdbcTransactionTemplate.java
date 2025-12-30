@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.tpl;
 
+import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,7 +22,9 @@ public class JdbcTransactionTemplate {
 
   public <T> T execute(Supplier<T> action, int isolationLvl) {
     Connection connection = null;
+    int initIsolationLevel = TRANSACTION_READ_COMMITTED;
     try {
+      initIsolationLevel = connection.getTransactionIsolation();
       connection = holder.connection();
       connection.setTransactionIsolation(isolationLvl);
       connection.setAutoCommit(false);
@@ -37,6 +40,11 @@ public class JdbcTransactionTemplate {
         } catch (SQLException ex) {
           throw new RuntimeException(ex);
         } finally {
+          try {
+            connection.setTransactionIsolation(initIsolationLevel);
+          } catch (SQLException ex) {
+            // nop
+          }
           if (closeAfterAction.get()) {
             holder.close();
           }

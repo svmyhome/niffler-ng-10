@@ -1,13 +1,18 @@
 package guru.qa.niffler.jupiter.extension;
 
+import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.SpendDbClient;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -23,46 +28,60 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
   @Override
   public void beforeEach(ExtensionContext context) {
+    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
+        .ifPresent(usersAnno -> {
+          if (ArrayUtils.isNotEmpty(usersAnno.spendings())) {
+            Optional<UserJson> testUser = UserExtension.createdUser();
+            final String username =
+                testUser.isPresent() ? testUser.get().username() : usersAnno.username();
 
-    Optional<User> user = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
-        User.class);
+            List<SpendJson> result = new ArrayList<>();
 
-    if (user.isPresent() && user.get().spendings().length > 0) {
-      Spending spending = user.get().spendings()[0];
-      final SpendJson created = spendClient.create(
-          new SpendJson(
-              null,
-              new Date(),
-              new CategoryJson(
+            for (Spending spendAnno : usersAnno.spendings()) {
+              SpendJson spendJson = new SpendJson(
                   null,
-                  spending.category(),
-                  user.get().username(),
-                  false
-              ),
-              spending.currency(),
-              spending.amount(),
-              spending.description(),
-              user.get().username()
-          )
-      );
-
-      context.getStore(NAMESPACE).put(
-          context.getUniqueId(),
-          created
-      );
-    }
+                  new Date(),
+                  new CategoryJson(
+                      null,
+                      spendAnno.category(),
+                      username,
+                      false
+                  ),
+                  spendAnno.currency(),
+                  spendAnno.amount(),
+                  spendAnno.description(),
+                  username
+              );
+              SpendJson created = spendClient.create(spendJson);
+              result.add(created);
+            }
+            if (testUser.isPresent()) {
+              testUser.get().testData().spendings().addAll(result);
+            } else {
+              context.getStore(NAMESPACE).put(
+                  context.getUniqueId(),
+                  result.stream().toArray(SpendJson[]::new)
+              );
+            }
+          }
+        });
   }
 
   @Override
   public boolean supportsParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return parameterContext.getParameter().getType().isAssignableFrom(SpendJson.class);
+    return parameterContext.getParameter().getType().isAssignableFrom(SpendJson .class);
   }
 
   @Override
-  public SpendJson resolveParameter(ParameterContext parameterContext,
+  public SpendJson[] resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(NAMESPACE)
-        .get(extensionContext.getUniqueId(), SpendJson.class);
+    return createdSpends();
+  }
+
+  public static SpendJson[] createdSpends() {
+    final ExtensionContext methodContext = context();
+    return methodContext.getStore(NAMESPACE)
+        .get(methodContext.getUniqueId(), SpendJson[].class);
   }
 }
