@@ -35,7 +35,7 @@ public class CategoryExtension implements
     AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
         .ifPresent(usersAnno -> {
           if (ArrayUtils.isNotEmpty(usersAnno.categories())) {
-            Optional<UserJson> testUser = UserExtension.createUser();
+            Optional<UserJson> testUser = UserExtension.createdUser();
             final String username =
                 testUser.isPresent() ? testUser.get().username() : usersAnno.username();
 
@@ -82,11 +82,11 @@ public class CategoryExtension implements
   @Nonnull
   public CategoryJson[] resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return createCategory();
+    return createdCategories();
   }
 
   @Nonnull
-  public static CategoryJson[] createCategory() {
+  public static CategoryJson[] createdCategories() {
     final ExtensionContext methodContext = context();
     return methodContext.getStore(NAMESPACE)
         .get(methodContext.getUniqueId(), CategoryJson[].class);
@@ -94,7 +94,7 @@ public class CategoryExtension implements
 
   @Override
   public void afterTestExecution(ExtensionContext context) {
-    CategoryJson[] categories = createCategory();
+    CategoryJson[] categories = createdCategories();
     if (categories != null && categories.length > 0) {
       for (CategoryJson category : categories) {
         if (!category.archived()) {

@@ -66,11 +66,11 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
   @Nonnull
   public UserJson resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return createUser().orElseThrow();
+    return createdUser().orElseThrow();
   }
 
   @Nullable
-  public static Optional<UserJson> createUser() {
+  public static Optional<UserJson> createdUser() {
     final ExtensionContext methodContext = context();
     return Optional.ofNullable(methodContext.getStore(NAMESPACE)
         .get(methodContext.getUniqueId(), UserJson.class));

@@ -32,7 +32,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
         .ifPresent(usersAnno -> {
           if (ArrayUtils.isNotEmpty(usersAnno.spendings())) {
-            Optional<UserJson> testUser = UserExtension.createUser();
+            Optional<UserJson> testUser = UserExtension.createdUser();
             final String username =
                 testUser.isPresent() ? testUser.get().username() : usersAnno.username();
 
@@ -77,10 +77,10 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
   @Override
   public @Nonnull SpendJson[] resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return createSpend();
+    return createdSpends();
   }
 
-  public @Nonnull static SpendJson[] createSpend() {
+  public @Nonnull static SpendJson[] createdSpends() {
     final ExtensionContext methodContext = context();
     return methodContext.getStore(NAMESPACE)
         .get(methodContext.getUniqueId(), SpendJson[].class);

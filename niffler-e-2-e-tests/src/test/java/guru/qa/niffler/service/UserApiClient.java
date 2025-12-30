@@ -1,5 +1,6 @@
 package guru.qa.niffler.service;
 
+import static guru.qa.niffler.jupiter.extension.UserExtension.DEFAULT_PASSWORD;
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.UserApi;
 import guru.qa.niffler.config.Config;
@@ -79,7 +80,7 @@ public class UserApiClient implements UserClient {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {
-        UserJson friend = createUser(RandomDataUtils.randomUsername(), "12345");
+        UserJson friend = createUser(RandomDataUtils.randomUsername(), DEFAULT_PASSWORD);
         resultList.add(userApi.sendInvitation(friend.username(), targetUser.username())
             .execute().body());
       } catch (IOException e) {
@@ -95,7 +96,7 @@ public class UserApiClient implements UserClient {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {
-        UserJson friend = createUser(RandomDataUtils.randomUsername(), "12345");
+        UserJson friend = createUser(RandomDataUtils.randomUsername(), DEFAULT_PASSWORD);
         resultList.add(userApi.sendInvitation(targetUser.username(), friend.username())
             .execute().body());
       } catch (IOException e) {

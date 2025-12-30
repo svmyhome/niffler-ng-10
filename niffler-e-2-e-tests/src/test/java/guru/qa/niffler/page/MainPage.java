@@ -76,7 +76,7 @@ public class MainPage {
     return header.addSpendingPage();
   }
 
-  @Step("Open All People list")
+  @Step("Check that 'History of Spendings' header is visible")
   public @Nonnull MainPage historyOfSpendingIsVisible() {
     sectionHeaders.find(text("History of Spendings")).shouldBe(visible).click();
     return this;

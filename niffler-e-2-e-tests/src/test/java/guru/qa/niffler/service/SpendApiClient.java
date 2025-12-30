@@ -115,7 +115,11 @@ public class SpendApiClient implements SpendClient {
   @Override
   @Step("Send REST POST('/internal/spends/{id}') request to niffler-spend")
   public @Nullable Optional<SpendJson> findById(UUID id) {
-    final String username = "duck";
+    throw new UnsupportedOperationException();
+  }
+
+  @Step("Send REST POST('/internal/spends/{id}') request to niffler-spend")
+  public @Nullable  Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
     final Response<SpendJson> response;
     try {
       response = spendApi.getSpend(String.valueOf(id), username).execute();
