@@ -9,56 +9,80 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.data.constants.DataFilterValues;
+import io.qameta.allure.Step;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class SpendingTable {
 
   private final SelenideElement self = $("#spendings .MuiTableContainer-root");
-
+  private final SelenideElement searchPeriod = self.$("#period"),
+      editSpending = $("[aria-label*='Edit spending']"),
+      selectAllRows = $("[aria-label='select all rows']"),
+      deleteSpendingButton = $("#delete"),
+      deleteSubmitButton = $(".MuiDialogActions-root").$(byText("Delete")),
+      searchSpending = self.$("[placeholder='Search']");
   private final ElementsCollection rows = $$("tbody tr");
-  private final SelenideElement row = $("tbody tr");
 
-
-  public SpendingTable selectPeriod(DataFilterValues period) {
-    $("#period").click();
+  @Step("Select search period {period}")
+  public @Nonnull SpendingTable selectPeriod(DataFilterValues period) {
+    searchPeriod.click();
     $(String.format("[data-value='%s']", period)).click();
     return this;
   }
 
-  public SpendingTable editSpending(String description) {
+  @Step("Edit spending")
+  public @Nonnull SpendingTable editSpending(String description) {
     searchSpendingByDescription(description);
-    $("[aria-label*='Edit spending']").click();
+    editSpending.click();
     return this;
   }
 
-  public SpendingTable deleteSpending(String description) {
+  @Step("Delete spending")
+  public @Nonnull SpendingTable deleteSpending(String description) {
     searchSpendingByDescription(description);
-    $(".PrivateSwitchBase-input[type='checkbox']").click();
-    $("#delete").click();
-    $(".MuiDialogActions-root").$(byText("Delete")).click();
+    selectAllRows.click();
+    deleteSpendingButton.click();
+    deleteSubmitButton.click();
     return this;
   }
 
-  public SpendingTable searchSpendingByDescription(String description) {
-    self.$("[placeholder='Search']").val(description);
+  @Step("Search spending by description")
+  public @Nonnull SpendingTable searchSpendingByDescription(String description) {
+    searchSpending.val(description);
     return this;
   }
 
-  public SpendingTable checkTableContains(String... expectedSpends) {
+  @Step("Check table values")
+  public @Nonnull SpendingTable checkTableContains(String... expectedSpends) {
     rows.shouldHave(texts(expectedString(expectedSpends)));
     return this;
   }
 
-  private static String expectedString(String[] expectedSpends) {
+  @Step("Check table size")
+  public SpendingTable checkTableSize(int expectedSize) {
+    rows.shouldHave(CollectionCondition.size(expectedSize));
+    return this;
+  }
+
+  @Step("Check period is selected")
+  public SpendingTable checkPeriodIsSelected(DataFilterValues period) {
+    searchPeriod.shouldHave(text(period.getPeriod()));
+    return this;
+  }
+
+  private @Nonnull
+  static String expectedString(String[] expectedSpends) {
     return Arrays.stream(expectedSpends)
         .map(SpendingTable::convertCurrency)
         .collect(Collectors.joining(" ")).trim();
   }
 
-  private static String convertCurrency(String value) {
+  private @Nonnull
+  static String convertCurrency(String value) {
     return switch (value) {
       case "RUB" -> "₽";
       case "USD" -> "$";
@@ -66,15 +90,5 @@ public class SpendingTable {
       case "KZT" -> "₸";
       default -> value;
     };
-  }
-
-  public SpendingTable checkTableSize(int expectedSize) {
-    rows.shouldHave(CollectionCondition.size(expectedSize));
-    return this;
-  }
-
-  public SpendingTable checkPeriodIsSelected(DataFilterValues period) {
-    $("#period").shouldHave(text(period.getPeriod()));
-    return this;
   }
 }
