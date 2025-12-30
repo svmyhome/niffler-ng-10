@@ -1,9 +1,11 @@
 package guru.qa.niffler.page.component;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.AllPeoplesPage;
 import guru.qa.niffler.page.EditSpendingPage;
@@ -11,54 +13,82 @@ import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
+import io.qameta.allure.Step;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class Header {
 
   private final SelenideElement self = $("#root header");
-  //#account-menu [href='/people/friends']
+  private final SelenideElement openMenu = self.$(".MuiAvatar-root"),
+      menu = $("#account-menu"),
+      profile = $("[href='/profile']"),
+      friends = $("[href='/people/friends']"),
+      allPeople = $("[href='/people/all']"),
+      spending = self.$("[href='/spending']"),
+      main = self.$("[href='/main']");
 
-  public FriendsPage toFriendsPage() {
-    openMenu();
-    $("[href='/people/friends']").click();
-    return new FriendsPage();
-  }
+  private final ElementsCollection menuItems = $$("#account-menu li"),
+      actionButtons = $$("button");
 
-  public AllPeoplesPage toAllPeoplesPage() {
-    openMenu();
-    $("[href='/people/all']").click();
-    return new AllPeoplesPage();
-  }
-
-  public ProfilePage toProfilePage() {
-    openMenu();
-    $("[href='/profile']").click();
-    return new ProfilePage();
-  }
-
-  public LoginPage signOut() {
-    openMenu();
-    $$("li").findBy(text("Sign out")).click();
-    $$("button").findBy(Condition.exactText("Log out")).click();
-    return new LoginPage();
-  }
-
-  public EditSpendingPage addSpendingPage() {
-    self.$("[href='/spending']").click();
-    return new EditSpendingPage();
-  }
-
-  public MainPage toMainPage() {
-    self.$("[href='/main']").click();
-    return new MainPage();
-  }
-
-  public Header openMenu() {
-    self.$(".MuiAvatar-root").click();
+  @Step("Open menu")
+  public @Nonnull Header openMenu() {
+    openMenu.click();
+    menu.shouldBe(visible);
     return this;
   }
 
+  @Step("Open profile page")
+  public @Nonnull ProfilePage toProfilePage() {
+    openMenu();
+    profile.shouldBe(visible).click();
+    return new ProfilePage();
+  }
 
+  @Step("Open friends page")
+  public @Nonnull FriendsPage toFriendsPage() {
+    openMenu();
+    friends.shouldBe(visible).click();
+    return new FriendsPage();
+  }
+
+  @Step("Open all people page")
+  public @Nonnull AllPeoplesPage toAllPeoplesPage() {
+    openMenu();
+    allPeople.click();
+    return new AllPeoplesPage();
+  }
+
+  @Step("Select Sign out from menu")
+  public @Nonnull Header selectSignOut() {
+    menuItems.findBy(text("Sign out")).click();
+    return this;
+  }
+
+  @Step("Confirm logout")
+  public @Nonnull LoginPage confirmLogout() {
+    actionButtons.findBy(exactText("Log out")).click();
+    return new LoginPage();
+  }
+
+  @Step("Sign out")
+  public @Nonnull LoginPage signOut() {
+    openMenu();
+    selectSignOut().confirmLogout();
+    return new LoginPage();
+  }
+
+  @Step("Open spending page")
+  public @Nonnull EditSpendingPage addSpendingPage() {
+    spending.click();
+    return new EditSpendingPage();
+  }
+
+  @Step("Open main page")
+  public @Nonnull MainPage toMainPage() {
+    main.click();
+    return new MainPage();
+  }
 }
 
