@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
-public class ProfileTest {
+public class ProfileTest{
 
   private static final Config CFG = Config.getInstance();
 
@@ -32,6 +32,7 @@ public class ProfileTest {
         .checkProfileIsDisplayed()
         .setName(name)
         .saveChanges()
+        .checkSnackBarText("Profile successfully updated")
         .goToMainPage()
         .openProfile()
         .checkName(name);

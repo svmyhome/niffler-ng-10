@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient extends RestClient implements SpendClient {
+public final class SpendApiClient extends RestClient implements SpendClient {
 
   private final SpendApi spendApi;
 

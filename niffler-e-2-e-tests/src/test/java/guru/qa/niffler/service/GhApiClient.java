@@ -8,7 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 
 @ParametersAreNonnullByDefault
-public class GhApiClient extends RestClient {
+public final class GhApiClient extends RestClient {
 
   private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
   private final GhApi ghApi;

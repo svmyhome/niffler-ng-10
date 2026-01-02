@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class FriendsPage {
+public class FriendsPage  extends BasePage<FriendsPage> {
 
   private final SelenideElement
       friendsTable = $("#friends"),

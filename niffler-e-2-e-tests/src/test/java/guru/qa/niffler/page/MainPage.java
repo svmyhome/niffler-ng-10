@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class MainPage {
+public class MainPage  extends BasePage<MainPage> {
 
   private final ElementsCollection tableRows = $$("#spendings tr"),
       sectionHeaders = $$("h2");

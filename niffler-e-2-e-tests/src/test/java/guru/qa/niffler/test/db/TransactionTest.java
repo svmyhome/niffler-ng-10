@@ -14,6 +14,7 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
+import guru.qa.niffler.jupiter.extension.SpendClientInjector;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
@@ -29,17 +30,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import utils.RandomDataUtils;
 
+@ExtendWith(SpendClientInjector.class)
 public class TransactionTest {
 
   private static final Config CFG = Config.getInstance();
+  private SpendClient spendClient;
 
   @Test
   void txTest() {
-    SpendClient spendClient = new SpendDbClient();
     SpendJson spendJson = spendClient.create(
         new SpendJson(
             null,

@@ -21,7 +21,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import utils.RandomDataUtils;
 
 @ParametersAreNonnullByDefault
-public class UserApiClient implements UserClient {
+public final class UserApiClient implements UserClient {
 
   private static final Config CFG = Config.getInstance();
 

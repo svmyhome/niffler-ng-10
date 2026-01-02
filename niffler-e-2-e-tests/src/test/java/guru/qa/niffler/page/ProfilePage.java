@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage {
+public class ProfilePage  extends BasePage<ProfilePage> {
 
   private final SelenideElement showArchived = $(".MuiSwitch-input"),
       setName = $("#name"),

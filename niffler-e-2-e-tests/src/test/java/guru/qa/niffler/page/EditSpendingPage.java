@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class EditSpendingPage {
+public class EditSpendingPage  extends BasePage<EditSpendingPage> {
 
   private final SelenideElement
       amountInput = $("#amount"),

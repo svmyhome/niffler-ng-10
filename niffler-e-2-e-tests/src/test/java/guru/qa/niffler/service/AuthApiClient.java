@@ -8,7 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 
 @ParametersAreNonnullByDefault
-public class AuthApiClient extends RestClient {
+public final class AuthApiClient extends RestClient {
 
   private static final Config CFG = Config.getInstance();
 
