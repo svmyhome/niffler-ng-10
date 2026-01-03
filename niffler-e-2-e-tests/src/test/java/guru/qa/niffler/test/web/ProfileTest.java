@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
-public class ProfileTest{
+public class ProfileTest {
 
   private static final Config CFG = Config.getInstance();
 
@@ -36,5 +36,18 @@ public class ProfileTest{
         .goToMainPage()
         .openProfile()
         .checkName(name);
+  }
+
+  @User
+  @Test
+  public void shouldFailWhenUploadingInvalidPicture(UserJson user) {
+    String name = "Ivan";
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openProfile()
+        .checkProfileIsDisplayed()
+        .uploadNewPictureInProfile("profile.jpg")
+        .saveChanges()
+        .checkSnackBarText("Error while updating profile: Failed to read request");
   }
 }

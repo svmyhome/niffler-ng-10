@@ -13,11 +13,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage  extends BasePage<ProfilePage> {
+public class ProfilePage extends BasePage<ProfilePage> {
 
   private final SelenideElement showArchived = $(".MuiSwitch-input"),
       setName = $("#name"),
-      saveChanges = $("[type='submit']");
+      saveChanges = $("[type='submit']"),
+      uploadNewPicture = $("#image__input");
   private final ElementsCollection
       categories = $$(".MuiChip-filledPrimary"),
       categoriesArchived = $$(".MuiChip-filled.MuiChip-colorDefault"),
@@ -71,5 +72,12 @@ public class ProfilePage  extends BasePage<ProfilePage> {
   public @Nonnull MainPage goToMainPage() {
     header.toMainPage();
     return new MainPage();
+  }
+
+
+  @Step("Upload new picture in profile")
+  public @Nonnull ProfilePage uploadNewPictureInProfile(String fileName) {
+    uploadNewPicture.uploadFromClasspath("picture/" + fileName);
+    return this;
   }
 }

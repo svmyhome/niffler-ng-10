@@ -45,9 +45,6 @@ public class SpendingWebTest {
         .editSpending(user.testData().spendings().getFirst().description())
         .setNewSpendingDescription(newDescription)
         .checkThatTableContains(newDescription);
-    System.out.println(user.username());
-    System.out.println(user.testData().spendings().getFirst().description());
-    System.out.println(newDescription);
   }
 
   @User(
@@ -116,6 +113,7 @@ public class SpendingWebTest {
         .historyOfSpendingIsVisible()
         .openNewSpending()
         .fillSpending(123.0, Currency.RUB,"QAZ", cal, newDescription)
+        .checkSnackBarText("New spending is successfully created")
         .checkThatTableContains(newDescription);
   }
 
