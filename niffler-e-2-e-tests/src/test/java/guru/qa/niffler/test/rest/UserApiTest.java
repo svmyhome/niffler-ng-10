@@ -17,7 +17,6 @@ public class UserApiTest {
   @Test
   public void testGetUserFromApi() {
     UserJson user = userClient.createUser(RandomDataUtils.randomUsername(), "12345");
-    System.out.println(user.username());
   }
 
   @Test
@@ -28,7 +27,6 @@ public class UserApiTest {
     if (user.isPresent()) {
       user1 = UserJson.fromEntity(user.get());
     }
-
     userClient.createIncomeInvitations(user1, 1);
   }
 
@@ -40,7 +38,6 @@ public class UserApiTest {
     if (user.isPresent()) {
       user1 = UserJson.fromEntity(user.get());
     }
-
     userClient.createOutcomeInvitations(user1, 1);
   }
 
@@ -52,9 +49,6 @@ public class UserApiTest {
     if (user.isPresent()) {
       user1 = UserJson.fromEntity(user.get());
     }
-
     userClient.createFriends(user1, 1);
   }
-
-
 }

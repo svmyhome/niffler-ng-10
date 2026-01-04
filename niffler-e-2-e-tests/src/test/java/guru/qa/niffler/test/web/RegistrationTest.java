@@ -4,10 +4,17 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import utils.RandomDataUtils;
 
+@Epic("UI")
+@Feature("User management")
+@Story("Registration")
 @ExtendWith(BrowserExtension.class)
 public class RegistrationTest {
 
@@ -15,6 +22,7 @@ public class RegistrationTest {
   private static final String REGISTRATION_SUCCESS = "Congratulations! You've registered!";
 
   @Test
+  @DisplayName("New user registration should be successful")
   void shouldRegisterNewUser() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
@@ -23,6 +31,7 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("New user registration should be successful with steps")
   void shouldRegisterNewUserWithStep() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
@@ -34,6 +43,7 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("After successful registration user should be switch to login page")
   void shouldRegisterNewUserSwitchToLogin() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
@@ -46,6 +56,7 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("Registration should fail when username already exists")
   void shouldNotRegisterNewUserWithExistingUser() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
@@ -54,6 +65,7 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("Registration should fail when password is too short (less than 3 characters)")
   void shouldNotRegisterNewUserWithPasswordLessThreeChar() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()
@@ -62,6 +74,7 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("Registration should fail if password and confirm password do not match")
   void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .switchToRegisterPage()

@@ -20,7 +20,6 @@ public class CategoryDbTest {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<CategoryJson> categoryById = spendDbClient.findCategoryById(
         UUID.fromString("0a091f06-b5bb-11f0-93fc-aa5c32f82d84"));
-    System.out.println(categoryById);
   }
 
   @Test
@@ -28,7 +27,6 @@ public class CategoryDbTest {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<CategoryJson> categoryByUsernameAndSpendName = spendDbClient.findCategoryByUsernameAndSpendName(
         "duck", "Машина");
-    System.out.println(categoryByUsernameAndSpendName);
   }
 
   @Test

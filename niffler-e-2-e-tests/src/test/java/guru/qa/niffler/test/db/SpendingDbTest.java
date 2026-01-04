@@ -25,7 +25,6 @@ public class SpendingDbTest {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<SpendJson> byId = spendDbClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
-    System.out.println(byId);
   }
 
   @Test
@@ -33,7 +32,6 @@ public class SpendingDbTest {
     SpendDbClient spendDbClient = new SpendDbClient();
     Optional<SpendJson> duck = spendDbClient.findByUsernameAndSpendDescription("duck",
         "11111");
-    System.out.println(duck);
   }
 
   @Test
@@ -119,7 +117,6 @@ public class SpendingDbTest {
     entity.setCategory(savedCategory);
 
     spendRepositoryJdbc.create(entity);
-
   }
 
   @Test
