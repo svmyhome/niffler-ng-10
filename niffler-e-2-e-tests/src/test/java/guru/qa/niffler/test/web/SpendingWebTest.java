@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @Epic("UI")
 @Feature("Categories and Spendings")
-@Story("Category Management")
+@Story("Spending Management")
 @ExtendWith(BrowserExtension.class)
 public class SpendingWebTest {
 
