@@ -6,25 +6,25 @@ import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@Epic("UI")
+@Feature("Navigation")
+@Story("Profile page")
 @ExtendWith(BrowserExtension.class)
 public class ProfileTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Test
-  public void openProfile() {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("duck", "12345")
-        .openProfile()
-        .checkProfileIsDisplayed();
-  }
-
   @User
   @Test
-  public void editNameUserProfile(UserJson user) {
+  @DisplayName("Profile name should be editable")
+  public void profileNameShouldBeEditable(UserJson user) {
     String name = "Ivan";
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())

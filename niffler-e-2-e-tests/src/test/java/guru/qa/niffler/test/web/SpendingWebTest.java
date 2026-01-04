@@ -10,13 +10,20 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@Epic("UI")
+@Feature("Categories and Spendings")
+@Story("Spending Management")
 @ExtendWith(BrowserExtension.class)
 public class SpendingWebTest {
 
@@ -37,6 +44,7 @@ public class SpendingWebTest {
           )}
   )
   @Test
+  @DisplayName("User should be able to edit spending description")
   void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
     final String newDescription = "Обучение Niffler Next Generation 10";
 
@@ -62,34 +70,8 @@ public class SpendingWebTest {
           )}
   )
   @Test
+  @DisplayName("New spending description should be visible")
   void spendingDescriptionShouldBeVisible(UserJson user) {
-    final String newDescription = "Обучение Niffler Next Generation 10";
-
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .historyOfSpendingIsVisible()
-        .editSpending(user.testData().spendings().getFirst().description())
-        .setNewSpendingDescription(newDescription)
-        .searchSpending(newDescription)
-        .checkThatTableContains(newDescription);
-  }
-
-  @User(
-      spendings = {@Spending(
-          category = "Машина",
-          amount = 89900,
-          currency = CurrencyValues.RUB,
-          description = "Обучение Niffler 2.0 юбилейный поток!"
-      ),
-          @Spending(
-              category = "Пиво",
-              amount = 100,
-              currency = CurrencyValues.RUB,
-              description = "Обучение Niffler 2.0 юбилейный поток!"
-          )}
-  )
-  @Test
-  void spendingDescriptionShouldBeVisible1(UserJson user) {
     final String newDescription = "Обучение Niffler Next Generation 10";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -103,6 +85,7 @@ public class SpendingWebTest {
 
   @User
   @Test
+  @DisplayName("User should be able create new spending")
   void shouldCreateNewSpendingWithValidData(UserJson user) {
     final String newDescription = "qaz";
     Calendar cal = Calendar.getInstance();
@@ -126,6 +109,7 @@ public class SpendingWebTest {
       )}
   )
   @Test
+  @DisplayName("User should be able delete spending")
   void spendingShouldBeDeleted(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
@@ -143,7 +127,8 @@ public class SpendingWebTest {
       )}
   )
   @Test
-  void spendingShouldBeEdit(UserJson user) {
+  @DisplayName("User should be able to edit all fields of a spending")
+  void userShouldBeAbleToEditAllSpendingFields(UserJson user) {
     final String newDescription = "Обучение Niffler 2.0 юбилейный поток!";
     Calendar date = Calendar.getInstance();
     date.set(2024, 11, 12);
@@ -165,7 +150,8 @@ public class SpendingWebTest {
       )}
   )
   @Test
-  void selectPeriodSpending(UserJson user) {
+  @DisplayName("User should be able select spending by period")
+  void userShouldBeAbleSelectPeriodSpending(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
@@ -182,7 +168,8 @@ public class SpendingWebTest {
       )}
   )
   @Test
-  void checkTableContains(UserJson user) {
+  @DisplayName("Spending should be displayed correctly in the table")
+  void spendingShouldBeVisibleFromTable(UserJson user) {
     String today = LocalDate.now()
         .format(DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH));
 
@@ -194,5 +181,3 @@ public class SpendingWebTest {
         .checkTableSize(1);
   }
 }
-
-

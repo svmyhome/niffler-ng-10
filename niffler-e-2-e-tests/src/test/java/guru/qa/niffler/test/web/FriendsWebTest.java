@@ -7,9 +7,16 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@Epic("UI")
+@Feature("User management")
+@Story("Friends")
 @ExtendWith({UserQueueExtension.class, BrowserExtension.class})
 public class FriendsWebTest {
 
@@ -19,21 +26,21 @@ public class FriendsWebTest {
       friends = 1
   )
   @Test
+  @DisplayName("Added friend should be visible in friends list")
   public void friendShouldBePresentInFriendsTable(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openFriends()
         .verifyMyFriendsSectionDisplayed()
         .verifyUserHasNewFriend(user.testData().friends().getFirst().username());
-    System.out.println(user.username());
-    System.out.println(user.testData().friends().getFirst().username());
   }
 
   @User(
       friends = 1
   )
   @Test
-  public void friendShouldBePresentInFriendsTable1(UserJson user) {
+  @DisplayName("Search field should be cleared after clicking clear button")
+  public void friendShouldNotBePresentInFriendsTableAfterClear(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openFriends()
@@ -47,19 +54,20 @@ public class FriendsWebTest {
       friends = 0
   )
   @Test
-  public void friendsTableShouldBeEmptyForNewFrieds(UserJson user) {
+  @DisplayName("Friends table is empty")
+  public void friendsTableShouldBeEmptyForNewFriends(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openFriends()
         .verifyFriendsTableIsEmpty();
-    System.out.println(user.username());
   }
 
   @User(
       incomeInvitations = 1
   )
   @Test
-  public void incomeInvitationBePresentInFriendsTable(UserJson user) {
+  @DisplayName("User should see incoming friend request in friends table")
+  public void incomingFriendRequestShouldBePresentInFriendsTable(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openFriends()
@@ -72,6 +80,7 @@ public class FriendsWebTest {
       incomeInvitations = 1
   )
   @Test
+  @DisplayName("User should be able to decline incoming friend request")
   public void shouldDeclineFriendRequest(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
@@ -87,6 +96,7 @@ public class FriendsWebTest {
       incomeInvitations = 1
   )
   @Test
+  @DisplayName("User should be able to accept incoming friend request")
   public void shouldAcceptFriendRequest(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
@@ -98,11 +108,11 @@ public class FriendsWebTest {
         .verifyUserHaveFriend();
   }
 
-
   @User(
       outcomeInvitations = 1
   )
   @Test
+  @DisplayName("User should see outcoming friend request in friends table")
   public void outcomeInvitationBePresentInFriendsTable(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())

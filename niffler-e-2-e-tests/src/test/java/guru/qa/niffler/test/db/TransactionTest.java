@@ -59,7 +59,6 @@ public class TransactionTest {
             "duck"
         )
     );
-    System.out.println(spendJson);
   }
 
   @Test
@@ -69,7 +68,6 @@ public class TransactionTest {
         RandomDataUtils.randomUsername(),
         "12345"
     );
-    System.out.println(user);
   }
 
   UserDbClient dbClient = new UserDbClient();
@@ -84,8 +82,6 @@ public class TransactionTest {
         "12345"
     );
     List<UserJson> friends = dbClient.createFriends(user, 1);
-    System.out.println(user);
-    System.out.println(friends);
   }
 
   @ParameterizedTest
@@ -98,7 +94,6 @@ public class TransactionTest {
         username,
         "12345"
     );
-    System.out.println(user);
   }
 
   @Test
@@ -120,7 +115,6 @@ public class TransactionTest {
             false
         )
     );
-    System.out.println(categoryJson);
   }
 
   @Test
@@ -146,7 +140,6 @@ public class TransactionTest {
     SpendClient spendClient = new SpendDbClient();
     Optional<SpendJson> spend = spendClient.findById(
         UUID.fromString("1328a312-b5bc-11f0-a017-aa5c32f82d84"));
-    System.out.println(spend);
   }
 
   @Test
@@ -306,7 +299,6 @@ public class TransactionTest {
   public void findAllTest() {
     UserDbClient userdbClient = new UserDbClient();
     List<AuthUserJson> authorityJson = userdbClient.findAll();
-    System.out.println(authorityJson);
   }
 
   @Test
@@ -318,6 +310,5 @@ public class TransactionTest {
       AuthUserEntity authUser = user.get();
       dbClient.delete(authUser);
     }
-    System.out.println();
   }
 }
