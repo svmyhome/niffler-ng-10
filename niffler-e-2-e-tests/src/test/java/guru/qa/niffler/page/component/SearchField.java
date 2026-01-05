@@ -4,17 +4,20 @@ import static com.codeborne.selenide.Condition.empty;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SearchField extends BasePage<SearchField> {
+public class SearchField extends BaseComponent<SearchField> {
 
   private final SelenideElement self = $("form.MuiBox-root");
   private final SelenideElement searchField = self.$("[placeholder='Search']"),
       clearSearchField = self.$("#input-clear");
+
+  public SearchField() {
+    super($("form.MuiBox-root"));
+  }
 
   @Step("Fill search field {query}")
   public @Nonnull SearchField search(String query) {

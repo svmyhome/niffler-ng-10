@@ -4,7 +4,6 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Step;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -18,13 +17,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class Calendar extends BasePage<Calendar> {
+public class Calendar extends BaseComponent<Calendar> {
 
-  private final SelenideElement self = $("[name='date']").parent();
+//  private final SelenideElement self = $("[name='date']").parent();
   private final SelenideElement calendarButton = self.$("[aria-label*='Choose date']"),
       selectYearButton = $("[aria-label*='calendar view is open']"),
       previousMonthButton = $("[data-testid='ArrowLeftIcon']"),
       nextMonthButton = $("[data-testid='ArrowRightIcon']");
+
+  public Calendar() {
+    super($("[name='date']").parent());
+  }
 
   @Step("Select date in calendar {date}")
   public @Nonnull Calendar selectDateInCalendar(Date date) {
