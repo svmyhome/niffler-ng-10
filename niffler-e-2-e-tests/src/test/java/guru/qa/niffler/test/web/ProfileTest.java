@@ -40,8 +40,8 @@ public class ProfileTest {
 
   @User
   @Test
+  @DisplayName("User cannot upload invalid image as profile picture")
   public void shouldFailWhenUploadingInvalidPicture(UserJson user) {
-    String name = "Ivan";
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openProfile()

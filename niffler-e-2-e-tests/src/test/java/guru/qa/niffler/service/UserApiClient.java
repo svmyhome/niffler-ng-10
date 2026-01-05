@@ -1,77 +1,64 @@
 package guru.qa.niffler.service;
 
 import static guru.qa.niffler.jupiter.extension.UserExtension.DEFAULT_PASSWORD;
-import guru.qa.niffler.api.AuthApi;
+import com.google.common.base.Stopwatch;
 import guru.qa.niffler.api.UserApi;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.user.UserJson;
 import io.qameta.allure.Step;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import okhttp3.JavaNetCookieJar;
-import okhttp3.OkHttpClient;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import utils.RandomDataUtils;
 
 @ParametersAreNonnullByDefault
-public final class UserApiClient implements UserClient {
+public final class UserApiClient extends RestClient implements UserClient {
 
-  private static final Config CFG = Config.getInstance();
+//  private static final Config CFG = Config.getInstance();
 
-  private static final CookieManager cm = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+  private final UserApi userApi;
+  private final AuthApiClient authApiClient;
 
-  private final Retrofit authRetrofit = new Retrofit.Builder()
-      .baseUrl(CFG.authUrl())
-      .addConverterFactory(JacksonConverterFactory.create())
-      .client(new OkHttpClient.Builder()
-          .cookieJar(new JavaNetCookieJar(
-              cm
-          ))
-          .build())
-      .build();
-
-  private final Retrofit userRetrofit = new Retrofit.Builder()
-      .baseUrl(CFG.userdataUrl())
-      .addConverterFactory(JacksonConverterFactory.create())
-      .build();
-
-  private final UserApi userApi = userRetrofit.create(UserApi.class);
-  private final AuthApi authApi = authRetrofit.create(AuthApi.class);
+  public UserApiClient() {
+    super(CFG.userdataUrl());
+    this.userApi = create(UserApi.class);
+    this.authApiClient = new AuthApiClient();
+  }
 
   @Override
   @Step("Create user {username} via API")
-  public @Nullable UserJson createUser(String username, String password) {
+  public @Nonnull UserJson createUser(String username, String password) {
     try {
-      authApi.requestRegisterForm().execute();
-      authApi.register(
-          username,
-          password,
-          password,
-          cm.getCookieStore().getCookies()
-              .stream()
-              .filter(c -> c.getName().equals("XSRF-TOKEN"))
-              .findFirst()
-              .get()
-              .getValue()
-      ).execute();
+      authApiClient.register(username, password);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
-    final Response<UserJson> response;
-    try {
-      response = userApi.getCurrentUser(username).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
+    Response<UserJson> response;
+    Stopwatch sw = Stopwatch.createStarted();
+    int maxWaitTime = 6000;
+    while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWaitTime) {
+      try {
+        response = userApi.getCurrentUser(username).execute();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      UserJson user = response.body();
+      if (user != null && user.id() != null) {
+        return user;
+      } else {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
     }
-    return response.body();
+    throw new RuntimeException(
+        String.format("User '%s' was not created within %d ms", username, maxWaitTime)
+    );
   }
 
   @Override
@@ -107,7 +94,8 @@ public final class UserApiClient implements UserClient {
   }
 
   @Override
-  @Step("Create {count} friends for user {targetUser.username} via API")  public List<UserJson> createFriends(UserJson targetUser, int count) {
+  @Step("Create {count} friends for user {targetUser.username} via API")
+  public List<UserJson> createFriends(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {

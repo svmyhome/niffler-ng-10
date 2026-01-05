@@ -2,7 +2,6 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
-import guru.qa.niffler.config.Config;
 import java.io.IOException;
 import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
@@ -10,7 +9,7 @@ import retrofit2.Response;
 @ParametersAreNonnullByDefault
 public final class AuthApiClient extends RestClient {
 
-  private static final Config CFG = Config.getInstance();
+//  private static final Config CFG = Config.getInstance();
 
   private final AuthApi authApi;
 
