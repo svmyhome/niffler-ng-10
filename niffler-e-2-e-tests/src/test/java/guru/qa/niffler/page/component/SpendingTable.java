@@ -9,7 +9,6 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.data.constants.DataFilterValues;
-import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Step;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -17,9 +16,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable extends BasePage<SpendingTable> {
+public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SelenideElement self = $("#spendings .MuiTableContainer-root");
   private final SelenideElement searchPeriod = self.$("#period"),
       editSpending = $("[aria-label*='Edit spending']"),
       selectAllRows = $("[aria-label='select all rows']"),
@@ -27,6 +25,11 @@ public class SpendingTable extends BasePage<SpendingTable> {
       deleteSubmitButton = $(".MuiDialogActions-root").$(byText("Delete")),
       searchSpending = self.$("[placeholder='Search']");
   private final ElementsCollection rows = $$("tbody tr");
+
+  public SpendingTable() {
+    super($("#spendings .MuiTableContainer-root"));
+  }
+
 
   @Step("Select search period {period}")
   public @Nonnull SpendingTable selectPeriod(DataFilterValues period) {

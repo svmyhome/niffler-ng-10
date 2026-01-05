@@ -8,7 +8,6 @@ import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.AllPeoplesPage;
-import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
@@ -19,9 +18,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class Header extends BasePage<Header> {
+public class Header extends BaseComponent<Header> {
 
-  private final SelenideElement self = $("#root header");
   private final SelenideElement openMenu = self.$(".MuiAvatar-root"),
       menu = $("#account-menu"),
       profile = $("[href='/profile']"),
@@ -32,6 +30,10 @@ public class Header extends BasePage<Header> {
 
   private final ElementsCollection menuItems = $$("#account-menu li"),
       actionButtons = $$("button");
+
+  public Header() {
+    super($("#root header"));
+  }
 
   @Step("Open menu")
   public @Nonnull Header openMenu() {
