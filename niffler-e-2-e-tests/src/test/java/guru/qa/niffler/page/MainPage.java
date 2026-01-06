@@ -101,7 +101,8 @@ public class MainPage  extends BasePage<MainPage> {
 
   @Step("Check spend is deleted")
   public void checkSpendIsDeleted() {
-    $(".MuiTypography-root").shouldHave(text("Spendings succesfully deleted"));
+    $(".MuiTypography-root")
+        .shouldBe(visible).shouldHave(text("Spendings succesfully deleted"));
   }
 
   @Step("Edit spending from table")
