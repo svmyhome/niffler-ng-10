@@ -38,9 +38,9 @@ public class Calendar extends BaseComponent<Calendar> {
 
     calendarButton.click();
     selectYearButton.click();
-    $(byText(year)).click();
+    $(byText(year)).shouldBe(visible).click();
     selectMonth(expectedMonth);
-    $(byText(day)).click();
+    $(byText(day)).shouldBe(visible).click();
     return this;
   }
 
