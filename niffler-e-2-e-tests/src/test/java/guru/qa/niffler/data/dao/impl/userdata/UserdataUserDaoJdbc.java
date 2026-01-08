@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -55,7 +54,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
-  public @Nullable Optional<UserEntity> findById(UUID id) {
+  public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE id = ?"
     )) {
@@ -84,7 +83,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
-  public @Nullable Optional<UserEntity> findByUsername(String username) {
+  public Optional<UserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {

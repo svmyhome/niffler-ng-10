@@ -13,7 +13,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.lang.Nullable;
 
 @ParametersAreNonnullByDefault
 public class SpendRepositorySpringJdbc implements SpendRepository {
@@ -35,13 +34,11 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return spendDaoSpringJdbc.findById(id);
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
@@ -68,13 +65,11 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return categoryDaoSpringJdbc.findById(id);
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     return categoryDaoSpringJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }
