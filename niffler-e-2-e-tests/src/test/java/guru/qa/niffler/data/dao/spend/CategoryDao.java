@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -14,10 +13,8 @@ public interface CategoryDao {
   @Nonnull
   CategoryEntity create(CategoryEntity category);
 
-  @Nullable
   Optional<CategoryEntity> findById(UUID id);
 
-  @Nullable
   Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
       String name);
 

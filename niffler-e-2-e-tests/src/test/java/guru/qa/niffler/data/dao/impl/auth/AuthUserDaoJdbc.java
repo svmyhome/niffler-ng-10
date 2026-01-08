@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -53,7 +52,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   }
 
   @Override
-  public @Nullable Optional<AuthUserEntity> findByUsername(String username) {
+  public Optional<AuthUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE username = ?"
     )) {
@@ -79,7 +78,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   }
 
   @Override
-  public @Nullable Optional<AuthUserEntity> findById(UUID id) {
+  public Optional<AuthUserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM \"user\" WHERE id = ?"
     )) {

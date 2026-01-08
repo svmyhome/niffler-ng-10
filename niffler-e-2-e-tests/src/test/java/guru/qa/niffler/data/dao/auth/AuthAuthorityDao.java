@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -16,7 +15,6 @@ public interface AuthAuthorityDao {
   @Nonnull
   List<AuthorityEntity> findAllByUserId(UUID userId);
 
-  @Nullable
   Optional<AuthorityEntity> findById(UUID id);
 
   void delete(AuthorityEntity... authority);

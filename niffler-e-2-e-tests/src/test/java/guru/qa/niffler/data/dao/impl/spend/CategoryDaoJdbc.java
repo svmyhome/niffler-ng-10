@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -50,7 +49,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public @Nullable Optional<CategoryEntity> findById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
@@ -75,7 +74,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public @Nullable Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
+  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username,
       String name) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE username = ? AND name = ?"

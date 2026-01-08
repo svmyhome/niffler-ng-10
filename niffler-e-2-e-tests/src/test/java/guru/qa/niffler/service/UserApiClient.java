@@ -11,7 +11,8 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -47,7 +48,7 @@ public class UserApiClient implements UserClient {
 
   @Override
   @Step("Create user {username} via API")
-  public @Nullable UserJson createUser(String username, String password) {
+  public @Nonnull UserJson createUser(String username, String password) {
     try {
       authApi.requestRegisterForm().execute();
       authApi.register(
@@ -71,7 +72,8 @@ public class UserApiClient implements UserClient {
     } catch (IOException e) {
       throw new AssertionError(e);
     }
-    return response.body();
+    return Objects.requireNonNull(response.body(),
+        "Response body is null for user: " + username);
   }
 
   @Override
@@ -107,7 +109,8 @@ public class UserApiClient implements UserClient {
   }
 
   @Override
-  @Step("Create {count} friends for user {targetUser.username} via API")  public List<UserJson> createFriends(UserJson targetUser, int count) {
+  @Step("Create {count} friends for user {targetUser.username} via API")
+  public List<UserJson> createFriends(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {

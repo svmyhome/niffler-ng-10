@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -34,7 +33,6 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
-  @Nullable
   public Optional<AuthUserEntity> findByUsername(String username) {
     try {
       return Optional.of(
@@ -48,7 +46,6 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   }
 
   @Override
-  @Nullable
   public Optional<AuthUserEntity> findById(UUID id) {
     return Optional.ofNullable(entityManager.find(AuthUserEntity.class, id));
   }

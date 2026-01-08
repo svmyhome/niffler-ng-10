@@ -10,7 +10,6 @@ import jakarta.persistence.NoResultException;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -34,13 +33,11 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return Optional.ofNullable(entityManager.find(SpendEntity.class, id));
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     try {
@@ -71,13 +68,11 @@ public class SpendRepositoryHibernate implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return Optional.ofNullable(entityManager.find(CategoryEntity.class, id));
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     try {
       return Optional.of(

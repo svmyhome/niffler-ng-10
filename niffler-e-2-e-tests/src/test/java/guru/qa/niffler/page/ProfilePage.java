@@ -23,7 +23,7 @@ public class ProfilePage {
       categoriesArchived = $$(".MuiChip-filled.MuiChip-colorDefault"),
       headersH2 = $$("h2");
 
-  Header header = new Header();
+  private final Header header = new Header();
 
   @Step("Successfully opened profile")
   public @Nonnull ProfilePage checkProfileIsDisplayed() {

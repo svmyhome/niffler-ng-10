@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.jspecify.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 public class SpendRepositoryJdbc implements SpendRepository {
@@ -40,13 +39,11 @@ public class SpendRepositoryJdbc implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findSpendById(UUID id) {
     return spendDaoJdbc.findById(id);
   }
 
   @Override
-  @Nullable
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username,
       String description) {
     try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -92,13 +89,11 @@ public class SpendRepositoryJdbc implements SpendRepository {
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return categoryDaoJdbc.findById(id);
   }
 
   @Override
-  @Nullable
   public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
     return categoryDaoJdbc.findCategoryByUsernameAndCategoryName(username, name);
   }

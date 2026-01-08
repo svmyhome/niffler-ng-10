@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -23,7 +22,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   private static final Config CFG = Config.getInstance();
 
   @Override
-  public @Nonnull void create(AuthorityEntity... authorities) {
+  public void create(AuthorityEntity... authorities) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "INSERT INTO authority (user_id, authority) VALUES(?,?)"
     )) {
@@ -63,7 +62,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public @Nullable Optional<AuthorityEntity> findById(UUID id) {
+  public Optional<AuthorityEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM authority WHERE id = ?"
     )) {
