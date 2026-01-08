@@ -19,7 +19,8 @@ public class AllPeoplesPage  extends BasePage<AllPeoplesPage> {
 
   private final SearchField searchField = new SearchField();
   private final ElementsCollection sectionHeaders = $$("h2");
-  public ElementsCollection getAllUsers() {
+
+  private ElementsCollection getAllUsers() {
     return allUsersTable.$$("tr td");
   }
 

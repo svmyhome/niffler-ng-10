@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,7 +43,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
-  public @Nullable Optional<CategoryEntity> findById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
@@ -56,7 +55,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
-  public @Nullable Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(
+  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(
       String categoryName,
       String name
   ) {

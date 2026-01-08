@@ -22,9 +22,9 @@ public class MainPage  extends BasePage<MainPage> {
 
   private final SelenideElement mainPage = $("#root");
 
-  Header header = new Header();
-  SearchField search = new SearchField();
-  SpendingTable spendingTable = new SpendingTable();
+  private final Header header = new Header();
+  private final SearchField search = new SearchField();
+  private final SpendingTable spendingTable = new SpendingTable();
 
   @Step("Edit spending: '{description}'")
   public @Nonnull EditSpendingPage editSpending(String description) {

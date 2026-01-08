@@ -6,8 +6,6 @@ import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -23,8 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class MainTest {
 
   private static final Config CFG = Config.getInstance();
-  Header header = new Header();
-  MainPage mainPage = new MainPage();
 
   @User
   @Test
@@ -33,9 +29,8 @@ public class MainTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openProfile()
-        .checkProfileIsDisplayed();
-
-    header.toMainPage();
-    mainPage.mainPageShouldBeDisplayed();
+        .checkProfileIsDisplayed()
+        .goToMainPage()
+        .mainPageShouldBeDisplayed();
   }
 }

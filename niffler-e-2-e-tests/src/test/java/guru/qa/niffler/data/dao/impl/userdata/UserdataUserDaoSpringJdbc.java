@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -48,7 +47,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
-  public @Nullable Optional<UserEntity> findById(UUID id) {
+  public Optional<UserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
@@ -60,7 +59,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
-  public @Nullable Optional<UserEntity> findByUsername(String username) {
+  public Optional<UserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.queryForObject(
         "SELECT * FROM \"user\" WHERE username = ?",

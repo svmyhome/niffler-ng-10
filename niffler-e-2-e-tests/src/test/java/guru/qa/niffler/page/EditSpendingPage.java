@@ -18,7 +18,7 @@ public class EditSpendingPage  extends BasePage<EditSpendingPage> {
       categoryInput = $("#category"), descriptionInput = $("#description");
   private final SelenideElement saveBtn = $("#save");
 
-  Calendar calendar = new Calendar();
+  private final Calendar calendar = new Calendar();
 
   @Step("Add new spending: '{description}'")
   public @Nonnull MainPage setNewSpendingDescription(String description) {

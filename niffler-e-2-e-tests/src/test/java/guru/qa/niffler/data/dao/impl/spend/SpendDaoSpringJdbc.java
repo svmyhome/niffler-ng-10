@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -47,7 +46,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
   }
 
   @Override
-  public @Nullable Optional<SpendEntity> findById(UUID id) {
+  public Optional<SpendEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
     return Optional.ofNullable(jdbcTemplate.queryForObject(
         "SELECT * FROM spend WHERE id = ?",
