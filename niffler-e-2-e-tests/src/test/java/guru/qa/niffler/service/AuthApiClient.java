@@ -9,8 +9,6 @@ import retrofit2.Response;
 @ParametersAreNonnullByDefault
 public final class AuthApiClient extends RestClient {
 
-//  private static final Config CFG = Config.getInstance();
-
   private final AuthApi authApi;
 
   public AuthApiClient() {

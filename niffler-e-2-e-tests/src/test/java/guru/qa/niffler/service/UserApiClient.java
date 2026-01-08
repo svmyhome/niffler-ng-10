@@ -10,16 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 import utils.RandomDataUtils;
 
 @ParametersAreNonnullByDefault
 public final class UserApiClient extends RestClient implements UserClient {
-
-//  private static final Config CFG = Config.getInstance();
 
   private final UserApi userApi;
   private final AuthApiClient authApiClient;
