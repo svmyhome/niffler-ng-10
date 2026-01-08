@@ -1,34 +1,20 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.api.AuthApi;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import javax.annotation.ParametersAreNonnullByDefault;
-import okhttp3.JavaNetCookieJar;
-import okhttp3.OkHttpClient;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @ParametersAreNonnullByDefault
-public class AuthApiClient {
+public final class AuthApiClient extends RestClient {
 
-  private static final Config CFG = Config.getInstance();
-  private static final CookieManager cm = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+  private final AuthApi authApi;
 
-  private final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(CFG.frontUrl())
-      .addConverterFactory(JacksonConverterFactory.create())
-      .client(new OkHttpClient.Builder()
-          .cookieJar(new JavaNetCookieJar(
-              cm
-          ))
-          .build())
-      .build();
-
-  private final AuthApi authApi = retrofit.create(AuthApi.class);
+  public AuthApiClient() {
+    super(CFG.authUrl(), true);
+    this.authApi = create(AuthApi.class);
+  }
 
   public Response<Void> register(String username, String password) throws IOException {
     authApi.requestRegisterForm().execute();
@@ -36,12 +22,7 @@ public class AuthApiClient {
         username,
         password,
         password,
-        cm.getCookieStore().getCookies()
-            .stream()
-            .filter(c -> c.getName().equals("XSRF-TOKEN"))
-            .findFirst()
-            .get()
-            .getValue()
+        ThreadSafeCookieStore.INSTANCE.xsrfCookie()
     ).execute();
   }
 }

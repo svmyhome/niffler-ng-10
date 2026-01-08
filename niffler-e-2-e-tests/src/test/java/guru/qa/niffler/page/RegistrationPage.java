@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class RegistrationPage {
+public class RegistrationPage extends BasePage<RegistrationPage> {
 
   private final SelenideElement usernameInput = $("#username"),
       passwordInput = $("#password"),

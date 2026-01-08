@@ -16,9 +16,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable {
+public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SelenideElement self = $("#spendings .MuiTableContainer-root");
   private final SelenideElement searchPeriod = self.$("#period"),
       editSpending = $("[aria-label*='Edit spending']"),
       selectAllRows = $("[aria-label='select all rows']"),
@@ -26,6 +25,11 @@ public class SpendingTable {
       deleteSubmitButton = $(".MuiDialogActions-root").$(byText("Delete")),
       searchSpending = self.$("[placeholder='Search']");
   private final ElementsCollection rows = $$("tbody tr");
+
+  public SpendingTable() {
+    super($("#spendings .MuiTableContainer-root"));
+  }
+
 
   @Step("Select search period {period}")
   public @Nonnull SpendingTable selectPeriod(DataFilterValues period) {

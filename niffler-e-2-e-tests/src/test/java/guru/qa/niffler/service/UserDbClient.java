@@ -6,8 +6,6 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.auth.AuthUserRepository;
-import guru.qa.niffler.data.repository.impl.auth.AuthUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.userdata.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.repository.userdata.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
@@ -28,13 +26,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import utils.RandomDataUtils;
 
 @ParametersAreNonnullByDefault
-public class UserDbClient implements UserClient {
+public final class UserDbClient implements UserClient {
 
   private static final Config CFG = Config.getInstance();
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-  private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
-  private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryHibernate();
+  private final AuthUserRepository authUserRepository = AuthUserRepository.getInstance();
+  private final UserdataUserRepository userdataUserRepository = UserdataUserRepository.getInstance();
 
   private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
       CFG.authJdbcUrl(),

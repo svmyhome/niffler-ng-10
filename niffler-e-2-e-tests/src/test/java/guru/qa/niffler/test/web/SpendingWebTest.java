@@ -95,7 +95,8 @@ public class SpendingWebTest {
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .openNewSpending()
-        .fillSpending(123.0, Currency.RUB, "QAZ", cal, newDescription)
+        .fillSpending(123.0, Currency.RUB,"QAZ", cal, newDescription)
+        .checkSnackBarText("New spending is successfully created")
         .checkThatTableContains(newDescription);
   }
 

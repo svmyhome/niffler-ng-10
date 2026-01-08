@@ -18,9 +18,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class Header {
+public class Header extends BaseComponent<Header> {
 
-  private final SelenideElement self = $("#root header");
   private final SelenideElement openMenu = self.$(".MuiAvatar-root"),
       menu = $("#account-menu"),
       profile = $("[href='/profile']"),
@@ -31,6 +30,10 @@ public class Header {
 
   private final ElementsCollection menuItems = $$("#account-menu li"),
       actionButtons = $$("button");
+
+  public Header() {
+    super($("#root header"));
+  }
 
   @Step("Open menu")
   public @Nonnull Header openMenu() {

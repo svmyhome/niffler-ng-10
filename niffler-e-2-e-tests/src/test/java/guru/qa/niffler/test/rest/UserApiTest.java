@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.rest;
 
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserApiClient;
 import guru.qa.niffler.service.UserClient;
@@ -12,7 +13,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import utils.RandomDataUtils;
 
 
 @Epic("API")
@@ -23,10 +23,11 @@ public class UserApiTest {
   private final UserClient userClient = new UserApiClient();
   private final UserDbClient userDbClient = new UserDbClient();
 
+  @User
   @Test
   @DisplayName("API: Should creat new user")
-  public void shouldCreateNewUserFromApi() {
-    userClient.createUser(RandomDataUtils.randomUsername(), "12345");
+  public void shouldCreateNewUserFromApi(UserJson user) {
+    userClient.createUser(user.username(), user.testData().password());
   }
 
   @Test

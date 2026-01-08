@@ -32,8 +32,22 @@ public class ProfileTest {
         .checkProfileIsDisplayed()
         .setName(name)
         .saveChanges()
+        .checkSnackBarText("Profile successfully updated")
         .goToMainPage()
         .openProfile()
         .checkName(name);
+  }
+
+  @User
+  @Test
+  @DisplayName("User cannot upload invalid image as profile picture")
+  public void shouldFailWhenUploadingInvalidPicture(UserJson user) {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openProfile()
+        .checkProfileIsDisplayed()
+        .uploadNewPictureInProfile("profile.jpg")
+        .saveChanges()
+        .checkSnackBarText("Error while updating profile: Failed to read request");
   }
 }
