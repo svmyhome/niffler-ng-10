@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -74,12 +75,12 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
   }
 
   @Override
-  public SpendJson[] resolveParameter(ParameterContext parameterContext,
+  public @Nonnull SpendJson[] resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     return createdSpends();
   }
 
-  public static SpendJson[] createdSpends() {
+  public @Nonnull static SpendJson[] createdSpends() {
     final ExtensionContext methodContext = context();
     return methodContext.getStore(NAMESPACE)
         .get(methodContext.getUniqueId(), SpendJson[].class);

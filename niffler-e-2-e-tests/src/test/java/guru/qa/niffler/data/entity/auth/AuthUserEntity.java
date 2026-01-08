@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -51,6 +52,7 @@ public class AuthUserEntity implements Serializable {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private List<AuthorityEntity> authorities = new ArrayList<>();
 
+  @Nonnull
   public static AuthUserEntity fromJson(AuthUserJson json) {
     AuthUserEntity aue = new AuthUserEntity();
     aue.setId(json.getId());

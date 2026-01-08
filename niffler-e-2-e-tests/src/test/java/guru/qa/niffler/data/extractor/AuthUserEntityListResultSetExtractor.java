@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -22,7 +23,9 @@ public class AuthUserEntityListResultSetExtractor implements
   }
 
   @Override
-  public List<AuthUserEntity> extractData(ResultSet rs) throws SQLException, DataAccessException {
+  @Nonnull
+  public List<AuthUserEntity> extractData(@Nonnull ResultSet rs)
+      throws SQLException, DataAccessException {
     Map<UUID, AuthUserEntity> userMap = new LinkedHashMap<>();
 
     while (rs.next()) {

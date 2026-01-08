@@ -9,16 +9,22 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
+import io.qameta.allure.Step;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+@ParametersAreNonnullByDefault
 public class SpendApiClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
@@ -31,7 +37,8 @@ public class SpendApiClient implements SpendClient {
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
   @Override
-  public SpendJson create(SpendJson spend) {
+  @Step("Send REST POST('/internal/spends/add') request to niffler-spend")
+  public @Nullable SpendJson create(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.addSpend(spend).execute();
@@ -43,7 +50,8 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public SpendJson update(SpendJson spend) {
+  @Step("Send REST POST('/internal/spends/edit') request to niffler-spend")
+  public @Nullable SpendJson update(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.updateSpend(spend).execute();
@@ -55,7 +63,8 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public CategoryJson createCategory(CategoryJson category) {
+  @Step("Send REST POST('/internal/categories/add') request to niffler-spend")
+  public @Nullable CategoryJson createCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
       response = spendApi.addCategory(category).execute();
@@ -67,7 +76,8 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public CategoryJson updateCategory(CategoryJson category) {
+  @Step("Send REST POST('/internal/categories/update') request to niffler-spend")
+  public @Nullable CategoryJson updateCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
       response = spendApi.updateCategory(category).execute();
@@ -84,7 +94,9 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name, String username) {
+  @Step("Send REST POST('/internal/categories/all') request to niffler-spend")
+  public @Nullable Optional<CategoryJson> findCategoryByUsernameAndSpendName(String name,
+      String username) {
     final Response<List<CategoryJson>> response;
     try {
       response = spendApi.getCategories(name, username).execute();
@@ -101,11 +113,13 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<SpendJson> findById(UUID id) {
+  @Step("Send REST POST('/internal/spends/{id}') request to niffler-spend")
+  public @Nullable Optional<SpendJson> findById(UUID id) {
     throw new UnsupportedOperationException();
   }
 
-  public Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
+  @Step("Send REST POST('/internal/spends/{id}') request to niffler-spend")
+  public @Nullable  Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
     final Response<SpendJson> response;
     try {
       response = spendApi.getSpend(String.valueOf(id), username).execute();
@@ -117,12 +131,13 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Override
-  public Optional<SpendJson> findByUsernameAndSpendDescription(String username,
+  public @Nullable Optional<SpendJson> findByUsernameAndSpendDescription(String username,
       String description) {
     throw new UnsupportedOperationException();
   }
 
   @Override
+  @Step("Send REST POST('/internal/spends/remove') request to niffler-spend")
   public void remove(SpendJson spend) {
     final Response<Void> response;
     try {
@@ -139,8 +154,13 @@ public class SpendApiClient implements SpendClient {
     throw new UnsupportedOperationException();
   }
 
-  public List<SpendJson> findSpendsByUserName(String username, CurrencyValues currencyValues,
-      String from, String to) {
+  @Step("Send REST POST('/internal/spends/all') request to niffler-spend")
+  public @Nonnull List<SpendJson> findSpendsByUserName(
+      String username,
+      @Nullable CurrencyValues currencyValues,
+      @Nullable String from,
+      @Nullable String to
+  ) {
     final Response<SpendJson[]> response;
     try {
       response = spendApi.getSpends(username, currencyValues, from, to).execute();
@@ -151,7 +171,8 @@ public class SpendApiClient implements SpendClient {
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
-  public List<SpendJson> findSpendsByUserName(String username) {
+  @Step("Send REST POST('/internal/spends/all') request to niffler-spend")
+  public @Nonnull List<SpendJson> findSpendsByUserName(String username) {
     final Response<SpendJson[]> response;
     try {
       response = spendApi.getSpends(username).execute();
@@ -162,7 +183,8 @@ public class SpendApiClient implements SpendClient {
     return List.of(Objects.requireNonNullElseGet(response.body(), () -> new SpendJson[0]));
   }
 
-  public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
+  @Step("Send REST POST('/internal/categories/all') request to niffler-spend")
+  public @Nullable Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName,
       String username) {
     final Response<List<CategoryJson>> response;
     try {
@@ -176,11 +198,11 @@ public class SpendApiClient implements SpendClient {
         response.body(),
         ArrayList::new
     );
-
     return categories.stream().findFirst();
   }
 
-  public List<CategoryJson> findAllCategories(String username) {
+  @Step("Send REST POST('/internal/categories/all') request to niffler-spend")
+  public @Nonnull List<CategoryJson> findAllCategories(String username) {
     final Response<List<CategoryJson>> response;
     try {
       response = spendApi.getCategories(username).execute();
@@ -188,10 +210,10 @@ public class SpendApiClient implements SpendClient {
       throw new AssertionError(e);
     }
     assertEquals(SC_OK, response.code());
-    assert response.body() != null;
-    return response.body();
+    return response.body() != null ? response.body() : Collections.emptyList();
   }
 
+  @Step("Send REST POST('/internal/spends/remove') request to niffler-spend")
   public void deleteSpends(String username, List<String> ids) {
     final Response<Void> response;
     try {

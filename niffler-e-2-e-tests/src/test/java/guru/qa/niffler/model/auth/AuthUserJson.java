@@ -2,6 +2,7 @@ package guru.qa.niffler.model.auth;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,8 @@ public class AuthUserJson {
   private boolean accountNonLocked;
   private boolean credentialsNonExpired;
 
-  public static AuthUserJson fromEntity(AuthUserEntity entity) {
+  @Nonnull
+  public static AuthUserJson fromEntity(@Nonnull AuthUserEntity entity) {
     AuthUserJson au = new AuthUserJson();
     au.setId(entity.getId());
     au.setUsername(entity.getUsername());

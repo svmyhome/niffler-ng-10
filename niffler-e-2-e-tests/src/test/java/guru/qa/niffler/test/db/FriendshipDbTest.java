@@ -1,11 +1,11 @@
-package guru.qa.niffler.test.web;
+package guru.qa.niffler.test.db;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.service.UserDbClient;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class FriendshipTest {
+public class FriendshipDbTest {
 
   private static final Config CFG = Config.getInstance();
 

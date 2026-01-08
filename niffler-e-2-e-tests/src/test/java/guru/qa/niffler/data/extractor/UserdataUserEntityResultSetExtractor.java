@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nonnull;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -22,7 +23,8 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
   }
 
   @Override
-  public UserEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
+  @Nonnull
+  public UserEntity extractData(@Nonnull ResultSet rs) throws SQLException, DataAccessException {
     Map<UUID, UserEntity> userMap = new ConcurrentHashMap<>();
     UUID userId = null;
     while (rs.next()) {

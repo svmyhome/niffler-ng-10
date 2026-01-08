@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -87,6 +88,7 @@ public class UserQueueExtension implements
   }
 
   @Override
+  @Nonnull
   public StaticUser resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     UserType ut = parameterContext.findAnnotation(UserType.class)
@@ -106,6 +108,7 @@ public class UserQueueExtension implements
     return user;
   }
 
+  @Nonnull
   private Queue<StaticUser> queueByType(UserType.FriendType type) {
     return switch (type) {
       case EMPTY -> EMPTY_USERS;

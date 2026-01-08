@@ -10,6 +10,7 @@ import guru.qa.niffler.service.SpendDbClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -78,11 +79,13 @@ public class CategoryExtension implements
   }
 
   @Override
+  @Nonnull
   public CategoryJson[] resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     return createdCategories();
   }
 
+  @Nonnull
   public static CategoryJson[] createdCategories() {
     final ExtensionContext methodContext = context();
     return methodContext.getStore(NAMESPACE)

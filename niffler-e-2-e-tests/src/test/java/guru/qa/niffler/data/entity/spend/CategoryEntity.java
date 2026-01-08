@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -34,6 +35,7 @@ public class CategoryEntity implements Serializable {
   @Column(nullable = false)
   private boolean archived;
 
+  @Nonnull
   public static CategoryEntity fromJson(CategoryJson json) {
     CategoryEntity ce = new CategoryEntity();
     ce.setId(json.id());
@@ -65,6 +67,7 @@ public class CategoryEntity implements Serializable {
   }
 
   @Override
+  @Nonnull
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();

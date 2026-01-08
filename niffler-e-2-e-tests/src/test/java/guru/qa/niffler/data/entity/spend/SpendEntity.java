@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -53,6 +54,7 @@ public class SpendEntity implements Serializable {
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private CategoryEntity category;
 
+  @Nonnull
   public static SpendEntity fromJson(SpendJson json) {
     SpendEntity se = new SpendEntity();
     se.setId(json.id());
@@ -89,6 +91,7 @@ public class SpendEntity implements Serializable {
   }
 
   @Override
+  @Nonnull
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();

@@ -5,7 +5,10 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class XaTransactionTemplate {
 
   private final JdbcConnectionHolders holders;
@@ -21,7 +24,7 @@ public class XaTransactionTemplate {
     return this;
   }
 
-  public <T> T execute(Supplier<T>... actions) {
+  public @Nullable <T> T execute(Supplier<T>... actions) {
     UserTransaction ut = new UserTransactionImp();
     try {
       ut.begin();

@@ -9,6 +9,8 @@ import guru.qa.niffler.service.UserDbClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -61,11 +63,13 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
   }
 
   @Override
+  @Nonnull
   public UserJson resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
     return createdUser().orElseThrow();
   }
 
+  @Nullable
   public static Optional<UserJson> createdUser() {
     final ExtensionContext methodContext = context();
     return Optional.ofNullable(methodContext.getStore(NAMESPACE)

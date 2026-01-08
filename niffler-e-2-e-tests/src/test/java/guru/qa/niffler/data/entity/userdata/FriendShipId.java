@@ -3,6 +3,7 @@ package guru.qa.niffler.data.entity.userdata;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,7 @@ public class FriendShipId implements Serializable {
   }
 
   @Override
+  @Nonnull
   public int hashCode() {
     return Objects.hash(requester, addressee);
   }

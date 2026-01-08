@@ -13,16 +13,21 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
+import io.qameta.allure.Step;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import utils.RandomDataUtils;
 
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 
   private static final Config CFG = Config.getInstance();
@@ -35,14 +40,14 @@ public class UserDbClient implements UserClient {
       CFG.authJdbcUrl(),
       CFG.userdataJdbcUrl());
 
-  public static UserEntity userEntityRequiredField(String username) {
+  public @Nonnull static UserEntity userEntityRequiredField(String username) {
     UserEntity ue = new UserEntity();
     ue.setUsername(username);
     ue.setCurrency(CurrencyValues.RUB);
     return ue;
   }
 
-  private AuthUserEntity authUserEntity(String username, String password) {
+  private @Nonnull AuthUserEntity authUserEntity(String username, String password) {
     AuthUserEntity authUser = new AuthUserEntity();
     authUser.setUsername(username);
     authUser.setPassword(pe.encode(password));
@@ -62,7 +67,8 @@ public class UserDbClient implements UserClient {
   }
 
   @Override
-  public UserJson createUser(String username, String password) {
+  @Step("Create user to DB")
+  public @Nonnull UserJson createUser(String username, String password) {
     return xaTransactionTemplate.execute(() -> {
       AuthUserEntity authUser = authUserEntity(username, password);
       authUserRepository.create(authUser);
@@ -70,12 +76,14 @@ public class UserDbClient implements UserClient {
     });
   }
 
+  @Step("Find all users in DB")
   public List<AuthUserJson> findAll() {
     List<AuthUserEntity> entities = authUserRepository.findAll();
     return entities.stream().map(AuthUserJson::fromEntity).collect(Collectors.toList());
   }
 
-  public Optional<AuthUserEntity> findAuthUserById(UUID id) {
+  @Step("Find user by ID in DB")
+  public @Nullable Optional<AuthUserEntity> findAuthUserById(UUID id) {
     return authUserRepository.findById(id);
   }
 
@@ -87,6 +95,7 @@ public class UserDbClient implements UserClient {
   }
 
   @Override
+  @Step("Create income invitation for user {targetUser.username} to DB")
   public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
     final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
@@ -107,6 +116,7 @@ public class UserDbClient implements UserClient {
   }
 
   @Override
+  @Step("Create outcome invitation for user {targetUser.username} to DB")
   public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
     final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
@@ -127,6 +137,7 @@ public class UserDbClient implements UserClient {
   }
 
   @Override
+  @Step("Create {count} friends for user {targetUser.username} to DB")
   public List<UserJson> createFriends(UserJson targetUser, int count) {
     final List<UserJson> users = new ArrayList<>();
     if (count > 0) {
@@ -146,14 +157,17 @@ public class UserDbClient implements UserClient {
     return users;
   }
 
-  public Optional<UserEntity> findUserById(UUID id) {
+  @Step("Find user by ID in DB")
+  public @Nullable Optional<UserEntity> findUserById(UUID id) {
     return userdataUserRepository.findById(id);
   }
 
-  public Optional<AuthUserEntity> findUserByUserName(String username) {
+  @Step("Find user by username in DB")
+  public @Nullable Optional<AuthUserEntity> findUserByUserName(String username) {
     return authUserRepository.findByUsername(username);
   }
 
+  @Step("Update user in DB")
   public AuthUserEntity update(AuthUserEntity user) {
     return xaTransactionTemplate.execute(() -> {
       authUserRepository.update(user);
@@ -161,6 +175,7 @@ public class UserDbClient implements UserClient {
     });
   }
 
+  @Step("Remove user from DB")
   public void remove(UserEntity user) {
     xaTransactionTemplate.execute(() -> {
       UserEntity managedUser = userdataUserRepository.findById(user.getId())

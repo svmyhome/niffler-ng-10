@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -62,6 +63,7 @@ public class FriendshipEntity implements Serializable {
   }
 
   @Override
+  @Nonnull
   public final int hashCode() {
     return Objects.hash(requester, addressee);
   }

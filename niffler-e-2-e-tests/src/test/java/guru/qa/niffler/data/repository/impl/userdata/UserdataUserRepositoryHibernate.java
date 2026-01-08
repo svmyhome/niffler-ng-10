@@ -9,13 +9,18 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
   private final Config CFG = Config.getInstance();
   private final EntityManager entityManager = EntityManagers.em(CFG.userdataJdbcUrl());
 
   @Override
+  @Nonnull
   public UserEntity create(UserEntity user) {
     entityManager.joinTransaction();
     entityManager.persist(user);
@@ -23,11 +28,13 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
   }
 
   @Override
+  @Nullable
   public Optional<UserEntity> findById(UUID id) {
     return Optional.ofNullable(entityManager.find(UserEntity.class, id));
   }
 
   @Override
+  @Nullable
   public Optional<UserEntity> findByUsername(String username) {
     return entityManager
         .createQuery("SELECT u FROM UserEntity u WHERE u.username = :username", UserEntity.class)
@@ -37,6 +44,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
   }
 
   @Override
+  @Nullable
   public UserEntity update(UserEntity user) {
     return entityManager.merge(user);
   }
@@ -51,6 +59,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public List<UserEntity> findAll() {
     return entityManager.createQuery("select u from UserEntity u ORDER BY u.username",
             UserEntity.class)
