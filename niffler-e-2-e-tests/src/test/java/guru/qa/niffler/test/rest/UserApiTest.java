@@ -37,7 +37,6 @@ public class UserApiTest {
   private final UserApiClient userApiClient = new UserApiClient();
   private final UserDbClient userDbClient = new UserDbClient();
 
-  @Order(3)
   @User
   @Test
   @DisplayName("API: Should creat new user")
@@ -45,7 +44,6 @@ public class UserApiTest {
     userClient.createUser(user.username(), user.testData().password());
   }
 
-  @Order(4)
   @Test
   @DisplayName("API: Should creat new income invitation")
   public void shouldCreateIncomeInvitationFromApi() {
@@ -58,7 +56,6 @@ public class UserApiTest {
     userClient.createIncomeInvitations(user1, 1);
   }
 
-  @Order(5)
   @Test
   @DisplayName("API: Should creat new outcome invitation")
   public void shouldCreateOutcomeInvitationFromApi() {
@@ -71,7 +68,6 @@ public class UserApiTest {
     userClient.createOutcomeInvitations(user1, 1);
   }
 
-  @Order(6)
   @Test
   @DisplayName("API: Should creat friend")
   public void shouldCreateFriendsFromApi() {
@@ -103,7 +99,7 @@ public class UserApiTest {
     assertThat(allUsers, hasSize(1));
   }
 
-  @Order(7)
+  @Order(Integer.MAX_VALUE)
   @User
   @Test
   @DisplayName("API: Should return all users")
