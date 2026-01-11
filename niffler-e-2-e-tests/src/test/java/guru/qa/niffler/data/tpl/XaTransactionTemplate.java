@@ -3,8 +3,10 @@ package guru.qa.niffler.data.tpl;
 import com.atomikos.icatch.jta.UserTransactionImp;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.sql.Connection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -19,12 +21,16 @@ public class XaTransactionTemplate {
     this.holders = Connections.holders(jdbcUrl);
   }
 
-  public XaTransactionTemplate holdConnectionAfterAction() {
+  public @Nonnull XaTransactionTemplate holdConnectionAfterAction() {
     this.closeAfterAction.set(false);
     return this;
   }
 
-  public @Nullable <T> T execute(Supplier<T>... actions) {
+  public <T> T execute(Supplier<T>... actions) {
+    return execute(Connection.TRANSACTION_REPEATABLE_READ, actions);
+  }
+
+  public @Nullable <T> T execute(int isolationLvl, Supplier<T>... actions) {
     UserTransaction ut = new UserTransactionImp();
     try {
       ut.begin();
@@ -39,12 +45,12 @@ public class XaTransactionTemplate {
         ut.rollback();
       } catch (SystemException ex) {
         throw new RuntimeException(ex);
-      } finally {
-        if (closeAfterAction.get()) {
-          holders.close();
-        }
       }
       throw new RuntimeException(e);
+    } finally {
+      if (closeAfterAction.get()) {
+        holders.close();
+      }
     }
   }
 }

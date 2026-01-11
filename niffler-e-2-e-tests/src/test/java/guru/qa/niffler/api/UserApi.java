@@ -2,6 +2,7 @@ package guru.qa.niffler.api;
 
 import guru.qa.niffler.model.user.UserJson;
 import java.util.List;
+import javax.annotation.Nullable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -19,8 +20,12 @@ public interface UserApi {
   @GET("internal/users/all")
   Call<List<UserJson>> getAllUsers(
       @Query("username") String username,
-      @Query("searchQuery") String searchQuery
+      @Nullable @Query("searchQuery") String searchQuery
   );
+
+  default Call<List<UserJson>> getAllUsers(String username) {
+    return getAllUsers(username, null);
+  }
 
   @POST("internal/users/update")
   Call<UserJson> updateUser(@Body UserJson user);
