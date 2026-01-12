@@ -5,7 +5,6 @@ import static org.apache.hc.core5.http.HttpStatus.SC_CREATED;
 import static org.apache.hc.core5.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import guru.qa.niffler.api.SpendApi;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
@@ -21,20 +20,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient implements SpendClient {
+public final class SpendApiClient extends RestClient implements SpendClient {
 
-  private static final Config CFG = Config.getInstance();
+  private final SpendApi spendApi;
 
-  private final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(CFG.spendUrl())
-      .addConverterFactory(JacksonConverterFactory.create())
-      .build();
-
-  private final SpendApi spendApi = retrofit.create(SpendApi.class);
+  public SpendApiClient() {
+    super(CFG.spendUrl());
+    this.spendApi = create(SpendApi.class);
+  }
 
   @Override
   @Step("Send REST POST('/internal/spends/add') request to niffler-spend")
@@ -119,7 +114,7 @@ public class SpendApiClient implements SpendClient {
   }
 
   @Step("Send REST POST('/internal/spends/{id}') request to niffler-spend")
-  public @Nullable  Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
+  public @Nullable Optional<SpendJson> findByIdAndUsername(UUID id, String username) {
     final Response<SpendJson> response;
     try {
       response = spendApi.getSpend(String.valueOf(id), username).execute();

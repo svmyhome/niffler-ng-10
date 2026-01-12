@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class MainPage {
+public class MainPage  extends BasePage<MainPage> {
 
   private final ElementsCollection tableRows = $$("#spendings tr"),
       sectionHeaders = $$("h2");
@@ -101,7 +101,8 @@ public class MainPage {
 
   @Step("Check spend is deleted")
   public void checkSpendIsDeleted() {
-    $(".MuiTypography-root").shouldHave(text("Spendings succesfully deleted"));
+    $(".MuiTypography-root")
+        .shouldBe(visible).shouldHave(text("Spendings succesfully deleted"));
   }
 
   @Step("Edit spending from table")

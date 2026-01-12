@@ -3,7 +3,6 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.repository.impl.spend.SpendRepositoryHibernate;
 import guru.qa.niffler.data.repository.spend.SpendRepository;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.spend.CategoryJson;
@@ -16,10 +15,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SpendDbClient implements SpendClient {
+public final class SpendDbClient implements SpendClient {
 
   private static final Config CFG = Config.getInstance();
-  private final SpendRepository spendRepository = new SpendRepositoryHibernate();
+  private final SpendRepository spendRepository = SpendRepository.getInstance();
 
 
   private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(

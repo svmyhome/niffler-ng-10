@@ -9,11 +9,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SearchField {
+public class SearchField extends BaseComponent<SearchField> {
 
   private final SelenideElement self = $("form.MuiBox-root");
   private final SelenideElement searchField = self.$("[placeholder='Search']"),
       clearSearchField = self.$("#input-clear");
+
+  public SearchField() {
+    super($("form.MuiBox-root"));
+  }
 
   @Step("Fill search field {query}")
   public @Nonnull SearchField search(String query) {

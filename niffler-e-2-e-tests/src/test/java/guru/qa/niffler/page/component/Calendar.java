@@ -17,13 +17,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class Calendar {
+public class Calendar extends BaseComponent<Calendar> {
 
-  private final SelenideElement self = $("[name='date']").parent();
   private final SelenideElement calendarButton = self.$("[aria-label*='Choose date']"),
       selectYearButton = $("[aria-label*='calendar view is open']"),
       previousMonthButton = $("[data-testid='ArrowLeftIcon']"),
       nextMonthButton = $("[data-testid='ArrowRightIcon']");
+
+  public Calendar() {
+    super($("[name='date']").parent());
+  }
 
   @Step("Select date in calendar {date}")
   public @Nonnull Calendar selectDateInCalendar(Date date) {
@@ -34,9 +37,9 @@ public class Calendar {
 
     calendarButton.click();
     selectYearButton.click();
-    $(byText(year)).click();
+    $(byText(year)).shouldBe(visible).click();
     selectMonth(expectedMonth);
-    $(byText(day)).click();
+    $(byText(day)).shouldBe(visible).click();
     return this;
   }
 
