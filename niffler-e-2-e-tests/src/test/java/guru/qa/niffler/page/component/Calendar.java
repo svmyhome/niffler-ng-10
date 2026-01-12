@@ -19,7 +19,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class Calendar extends BaseComponent<Calendar> {
 
-//  private final SelenideElement self = $("[name='date']").parent();
   private final SelenideElement calendarButton = self.$("[aria-label*='Choose date']"),
       selectYearButton = $("[aria-label*='calendar view is open']"),
       previousMonthButton = $("[data-testid='ArrowLeftIcon']"),
