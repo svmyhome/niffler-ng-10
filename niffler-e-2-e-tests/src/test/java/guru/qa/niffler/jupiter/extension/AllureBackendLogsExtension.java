@@ -31,36 +31,6 @@ public class AllureBackendLogsExtension implements SuiteExtension {
 
     try {
       attachLogFiles(allureLifecicle);
-//      allureLifecicle.addAttachment(
-//          "Niffler-auth logs",
-//          "text/html",
-//          ".log",
-//          Files.newInputStream(Path.of("./logs/niffler-auth/app.log"))
-//      );
-//      allureLifecicle.addAttachment(
-//          "Niffler-userdata logs",
-//          "text/html",
-//          ".log",
-//          Files.newInputStream(Path.of("./logs/niffler-userdata/userdata.log"))
-//      );
-//      allureLifecicle.addAttachment(
-//          "Niffler-spend logs",
-//          "text/html",
-//          ".log",
-//          Files.newInputStream(Path.of("./logs/niffler-spend/spend.log"))
-//      );
-//      allureLifecicle.addAttachment(
-//          "Niffler-gateway logs",
-//          "text/html",
-//          ".log",
-//          Files.newInputStream(Path.of("./logs/niffler-gateway/gateway.log"))
-//      );
-//      allureLifecicle.addAttachment(
-//          "Niffler-currency logs",
-//          "text/html",
-//          ".log",
-//          Files.newInputStream(Path.of("./logs/niffler-currency/currency.log"))
-//      );
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
