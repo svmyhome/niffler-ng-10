@@ -50,14 +50,7 @@ public class AllureBackendLogsExtension implements SuiteExtension {
     }
   }
 
-  private static class LogFileConfig {
+  private record LogFileConfig(String displayName, String filePath) {
 
-    final String displayName;
-    final String filePath;
-
-    LogFileConfig(String displayName, String filePath) {
-      this.displayName = displayName;
-      this.filePath = filePath;
-    }
   }
 }
