@@ -6,10 +6,13 @@ import guru.qa.niffler.model.allure.ScreenDif;
 import io.qameta.allure.Allure;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -18,11 +21,38 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.springframework.core.io.ClassPathResource;
 
-public class ScreenShotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
+public class ScreenShotTestExtension implements BeforeEachCallback, AfterEachCallback,
+    ParameterResolver,
+    TestExecutionExceptionHandler {
 
   public static final ObjectMapper objectMapper = new ObjectMapper();
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
       ScreenShotTestExtension.class);
+
+
+  @Override
+  public void beforeEach(ExtensionContext context) throws Exception {
+    AnnotationSupport.findAnnotation(context.getRequiredTestClass(), ScreenShotTest.class)
+        .ifPresent(anno -> {
+          context.getStore(NAMESPACE).put(context.getUniqueId(), anno.value());
+        });
+  }
+
+  @Override
+  public void afterEach(ExtensionContext context) throws Exception {
+    AnnotationSupport.findAnnotation(context.getRequiredTestClass(), ScreenShotTest.class)
+        .ifPresent(anno -> {
+          if (anno.rewriteExpected()) {
+            var actual = getActual();
+            File output = new File("src/test/resources/" + anno.value());
+            try {
+              ImageIO.write(actual, "png", output);
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        });
+  }
 
   @Override
   public boolean supportsParameter(ParameterContext parameterContext,
@@ -36,12 +66,28 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
   @Override
   public BufferedImage resolveParameter(ParameterContext parameterContext,
       ExtensionContext extensionContext) throws ParameterResolutionException {
-    return ImageIO.read(new ClassPathResource("img/expected.png").getInputStream());
+    ScreenShotTest annotation = AnnotationSupport
+        .findAnnotation(extensionContext.getRequiredTestMethod(), ScreenShotTest.class)
+        .orElseThrow(() -> new IllegalStateException("Annotation @ScreenShotTest not found"));
+    return ImageIO.read(new ClassPathResource(annotation.value()).getInputStream());
   }
 
   @Override
   public void handleTestExecutionException(ExtensionContext context, Throwable throwable)
       throws Throwable {
+
+    ScreenShotTest annotation = AnnotationSupport.findAnnotation(
+        context.getRequiredTestMethod(),
+        ScreenShotTest.class
+    ).orElseThrow(() -> new IllegalStateException("Annotation @ScreenShotTest not found"));
+
+    BufferedImage expectedFromAnnotation = ImageIO.read(
+        new ClassPathResource(annotation.value()).getInputStream()
+    );
+
+    if (getExpected() == null) {
+      setExpected(expectedFromAnnotation);
+    }
     ScreenDif screenDif = new ScreenDif(
         "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
         "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
@@ -91,4 +137,5 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
       throw new RuntimeException(e);
     }
   }
+
 }

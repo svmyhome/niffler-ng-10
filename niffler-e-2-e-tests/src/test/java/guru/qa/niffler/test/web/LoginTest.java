@@ -47,7 +47,6 @@ public class LoginTest {
         .loginPageShouldBeDisplayed();
   }
 
-
   @Test
   @DisplayName("User should NOT be able to login with incorrect password")
   void userStayOnLoginPageAfterLoginWithBadCredential() {

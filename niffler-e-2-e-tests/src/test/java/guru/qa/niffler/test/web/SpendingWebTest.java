@@ -1,7 +1,5 @@
 package guru.qa.niffler.test.web;
 
-import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.constants.Currency;
@@ -22,11 +20,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
-import javax.imageio.ImageIO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import utils.ScreenDiffResult;
 
 @Epic("UI")
 @Feature("Categories and Spendings")
@@ -191,23 +187,28 @@ public class SpendingWebTest {
   @User(
       spendings = {@Spending(
           category = "Машина",
-          amount = 89900,
+          amount = 300,
           currency = CurrencyValues.RUB,
-          description = "Обучение Niffler 2.0 юбилейный поток!"
-      )}
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
   )
-  @ScreenShotTest("img/expected.png")
-  @DisplayName("User should be able delete spending")
-  void spendingShouldBeScreenshot(UserJson user, BufferedImage expected) throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .historyOfSpendingIsVisible();
+    @ScreenShotTest(value = "img/spending.png", rewriteExpected = true)
+    @DisplayName("User should be able delete spending")
+    void spendingShouldBeScreenshot(UserJson user, BufferedImage expected)
+      throws IOException{
+      Selenide.open(CFG.frontUrl(), LoginPage.class)
+          .login(user.username(), user.testData().password())
+          .historyOfSpendingIsVisible()
+          .checkSpendingChartPictureIsCorrect(expected);
 
-    BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+//      Selenide.sleep(2000);
+//    Thread.sleep(5000);
 
-    assertFalse(new ScreenDiffResult(
-        expected,
-        actual
-    ));
+    }
   }
-}

@@ -4,23 +4,30 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.imageio.ImageIO;
+import utils.ScreenDiffResult;
 
 @ParametersAreNonnullByDefault
-public class MainPage  extends BasePage<MainPage> {
+public class MainPage extends BasePage<MainPage> {
 
   private final ElementsCollection tableRows = $$("#spendings tr"),
       sectionHeaders = $$("h2");
 
-  private final SelenideElement mainPage = $("#root");
+  private final SelenideElement mainPage = $("#root"),
+      chartImage = $("canvas[role='img']");
 
   private final Header header = new Header();
   private final SearchField search = new SearchField();
@@ -132,6 +139,18 @@ public class MainPage  extends BasePage<MainPage> {
   @Step("Check table have {count} rows")
   public @Nonnull MainPage checkTableSize(int count) {
     spendingTable.checkTableSize(count);
+    return this;
+  }
+
+  @Step("Check spending chart picture")
+  public @Nonnull MainPage checkSpendingChartPictureIsCorrect(
+      BufferedImage expected) throws IOException {
+    Selenide.sleep(5000);
+    BufferedImage actual = ImageIO.read(chartImage.screenshot());
+    assertFalse(new ScreenDiffResult(
+        expected,
+        actual
+    ));
     return this;
   }
 }

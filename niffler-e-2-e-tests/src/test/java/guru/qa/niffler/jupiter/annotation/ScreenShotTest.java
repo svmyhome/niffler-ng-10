@@ -14,4 +14,5 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ScreenShotTestExtension.class)
 public @interface ScreenShotTest {
   String value();
+  boolean rewriteExpected() default false;
 }
