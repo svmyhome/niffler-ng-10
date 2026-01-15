@@ -235,4 +235,32 @@ public class SpendingWebTest {
         .checkThatSpendingsLengendContains("Книги 200 ₽")
         .checkSpendingChartPictureIsCorrect(expected);
   }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 300,
+          currency = CurrencyValues.RUB,
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @ScreenShotTest(value = "img/updateSpending.png")
+  @DisplayName("Spending chart should update correctly")
+  void spendingChartShouldDisplayCorrectlyAfterUpdate(UserJson user, BufferedImage expected)
+      throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .editSpending("На ТО")
+        .setNewAmount(1000.0)
+        .checkThatSpendingsLengendContains("Машина 1000 ₽")
+        .checkThatSpendingsLengendContains("Книги 200 ₽")
+        .checkSpendingChartPictureIsCorrect(expected);
+  }
 }
