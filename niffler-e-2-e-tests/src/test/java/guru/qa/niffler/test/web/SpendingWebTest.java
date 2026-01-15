@@ -198,14 +198,40 @@ public class SpendingWebTest {
               description = "Обучение Niffler 2.0 юбилейный поток!"
           )}
   )
-  @ScreenShotTest(value = "img/spending.png")
-  @DisplayName("User should be able delete spending")
-  void spendingShouldBeScreenshot(UserJson user, BufferedImage expected)
+  @ScreenShotTest(value = "img/spendings.png")
+  @DisplayName("Spending chart should correctly display test data")
+  void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected)
       throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .checkThatSpendingsLengendContains("Машина 300 ₽")
+        .checkThatSpendingsLengendContains("Книги 200 ₽")
+        .checkSpendingChartPictureIsCorrect(expected);
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 300,
+          currency = CurrencyValues.RUB,
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @ScreenShotTest(value = "img/spending.png")
+  @DisplayName("Spending chart should refresh correctly after deletion")
+  void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected)
+      throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .deleteSpendingFromTable("На ТО")
         .checkThatSpendingsLengendContains("Книги 200 ₽")
         .checkSpendingChartPictureIsCorrect(expected);
   }
