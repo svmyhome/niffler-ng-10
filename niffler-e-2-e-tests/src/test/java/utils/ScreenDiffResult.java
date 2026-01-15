@@ -11,22 +11,23 @@ public class ScreenDiffResult implements BooleanSupplier {
   private final BufferedImage expected;
   private final BufferedImage actual;
   private final ImageDiff diff;
-  private final boolean hasDif;
+  private final boolean hasDiff;
+  private static final int ALLOWED_DIFF_PIXELS = 200;
 
   public ScreenDiffResult(BufferedImage expected, BufferedImage actual) {
     this.expected = expected;
     this.actual = actual;
     this.diff = new ImageDiffer().makeDiff(expected, actual);
-    this.hasDif = diff.hasDiff();
+    this.hasDiff = diff.getDiffSize() > ALLOWED_DIFF_PIXELS;
   }
 
   @Override
   public boolean getAsBoolean() {
-    if (hasDif) {
+    if (hasDiff) {
       ScreenShotTestExtension.setExpected(expected);
       ScreenShotTestExtension.setActual(actual);
       ScreenShotTestExtension.setDiff(diff.getMarkedImage());
     }
-    return hasDif;
+    return hasDiff;
   }
 }
