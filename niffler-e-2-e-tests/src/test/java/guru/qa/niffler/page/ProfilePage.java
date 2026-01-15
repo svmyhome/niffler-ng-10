@@ -91,6 +91,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
   public @Nonnull ProfilePage checkProfilePictureIsCorrect(BufferedImage expected)
       throws IOException {
     BufferedImage actual = ImageIO.read(avatarImage.screenshot());
+//    BufferedImage actual = ImageIO.read($("img[class*='MuiAvatar-img'][class*='css-1hy9t21']").screenshot());
     assertFalse(new ScreenDiffResult(
         expected,
         actual

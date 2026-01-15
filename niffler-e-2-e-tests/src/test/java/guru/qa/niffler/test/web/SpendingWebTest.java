@@ -198,17 +198,15 @@ public class SpendingWebTest {
               description = "Обучение Niffler 2.0 юбилейный поток!"
           )}
   )
-    @ScreenShotTest(value = "img/spending.png", rewriteExpected = true)
-    @DisplayName("User should be able delete spending")
-    void spendingShouldBeScreenshot(UserJson user, BufferedImage expected)
-      throws IOException{
-      Selenide.open(CFG.frontUrl(), LoginPage.class)
-          .login(user.username(), user.testData().password())
-          .historyOfSpendingIsVisible()
-          .checkSpendingChartPictureIsCorrect(expected);
-
-//      Selenide.sleep(2000);
-//    Thread.sleep(5000);
-
-    }
+  @ScreenShotTest(value = "img/spending.png")
+  @DisplayName("User should be able delete spending")
+  void spendingShouldBeScreenshot(UserJson user, BufferedImage expected)
+      throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .checkThatSpendingsLengendContains("Машина 300 ₽")
+        .checkThatSpendingsLengendContains("Книги 200 ₽")
+        .checkSpendingChartPictureIsCorrect(expected);
   }
+}

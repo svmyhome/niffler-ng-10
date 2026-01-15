@@ -24,7 +24,8 @@ import utils.ScreenDiffResult;
 public class MainPage extends BasePage<MainPage> {
 
   private final ElementsCollection tableRows = $$("#spendings tr"),
-      sectionHeaders = $$("h2");
+      sectionHeaders = $$("h2"),
+      spendingLegends = $$("#legend-container li");
 
   private final SelenideElement mainPage = $("#root"),
       chartImage = $("canvas[role='img']");
@@ -151,6 +152,12 @@ public class MainPage extends BasePage<MainPage> {
         expected,
         actual
     ));
+    return this;
+  }
+
+  @Step("Spending legend should have'{description}'")
+  public @Nonnull MainPage checkThatSpendingsLengendContains(String description) {
+    spendingLegends.find(text(description)).should(visible);
     return this;
   }
 }

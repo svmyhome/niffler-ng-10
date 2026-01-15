@@ -55,14 +55,14 @@ public class ProfileTest {
   }
 
   @User
-  @ScreenShotTest("img/homer.png")
+  @ScreenShotTest(value = "img/avatar.jpg")
   @DisplayName("User can save valid picture in the profile")
   public void shouldSaveValidPictureInProfile(UserJson user, BufferedImage expected) throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
-        .uploadNewPictureInProfile("homer.png")
+        .uploadNewPictureInProfile("avatar.jpg")
         .saveChanges()
         .checkSnackBarText("Profile successfully updated")
         .checkProfilePictureIsCorrect(expected);

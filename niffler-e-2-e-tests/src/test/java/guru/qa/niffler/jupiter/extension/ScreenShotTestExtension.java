@@ -32,7 +32,7 @@ public class ScreenShotTestExtension implements BeforeEachCallback, AfterEachCal
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    AnnotationSupport.findAnnotation(context.getRequiredTestClass(), ScreenShotTest.class)
+    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
         .ifPresent(anno -> {
           context.getStore(NAMESPACE).put(context.getUniqueId(), anno.value());
         });
@@ -40,7 +40,7 @@ public class ScreenShotTestExtension implements BeforeEachCallback, AfterEachCal
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    AnnotationSupport.findAnnotation(context.getRequiredTestClass(), ScreenShotTest.class)
+    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
         .ifPresent(anno -> {
           if (anno.rewriteExpected()) {
             var actual = getActual();
