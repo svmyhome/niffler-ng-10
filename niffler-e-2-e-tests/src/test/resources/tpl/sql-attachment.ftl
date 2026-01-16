@@ -6,24 +6,16 @@
   <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/highlight.min.js"></script>
   <script type="text/javascript" src="https://yandex.st/highlightjs/8.0/languages/sql.min.js"></script>
   <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
-
   <style>
     pre {
       white-space: pre-wrap;
     }
   </style>
 </head>
-
 <body>
-<h5>SQL Query</h5>
+<h4>SQL Query</h4>
 <div>
-  <pre>
-    <code>
-      ${data.sql}
-    </code>
-  </pre>
+<pre><code>${data.sql}</code></pre>
 </div>
 </body>
-
-
 </html>

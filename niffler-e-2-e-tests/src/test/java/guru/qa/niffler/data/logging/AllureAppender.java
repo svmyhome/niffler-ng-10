@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.logging;
 
 import static com.github.jknack.handlebars.internal.lang3.StringUtils.isNoneEmpty;
+import static com.github.jknack.handlebars.internal.lang3.StringUtils.substringBetween;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.github.vertical_blank.sqlformatter.languages.Dialect;
 import com.p6spy.engine.logging.Category;
@@ -21,7 +22,7 @@ public class AllureAppender extends StdoutLogger {
       String sql, String url) {
     if (isNoneEmpty(sql)) {
       final SqlAttachmentData attachmentData = new SqlAttachmentData(
-          sql.split("\\s+")[0].toUpperCase() + " query to: " + url,
+          sql.split("\\s+")[0].toUpperCase() + " query to: " + substringBetween(url, "5432/", "?"),
           SqlFormatter.of(Dialect.PostgreSql).format(sql)
       );
       attachmentProcessor.addAttachment(
