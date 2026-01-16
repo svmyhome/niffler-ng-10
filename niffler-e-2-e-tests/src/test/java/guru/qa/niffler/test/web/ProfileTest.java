@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.user.UserJson;
@@ -9,6 +10,8 @@ import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,5 +52,19 @@ public class ProfileTest {
         .uploadNewPictureInProfile("profile.jpg")
         .saveChanges()
         .checkSnackBarText("Error while updating profile: Failed to read request");
+  }
+
+  @User
+  @ScreenShotTest(value = "img/avatar.jpg")
+  @DisplayName("User can save valid picture in the profile")
+  public void shouldSaveValidPictureInProfile(UserJson user, BufferedImage expected) throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .openProfile()
+        .checkProfileIsDisplayed()
+        .uploadNewPictureInProfile("avatar.jpg")
+        .saveChanges()
+        .checkSnackBarText("Profile successfully updated")
+        .checkProfilePictureIsCorrect(expected);
   }
 }
