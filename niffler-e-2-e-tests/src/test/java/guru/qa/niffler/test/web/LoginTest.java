@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
@@ -12,6 +13,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.openqa.selenium.remote.Browser;
 
 @Epic("UI")
 @Feature("User management")
@@ -23,6 +26,7 @@ public class LoginTest {
 
   @User
   @Test
+  @ResourceLock("browser")
   @DisplayName("User should be able to login with valid credentials")
   void shouldLoginUser(UserJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -32,8 +36,10 @@ public class LoginTest {
 
   @User
   @Test
+  @ResourceLock("browser")
   @DisplayName("User should be able to sign out after login")
   void userShouldBeAbleToSignOut(UserJson user) {
+    Configuration.browser = Browser.FIREFOX.browserName();
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .mainPageShouldBeDisplayed()

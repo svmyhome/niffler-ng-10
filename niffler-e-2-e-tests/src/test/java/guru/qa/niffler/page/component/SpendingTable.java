@@ -56,7 +56,7 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
 
   @Step("Search spending by description")
   public @Nonnull SpendingTable searchSpendingByDescription(String description) {
-    searchSpending.val(description);
+    searchSpending.val(description).pressEnter();
     return this;
   }
 

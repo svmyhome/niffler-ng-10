@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.tpl;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.p6spy.engine.spy.P6DataSource;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,13 +36,14 @@ public class DataSources {
           dsBean.setXaProperties(props);
           dsBean.setPoolSize(3);
           dsBean.setPoolSize(10);
+          P6DataSource p6DataSource = new P6DataSource(dsBean);
           try {
             InitialContext context = new InitialContext();
-            context.bind("java:comp/env/jdbc/" + uniqId, dsBean);
+            context.bind("java:comp/env/jdbc/" + uniqId, p6DataSource);
           } catch (NamingException e) {
             throw new RuntimeException(e);
           }
-          return dsBean;
+          return p6DataSource;
         }
     );
   }
