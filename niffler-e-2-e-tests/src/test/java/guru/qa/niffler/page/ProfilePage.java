@@ -5,12 +5,17 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.imageio.ImageIO;
+import utils.ScreenDiffResult;
 
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
@@ -18,7 +23,8 @@ public class ProfilePage extends BasePage<ProfilePage> {
   private final SelenideElement showArchived = $(".MuiSwitch-input"),
       setName = $("#name"),
       saveChanges = $("[type='submit']"),
-      uploadNewPicture = $("#image__input");
+      uploadNewImage = $("#image__input"),
+      avatarImage = $(".MuiContainer-root .MuiAvatar-img");
   private final ElementsCollection
       categories = $$(".MuiChip-filledPrimary"),
       categoriesArchived = $$(".MuiChip-filled.MuiChip-colorDefault"),
@@ -74,10 +80,25 @@ public class ProfilePage extends BasePage<ProfilePage> {
     return new MainPage();
   }
 
-
   @Step("Upload new picture in profile")
   public @Nonnull ProfilePage uploadNewPictureInProfile(String fileName) {
-    uploadNewPicture.uploadFromClasspath("picture/" + fileName);
+    uploadNewImage.uploadFromClasspath("img/" + fileName);
+    return this;
+  }
+
+  @Step("Check profile picture is correct")
+  public @Nonnull ProfilePage checkProfilePictureIsCorrect(BufferedImage expected)
+      {
+        BufferedImage actual = null;
+        try {
+          actual = ImageIO.read(avatarImage.screenshot());
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+        assertFalse(new ScreenDiffResult(
+        expected,
+        actual
+    ));
     return this;
   }
 }

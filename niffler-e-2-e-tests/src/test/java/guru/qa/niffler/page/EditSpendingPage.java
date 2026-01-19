@@ -27,6 +27,13 @@ public class EditSpendingPage  extends BasePage<EditSpendingPage> {
     return new MainPage();
   }
 
+  @Step("Add new spending: '{description}'")
+  public @Nonnull MainPage setNewAmount(Double value) {
+    amountInput.setValue(String.valueOf(value));
+    saveBtn.click();
+    return new MainPage();
+  }
+
   @Step("Add new spending")
   public @Nonnull MainPage fillSpending(double amount, Currency currency, String category,
       java.util.Calendar date,
