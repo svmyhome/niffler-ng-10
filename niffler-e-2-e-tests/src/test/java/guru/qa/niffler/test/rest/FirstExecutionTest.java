@@ -14,11 +14,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 @Order(1)
-//@Execution(ExecutionMode.SAME_THREAD)
-//@TestMethodOrder(OrderAnnotation.class)
 @Epic("API")
 @Feature("User management")
-@Story("First test")
+@Story("First execution test")
 public class FirstExecutionTest {
 
   private final UserApiClient userApiClient = new UserApiClient();

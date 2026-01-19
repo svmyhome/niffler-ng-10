@@ -23,7 +23,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 @TestMethodOrder(OrderAnnotation.class)
 @Epic("API")
 @Feature("User management")
-@Story("Last test")
+@Story("Last execution test")
 public class LastExecutionTest {
 
   private final UserApiClient userApiClient = new UserApiClient();
