@@ -88,9 +88,14 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
   @Step("Check profile picture is correct")
   public @Nonnull ProfilePage checkProfilePictureIsCorrect(BufferedImage expected)
-      throws IOException {
-    BufferedImage actual = ImageIO.read(avatarImage.screenshot());
-    assertFalse(new ScreenDiffResult(
+      {
+        BufferedImage actual = null;
+        try {
+          actual = ImageIO.read(avatarImage.screenshot());
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+        assertFalse(new ScreenDiffResult(
         expected,
         actual
     ));
