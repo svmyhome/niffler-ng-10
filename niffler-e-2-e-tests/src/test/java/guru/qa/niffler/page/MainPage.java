@@ -18,6 +18,7 @@ import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
@@ -153,7 +154,7 @@ public class MainPage extends BasePage<MainPage> {
     Selenide.sleep(5000);
     BufferedImage actual = null;
     try {
-      actual = ImageIO.read(chartImage.screenshot());
+      actual = ImageIO.read(Objects.requireNonNull(chartImage.screenshot()));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

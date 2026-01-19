@@ -3,7 +3,6 @@ package guru.qa.niffler.page.component;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.condition.StatConditions.color;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -20,12 +19,11 @@ import javax.imageio.ImageIO;
 public class StatComponent extends BaseComponent<StatComponent> {
 
   private final SelenideElement chartImage = self.$("canvas[role='img']");
-  private final ElementsCollection spendingLegends = $$("#legend-container li");
+  private final ElementsCollection spendingLegends = $("#legend-container").$$("li");
 
   public StatComponent() {
     super($("#stat"));
   }
-
 
   @Step("Spending legend should have'{description}'")
   public @Nonnull StatComponent checkThatSpendingsLengendContains(String description) {
@@ -33,12 +31,12 @@ public class StatComponent extends BaseComponent<StatComponent> {
     return this;
   }
 
-  @Step("Get screenshot")
-  public @Nonnull BufferedImage chartScreenShot() throws IOException {
+  @Step("Get screenshot of spending chart for comparison")
+  public @Nonnull BufferedImage getChartScreenshot() throws IOException {
     return ImageIO.read(Objects.requireNonNull(chartImage.screenshot()));
   }
 
-  @Step("Check bubbles")
+  @Step("Check that spending chart elements have colors: {expectedColors}")
   public StatComponent checkBubbles(Color... expectedColors) {
     spendingLegends.should(color(expectedColors));
     return this;

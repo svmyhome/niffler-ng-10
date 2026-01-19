@@ -216,7 +216,7 @@ public class SpendingWebTest {
     Selenide.sleep(4000);
     assertFalse(new ScreenDiffResult(
             expected,
-            statComponent.chartScreenShot()
+            statComponent.getChartScreenshot()
         ),
         "Screenshot comparison failure");
     statComponent.checkBubbles(Color.yellow, Color.green);

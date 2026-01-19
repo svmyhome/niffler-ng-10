@@ -12,6 +12,7 @@ import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
@@ -91,7 +92,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
       {
         BufferedImage actual = null;
         try {
-          actual = ImageIO.read(avatarImage.screenshot());
+          actual = ImageIO.read(Objects.requireNonNull(avatarImage.screenshot()));
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
