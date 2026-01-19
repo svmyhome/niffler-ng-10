@@ -5,7 +5,6 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
@@ -16,7 +15,6 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
-import utils.ScreenDiffResult;
 
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
@@ -87,19 +85,12 @@ public class ProfilePage extends BasePage<ProfilePage> {
     return this;
   }
 
-  @Step("Check profile picture is correct")
-  public @Nonnull ProfilePage checkProfilePictureIsCorrect(BufferedImage expected)
-      {
-        BufferedImage actual = null;
-        try {
-          actual = ImageIO.read(Objects.requireNonNull(avatarImage.screenshot()));
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-        assertFalse(new ScreenDiffResult(
-        expected,
-        actual
-    ));
-    return this;
+  @Step("Take screenshot of user avatar")
+  public @Nonnull BufferedImage captureAvatarScreenshot(){
+    try {
+      return ImageIO.read(Objects.requireNonNull(avatarImage.screenshot()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

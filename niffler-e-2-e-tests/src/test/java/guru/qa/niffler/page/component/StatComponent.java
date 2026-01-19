@@ -32,8 +32,12 @@ public class StatComponent extends BaseComponent<StatComponent> {
   }
 
   @Step("Get screenshot of spending chart for comparison")
-  public @Nonnull BufferedImage getChartScreenshot() throws IOException {
-    return ImageIO.read(Objects.requireNonNull(chartImage.screenshot()));
+  public @Nonnull BufferedImage getChartScreenshot() {
+    try {
+      return ImageIO.read(Objects.requireNonNull(chartImage.screenshot()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Step("Check that spending chart elements have colors: {expectedColors}")

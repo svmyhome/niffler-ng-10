@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.web;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.assertions.ImageAssertions;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.constants.Currency;
@@ -26,7 +26,6 @@ import java.util.Locale;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import utils.ScreenDiffResult;
 
 @Epic("UI")
 @Feature("Categories and Spendings")
@@ -214,11 +213,8 @@ public class SpendingWebTest {
         .getStatComponent();
 
     Selenide.sleep(4000);
-    assertFalse(new ScreenDiffResult(
-            expected,
-            statComponent.getChartScreenshot()
-        ),
-        "Screenshot comparison failure");
+    ImageAssertions.checkScreenshotMatches(expected,
+        statComponent.getChartScreenshot());
     statComponent.checkBubbles(Color.yellow, Color.green);
   }
 
@@ -240,12 +236,17 @@ public class SpendingWebTest {
   @DisplayName("Spending chart should refresh correctly after deletion")
   void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected)
       throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
+    StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .deleteSpendingFromTable("На ТО")
         .checkThatSpendingsLengendContains("Книги 200 ₽")
-        .checkSpendingChartPictureIsCorrect(expected);
+        .getStatComponent();
+
+    Selenide.sleep(4000);
+    ImageAssertions.checkScreenshotMatches(expected,
+        statComponent.getChartScreenshot());
+    statComponent.checkBubbles(Color.yellow);
   }
 
   @User(
@@ -264,15 +265,19 @@ public class SpendingWebTest {
   )
   @ScreenShotTest(value = "img/updateSpending.png")
   @DisplayName("Spending chart should update correctly")
-  void spendingChartShouldDisplayCorrectlyAfterUpdate(UserJson user, BufferedImage expected)
-      throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
+  void spendingChartShouldDisplayCorrectlyAfterUpdate(UserJson user, BufferedImage expected) {
+    StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .editSpending("На ТО")
         .setNewAmount(1000.0)
         .checkThatSpendingsLengendContains("Машина 1000 ₽")
         .checkThatSpendingsLengendContains("Книги 200 ₽")
-        .checkSpendingChartPictureIsCorrect(expected);
+        .getStatComponent();
+
+    Selenide.sleep(4000);
+    ImageAssertions.checkScreenshotMatches(expected,
+        statComponent.getChartScreenshot());
+    statComponent.checkBubbles(Color.yellow, Color.green);
   }
 }

@@ -18,6 +18,7 @@ import org.openqa.selenium.WebElement;
 @ParametersAreNonnullByDefault
 public class StatConditions {
 
+  @Nonnull
   public static WebElementCondition color(Color expectedColor) {
     return new WebElementCondition("color") {
       @NotNull
@@ -32,6 +33,7 @@ public class StatConditions {
     };
   }
 
+  @Nonnull
   public static WebElementsCondition color(Color... expectedColors) {
     return new WebElementsCondition() {
       private final String expectedRgba = Arrays.stream(expectedColors).map(c -> c.rgb).toList()
@@ -70,10 +72,10 @@ public class StatConditions {
           return rejected(message, actualRgba);
         }
         return accepted();
-
       }
 
       @Override
+      @Nonnull
       public String toString() {
         return expectedRgba;
       }
