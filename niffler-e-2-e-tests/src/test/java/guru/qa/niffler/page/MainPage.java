@@ -149,9 +149,14 @@ public class MainPage extends BasePage<MainPage> {
 
   @Step("Check spending chart picture")
   public @Nonnull MainPage checkSpendingChartPictureIsCorrect(
-      BufferedImage expected) throws IOException {
+      BufferedImage expected) {
     Selenide.sleep(5000);
-    BufferedImage actual = ImageIO.read(chartImage.screenshot());
+    BufferedImage actual = null;
+    try {
+      actual = ImageIO.read(chartImage.screenshot());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     assertFalse(new ScreenDiffResult(
         expected,
         actual
