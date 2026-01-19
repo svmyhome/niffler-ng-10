@@ -1,5 +1,8 @@
 package guru.qa.niffler.test.rest;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.user.UserJson;
@@ -9,6 +12,7 @@ import guru.qa.niffler.service.UserDbClient;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +25,7 @@ import org.junit.jupiter.api.Test;
 public class UserApiTest {
 
   private final UserClient userClient = new UserApiClient();
+  private final UserApiClient userApiClient = new UserApiClient();
   private final UserDbClient userDbClient = new UserDbClient();
 
   @User
@@ -65,4 +70,22 @@ public class UserApiTest {
     }
     userClient.createFriends(user1, 1);
   }
+
+  @User
+  @Test
+  @DisplayName("API: Should returns empty list when search query doesn't match any user")
+  public void shouldReturnEmptyUserListWhenSearchQueryUnmatchedFromApi(UserJson user) {
+    List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), "8gwygcydg");
+    assertThat(allUsers, empty());
+  }
+
+  @User
+  @Test
+  @DisplayName("API: finds user when searching by 'mouse'")
+  public void shouldReturnUserWhenQueryIsMouseFromApi(UserJson user) {
+    String searchQuery = "mouse";
+    List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), searchQuery);
+    assertThat(allUsers, hasSize(1));
+  }
+
 }

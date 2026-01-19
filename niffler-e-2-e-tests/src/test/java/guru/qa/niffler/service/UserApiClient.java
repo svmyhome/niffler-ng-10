@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
 import utils.RandomDataUtils;
@@ -107,5 +108,21 @@ public final class UserApiClient extends RestClient implements UserClient {
       }
     }
     return resultList;
+  }
+
+  @Step("Get all users")
+  public List<UserJson> getAllUsers(String username, @Nullable String searchQuery) {
+    List<UserJson> allUsers;
+    try {
+      allUsers = userApi.getAllUsers(username, searchQuery).execute().body();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return allUsers;
+  }
+
+  @Step("Get all users")
+  public List<UserJson> getAllUsers(String username) {
+    return getAllUsers(username, null);
   }
 }
