@@ -4,7 +4,6 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -24,7 +23,7 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
       deleteSpendingButton = $("#delete"),
       deleteSubmitButton = $(".MuiDialogActions-root").$(byText("Delete")),
       searchSpending = self.$("[placeholder='Search']");
-  private final ElementsCollection rows = $$("tbody tr");
+  private final ElementsCollection rows = $("tbody").$$("tr");
 
   public SpendingTable() {
     super($("#spendings .MuiTableContainer-root"));

@@ -28,7 +28,7 @@ public class Header extends BaseComponent<Header> {
       spending = self.$("[href='/spending']"),
       main = self.$("[href='/main']");
 
-  private final ElementsCollection menuItems = $$("#account-menu li"),
+  private final ElementsCollection menuItems = $("#account-menu").$$("li"),
       actionButtons = $$("button");
 
   public Header() {

@@ -1,6 +1,8 @@
 package guru.qa.niffler.test.web;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.constants.Currency;
 import guru.qa.niffler.data.constants.DataFilterValues;
@@ -11,6 +13,7 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -23,6 +26,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import utils.ScreenDiffResult;
 
 @Epic("UI")
 @Feature("Categories and Spendings")
@@ -202,12 +206,20 @@ public class SpendingWebTest {
   @DisplayName("Spending chart should correctly display test data")
   void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected)
       throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
+    StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .checkThatSpendingsLengendContains("Машина 300 ₽")
         .checkThatSpendingsLengendContains("Книги 200 ₽")
-        .checkSpendingChartPictureIsCorrect(expected);
+        .getStatComponent();
+
+    Selenide.sleep(4000);
+    assertFalse(new ScreenDiffResult(
+            expected,
+            statComponent.chartScreenShot()
+        ),
+        "Screenshot comparison failure");
+    statComponent.checkBubbles(Color.yellow, Color.green);
   }
 
   @User(
