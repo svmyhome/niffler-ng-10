@@ -10,6 +10,7 @@ import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.spend.Bubble;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
@@ -18,7 +19,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -203,19 +203,19 @@ public class SpendingWebTest {
   )
   @ScreenShotTest(value = "img/spendings.png")
   @DisplayName("Spending chart should correctly display test data")
-  void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected)
-      throws IOException {
+  void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected) {
     StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
-        .checkThatSpendingsLengendContains("Машина 300 ₽")
-        .checkThatSpendingsLengendContains("Книги 200 ₽")
         .getStatComponent();
 
     Selenide.sleep(4000);
     ImageAssertions.checkScreenshotMatches(expected,
         statComponent.getChartScreenshot());
-    statComponent.checkBubbles(Color.yellow, Color.green);
+    statComponent.checkBubbles(
+        new Bubble(Color.yellow, "Машина 300 ₽"),
+        new Bubble(Color.green, "Книги 200 ₽")
+    );
   }
 
   @User(
@@ -234,19 +234,17 @@ public class SpendingWebTest {
   )
   @ScreenShotTest(value = "img/spending.png")
   @DisplayName("Spending chart should refresh correctly after deletion")
-  void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected)
-      throws IOException {
+  void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected) {
     StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .historyOfSpendingIsVisible()
         .deleteSpendingFromTable("На ТО")
-        .checkThatSpendingsLengendContains("Книги 200 ₽")
         .getStatComponent();
 
     Selenide.sleep(4000);
     ImageAssertions.checkScreenshotMatches(expected,
         statComponent.getChartScreenshot());
-    statComponent.checkBubbles(Color.yellow);
+    statComponent.checkBubbles(new Bubble(Color.yellow, "Книги 200 ₽"));
   }
 
   @User(
@@ -278,6 +276,9 @@ public class SpendingWebTest {
     Selenide.sleep(4000);
     ImageAssertions.checkScreenshotMatches(expected,
         statComponent.getChartScreenshot());
-    statComponent.checkBubbles(Color.yellow, Color.green);
+    statComponent.checkBubbles(
+        new Bubble(Color.yellow, "Машина 1000 ₽"),
+        new Bubble(Color.green, "Книги 200 ₽")
+    );
   }
 }

@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.condition.StatConditions.color;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.model.spend.Bubble;
 import io.qameta.allure.Step;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -40,9 +40,15 @@ public class StatComponent extends BaseComponent<StatComponent> {
     }
   }
 
+//  @Step("Check that spending chart elements have colors: {expectedColors}")
+//  public StatComponent checkBubbles(Bubble... expectedColors) {
+//    spendingLegends.should(color(expectedColors));
+//    return this;
+//  }
+
   @Step("Check that spending chart elements have colors: {expectedColors}")
-  public StatComponent checkBubbles(Color... expectedColors) {
-    spendingLegends.should(color(expectedColors));
+  public StatComponent checkBubbles(Bubble... expectedBubbles) {
+    spendingLegends.should(color(expectedBubbles));
     return this;
   }
 
