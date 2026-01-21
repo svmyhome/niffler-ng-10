@@ -105,7 +105,8 @@ public class StatConditions {
           final String message = String.format("List size mismatch (expected: %s, actual: %s)",
               expectedBubbles.length, elements.size());
           List<String> actualColors = elements.stream()
-              .map(el -> el.getCssValue("background-color"))
+              .map(
+                  el -> el.getCssValue("background-color") + " : " + el.getText())
               .toList();
           return rejected(message, actualColors.toString());
         }
@@ -116,13 +117,7 @@ public class StatConditions {
           final Color colorToCheck = expectedBubbles[i].color();
           final String descriptionToCheck = expectedBubbles[i].text();
           final String rgba = elementToCheck.getCssValue("background-color");
-          List<WebElement> foundElements = elementToCheck.findElements(
-              By.xpath(String.format("//li[contains(text(),'%s')]", descriptionToCheck))
-          );
-          String actualDescription = "";
-          if (!foundElements.isEmpty()) {
-            actualDescription = foundElements.getFirst().getText();
-          }
+          final String actualDescription = elementToCheck.getText();
           actualRgbaList.add(rgba + ": " + actualDescription);
           if (passed) {
             passed = colorToCheck.rgb.equals(rgba) && descriptionToCheck.equals(actualDescription);
