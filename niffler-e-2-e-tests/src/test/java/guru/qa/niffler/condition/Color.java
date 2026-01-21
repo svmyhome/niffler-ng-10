@@ -1,5 +1,6 @@
 package guru.qa.niffler.condition;
 
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -15,4 +16,9 @@ public enum Color {
   purple("rgba(148, 85, 198, 1)");
 
   public final String rgb;
+
+  public static Color fromRgb(String rgb) {
+    return Arrays.stream(Color.values()).filter(color -> color.rgb.equals(rgb)).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("No color found for rgb: " + rgb));
+  }
 }
