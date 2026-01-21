@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 @ParametersAreNonnullByDefault
@@ -141,7 +140,7 @@ public class StatConditions {
   }
 
   @Nonnull
-  public static WebElementsCondition colorAnyOrder(Bubble... expectedBubbles) {
+  public static WebElementsCondition statBubblesInAnyOrder(Bubble... expectedBubbles) {
     return new WebElementsCondition() {
 
       final Set<Bubble> expectedSet = new HashSet<>(Arrays.asList(expectedBubbles));
@@ -149,7 +148,6 @@ public class StatConditions {
       private final String expectedResult = expectedSet.stream()
           .map(bubble -> bubble.color().rgb + ": " + bubble.text())
           .collect(Collectors.joining(", ", "[", "]"));
-
 
       @Nonnull
       @Override
@@ -162,17 +160,9 @@ public class StatConditions {
               expectedBubbles.length, elements.size());
 
           List<String> actualRgbaListErr = new ArrayList<>();
-          for (int i = 0; i < elements.size(); i++) {
-            final WebElement elementToCheck = elements.get(i);
-            final String descriptionToCheck = expectedBubbles[i].text();
+          for (final WebElement elementToCheck : elements) {
             final String rgba = elementToCheck.getCssValue("background-color");
-            List<WebElement> foundElements = elementToCheck.findElements(
-                By.xpath(String.format("//li[contains(text(),'%s')]", descriptionToCheck))
-            );
-            String actualDescription = "";
-            if (!foundElements.isEmpty()) {
-              actualDescription = foundElements.getFirst().getText();
-            }
+            final String actualDescription = elementToCheck.getText();
             actualRgbaListErr.add(rgba + ": " + actualDescription);
           }
 
@@ -182,15 +172,76 @@ public class StatConditions {
         Set<Bubble> actualSet = new HashSet<>();
         List<String> actualRgbaList = new ArrayList<>();
 
-        for (int i = 0; i < elements.size(); i++) {
-          final WebElement elementToCheck = elements.get(i);
+        for (final WebElement elementToCheck : elements) {
           final String rgba = elementToCheck.getCssValue("background-color");
-          final String  actualDescription = elementToCheck.getText();
+          final String actualDescription = elementToCheck.getText();
           actualSet.add(new Bubble(Color.fromRgb(rgba), actualDescription));
           actualRgbaList.add(rgba + ": " + actualDescription);
         }
 
         if (expectedSet.equals(actualSet)) {
+          return accepted();
+        } else {
+          final String message = String.format(
+              "List bubbles mismatch (expected: %s, actual: %s)",
+              expectedResult,
+              actualRgbaList
+          );
+          return rejected(message, actualRgbaList.toString());
+        }
+      }
+
+      @Override
+      @Nonnull
+      public String toString() {
+        return expectedResult;
+      }
+    };
+  }
+
+  @Nonnull
+  public static WebElementsCondition statBubblesContains(Bubble... expectedBubbles) {
+    return new WebElementsCondition() {
+
+      final List<Bubble> expectedList = Arrays.asList(expectedBubbles);
+
+      private final String expectedResult = expectedList.stream()
+          .map(bubble -> bubble.color().rgb + ": " + bubble.text())
+          .collect(Collectors.joining(", ", "[", "]"));
+
+
+      @Nonnull
+      @Override
+      public CheckResult check(Driver driver, List<WebElement> elements) {
+        if (ArrayUtils.isEmpty(expectedBubbles)) {
+          throw new IllegalArgumentException("No expected bubbles given");
+        }
+        if (expectedBubbles.length > elements.size()) {
+          final String message = String.format("List size mismatch (expected: %s, actual: %s)",
+              expectedBubbles.length, elements.size());
+
+          List<String> actualRgbaListErr = new ArrayList<>();
+          for (int i = 0; i < elements.size(); i++) {
+            final WebElement elementToCheck = elements.get(i);
+            final String rgba = elementToCheck.getCssValue("background-color");
+            final String actualDescription = elementToCheck.getText();
+            actualRgbaListErr.add(rgba + ": " + actualDescription);
+          }
+          return rejected(message, actualRgbaListErr.toString());
+        }
+
+        Set<Bubble> actualSet = new HashSet<>();
+        List<String> actualRgbaList = new ArrayList<>();
+
+        for (int i = 0; i < elements.size(); i++) {
+          final WebElement elementToCheck = elements.get(i);
+          final String rgba = elementToCheck.getCssValue("background-color");
+          final String actualDescription = elementToCheck.getText();
+          actualSet.add(new Bubble(Color.fromRgb(rgba), actualDescription));
+          actualRgbaList.add(rgba + ": " + actualDescription);
+        }
+
+        if (actualSet.containsAll(expectedList)) {
           return accepted();
         } else {
           final String message = String.format(

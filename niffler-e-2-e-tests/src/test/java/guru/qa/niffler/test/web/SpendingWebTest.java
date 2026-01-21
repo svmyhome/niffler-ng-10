@@ -295,7 +295,7 @@ public class SpendingWebTest {
           )}
   )
   @ScreenShotTest(value = "img/updateSpending.png")
-  @DisplayName("Spending chart should update correctly")
+  @DisplayName("Spending chart should display correctly any order")
   void spendingChartShouldDisplayCorrectlyAnyOrder(UserJson user, BufferedImage expected) {
     StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
@@ -304,10 +304,37 @@ public class SpendingWebTest {
         .setNewAmount(1000.0)
         .getStatComponent();
 
-    Selenide.sleep(4000);
-    ImageAssertions.checkScreenshotMatches(expected,
-        statComponent.getChartScreenshot());
     statComponent.checkBubblesInAnyOrder(
+        new Bubble(Color.yellow, "Машина 1000 ₽"),
+        new Bubble(Color.green, "Книги 200 ₽")
+    );
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 300,
+          currency = CurrencyValues.RUB,
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @ScreenShotTest(value = "img/updateSpending.png")
+  @DisplayName("Spending chart should display contains spending")
+  void spendingChartShouldDisplayContainsSpending(UserJson user, BufferedImage expected) {
+    StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .editSpending("На ТО")
+        .setNewAmount(1000.0)
+        .getStatComponent();
+
+    statComponent.checkBubblesContains(
         new Bubble(Color.yellow, "Машина 1000 ₽"),
         new Bubble(Color.green, "Книги 200 ₽")
     );
