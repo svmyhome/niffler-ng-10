@@ -12,8 +12,10 @@ import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.spend.Bubble;
 import guru.qa.niffler.model.spend.CurrencyValues;
+import guru.qa.niffler.model.spend.RowSpend;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.component.SpendingsHistoryTable;
 import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -338,5 +340,41 @@ public class SpendingWebTest {
         new Bubble(Color.yellow, "Машина 1000 ₽"),
         new Bubble(Color.green, "Книги 200 ₽")
     );
+  }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 300,
+          currency = CurrencyValues.RUB,
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @ScreenShotTest(value = "img/updateSpending.png")
+  @DisplayName("History of spendings  should display all spendings")
+  void historySpendingsShouldDisplaySpending(UserJson user, BufferedImage expected) {
+    SpendingsHistoryTable spendingTable = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .getSpendingsHistoryComponent();
+
+    spendingTable.checkSpends(new RowSpend(user.testData().spendings().get(1).category().name(),
+            user.testData().spendings().get(1).amount(),
+            user.testData().spendings().get(1).currency().name(),
+            user.testData().spendings().get(1).description(),
+            user.testData().spendings().get(1).spendDate().toString()
+        ),
+        new RowSpend(user.testData().spendings().getFirst().category().name(),
+            user.testData().spendings().getFirst().amount(),
+            user.testData().spendings().getFirst().currency().name(),
+            user.testData().spendings().getFirst().description(),
+            user.testData().spendings().getFirst().spendDate().toString()
+        ));
   }
 }

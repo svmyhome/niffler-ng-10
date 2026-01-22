@@ -11,7 +11,7 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
-import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.SpendingsHistoryTable;
 import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
@@ -28,8 +28,9 @@ public class MainPage extends BasePage<MainPage> {
 
   private final Header header = new Header();
   private final SearchField search = new SearchField();
-  private final SpendingTable spendingTable = new SpendingTable();
+  private final SpendingsHistoryTable spendingTable = new SpendingsHistoryTable();
   private final StatComponent statComponent = new StatComponent();
+  private final SpendingsHistoryTable spendingsTable = new SpendingsHistoryTable();
 
   @Step("Edit spending: '{description}'")
   public @Nonnull EditSpendingPage editSpending(String description) {
@@ -146,9 +147,15 @@ public class MainPage extends BasePage<MainPage> {
     return this;
   }
 
-  @Step("Spending legend should have'{description}'")
+  @Step("Scroll to and get statistics component")
   public @Nonnull StatComponent getStatComponent() {
     statComponent.getSelf().scrollIntoView(instant().block(start));
     return statComponent;
+  }
+
+  @Step("Scroll to and get History of spendings  component")
+  public @Nonnull SpendingsHistoryTable getSpendingsHistoryComponent() {
+    spendingsTable.getSelf().scrollIntoView(instant().block(start));
+    return spendingsTable;
   }
 }

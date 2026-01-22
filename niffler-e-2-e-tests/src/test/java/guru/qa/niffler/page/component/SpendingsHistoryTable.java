@@ -7,7 +7,9 @@ import static com.codeborne.selenide.Selenide.$;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.SpendingConditions;
 import guru.qa.niffler.data.constants.DataFilterValues;
+import guru.qa.niffler.model.spend.RowSpend;
 import io.qameta.allure.Step;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -15,37 +17,40 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable extends BaseComponent<SpendingTable> {
+public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> {
 
-  private final SelenideElement searchPeriod = self.$("#period"),
+  private final SelenideElement searchPeriod = $("#period"),
       editSpending = $("[aria-label*='Edit spending']"),
       selectAllRows = $("[aria-label='select all rows']"),
       deleteSpendingButton = $("#delete"),
       deleteSubmitButton = $(".MuiDialogActions-root").$(byText("Delete")),
       searchSpending = self.$("[placeholder='Search']");
-  private final ElementsCollection rows = $("tbody").$$("tr");
+  private final ElementsCollection spendingRows = $("tbody").$$("tr");
 
-  public SpendingTable() {
-    super($("#spendings .MuiTableContainer-root"));
+  public SpendingsHistoryTable() {
+    super($("#spendings"));
   }
+//  public SpendingTable() {
+//    super($("#spendings .MuiTableContainer-root"));
+//  }
 
 
   @Step("Select search period {period}")
-  public @Nonnull SpendingTable selectPeriod(DataFilterValues period) {
+  public @Nonnull SpendingsHistoryTable selectPeriod(DataFilterValues period) {
     searchPeriod.click();
     $(String.format("[data-value='%s']", period)).click();
     return this;
   }
 
   @Step("Edit spending")
-  public @Nonnull SpendingTable editSpending(String description) {
+  public @Nonnull SpendingsHistoryTable editSpending(String description) {
     searchSpendingByDescription(description);
     editSpending.click();
     return this;
   }
 
   @Step("Delete spending")
-  public @Nonnull SpendingTable deleteSpending(String description) {
+  public @Nonnull SpendingsHistoryTable deleteSpending(String description) {
     searchSpendingByDescription(description);
     selectAllRows.click();
     deleteSpendingButton.click();
@@ -54,25 +59,25 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
   }
 
   @Step("Search spending by description")
-  public @Nonnull SpendingTable searchSpendingByDescription(String description) {
+  public @Nonnull SpendingsHistoryTable searchSpendingByDescription(String description) {
     searchSpending.val(description).pressEnter();
     return this;
   }
 
   @Step("Check table values")
-  public @Nonnull SpendingTable checkTableContains(String... expectedSpends) {
-    rows.shouldHave(texts(expectedString(expectedSpends)));
+  public @Nonnull SpendingsHistoryTable checkTableContains(String... expectedSpends) {
+    spendingRows.shouldHave(texts(expectedString(expectedSpends)));
     return this;
   }
 
   @Step("Check table size")
-  public SpendingTable checkTableSize(int expectedSize) {
-    rows.shouldHave(CollectionCondition.size(expectedSize));
+  public SpendingsHistoryTable checkTableSize(int expectedSize) {
+    spendingRows.shouldHave(CollectionCondition.size(expectedSize));
     return this;
   }
 
   @Step("Check period is selected")
-  public SpendingTable checkPeriodIsSelected(DataFilterValues period) {
+  public SpendingsHistoryTable checkPeriodIsSelected(DataFilterValues period) {
     searchPeriod.shouldHave(text(period.getPeriod()));
     return this;
   }
@@ -80,8 +85,15 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
   private @Nonnull
   static String expectedString(String[] expectedSpends) {
     return Arrays.stream(expectedSpends)
-        .map(SpendingTable::convertCurrency)
+        .map(SpendingsHistoryTable::convertCurrency)
         .collect(Collectors.joining(" ")).trim();
+  }
+
+
+  @Step("Check spends from table")
+  public @Nonnull SpendingsHistoryTable checkSpends(RowSpend... expectedSpends) {
+    spendingRows.should(SpendingConditions.spends(expectedSpends));
+    return this;
   }
 
   private @Nonnull
