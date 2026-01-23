@@ -83,7 +83,6 @@ public class SpendingConditions {
           );
           spends.add(
               new RowSpend(expectedSpend.category(), expectedSpend.amount(), expectedSpend.currency(), expectedSpend.description(), formattedDate));
-
         }
 
 
