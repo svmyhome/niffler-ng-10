@@ -8,6 +8,7 @@ import com.codeborne.selenide.WebElementsCondition;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.DateFormatterUtil;
 import guru.qa.niffler.model.spend.RowSpend;
+import guru.qa.niffler.model.spend.SpendJson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,80 +24,189 @@ import org.openqa.selenium.WebElement;
 @ParametersAreNonnullByDefault
 public class SpendingConditions {
 
-  public static WebElementsCondition spends(RowSpend... expectedSpends) {
-    return new WebElementsCondition() {
+    public static WebElementsCondition spends(RowSpend... expectedSpends) {
+        return new WebElementsCondition() {
 
-      private final String expectedResult = Arrays.stream(expectedSpends)
-          .map(spend -> spend.category() + ": " + spend.amount() + ": " + spend.description() + ": "
-              + spend.date())
-          .collect(Collectors.joining(", ", "[", "]"));
+            private final String expectedResult = Arrays.stream(expectedSpends)
+                    .map(spend -> spend.category() + ": " + spend.amount() + ": " + spend.description() + ": "
+                            + spend.date())
+                    .collect(Collectors.joining(", ", "[", "]"));
 
-      @Override
-      @Nonnull
-      public CheckResult check(Driver driver, List<WebElement> elements) {
-        if (ArrayUtils.isEmpty(expectedSpends)) {
-          throw new IllegalArgumentException("No expected spends given");
-        }
-        if (expectedSpends.length > elements.size()) {
-          final String message = String.format("List size mismatch (expected: %s, actual: %s)",
-              expectedSpends.length, elements.size());
-          List<String> actualSpends = new ArrayList<>();
-          for (final WebElement spendsRows : elements) {
-            final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
-            final String actualCategory = elementsToCheck.get(1).getText();
-            final String actualAmount = elementsToCheck.get(2).getText();
-            final String actualDescription = elementsToCheck.get(3).getText();
-            final String actualDate = elementsToCheck.get(4).getText();
-            actualSpends.add(
-                actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
-                    + actualDate);
-          }
-          return rejected(message, actualSpends.toString());
-        }
+            @Override
+            @Nonnull
+            public CheckResult check(Driver driver, List<WebElement> elements) {
+                if (ArrayUtils.isEmpty(expectedSpends)) {
+                    throw new IllegalArgumentException("No expected spends given");
+                }
+                if (expectedSpends.length > elements.size()) {
+                    final String message = String.format("List size mismatch (expected: %s, actual: %s)",
+                            expectedSpends.length, elements.size());
+                    List<String> actualSpends = new ArrayList<>();
+                    for (final WebElement spendsRows : elements) {
+                        final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
+                        final String actualCategory = elementsToCheck.get(1).getText();
+                        final String actualAmount = elementsToCheck.get(2).getText();
+                        final String actualDescription = elementsToCheck.get(3).getText();
+                        final String actualDate = elementsToCheck.get(4).getText();
+                        actualSpends.add(
+                                actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
+                                        + actualDate);
+                    }
+                    return rejected(message, actualSpends.toString());
+                }
 
-        List<RowSpend> actualSpends = new ArrayList<>();
-        for (final WebElement spendsRows : elements) {
-          final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
-          final String actualCategory = elementsToCheck.get(1).getText();
-          final String[] amountCurrency = elementsToCheck.get(2).getText().split(" ");
-          final double actualAmount = Double.parseDouble(amountCurrency[0]);
-          final String actualCurrency = CurrencyValues.fromCurrency(amountCurrency[1]).name();
-          final String actualDescription = elementsToCheck.get(3).getText();
-          String dateString = elementsToCheck.get(4).getText();
-          actualSpends.add(new RowSpend(
-              actualCategory,
-              actualAmount,
-              actualCurrency,
-              actualDescription,
-              dateString
-          ));
-        }
-        Set<RowSpend> spends = new HashSet<>();
-        for (final RowSpend expectedSpend : expectedSpends) {
-          String formattedDate = DateFormatterUtil.formatDate(
-              expectedSpend.date().toString()
-          );
-          spends.add(
-              new RowSpend(expectedSpend.category(), expectedSpend.amount(), expectedSpend.currency(), expectedSpend.description(), formattedDate));
-        }
-        if (actualSpends.containsAll(spends)) {
-          return accepted();
-        } else {
-          final String message = String.format(
-              "List bubbles mismatch (expected: %s, actual: %s)",
-              expectedResult,
-              actualSpends
-          );
-          return rejected(message, actualSpends.toString());
-        }
-      }
+                List<RowSpend> actualSpends = new ArrayList<>();
+                for (final WebElement spendsRows : elements) {
+                    final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
+                    final String actualCategory = elementsToCheck.get(1).getText();
+                    final String[] amountCurrency = elementsToCheck.get(2).getText().split(" ");
+                    final double actualAmount = Double.parseDouble(amountCurrency[0]);
+                    final String actualCurrency = CurrencyValues.fromCurrency(amountCurrency[1]).name();
+                    final String actualDescription = elementsToCheck.get(3).getText();
+                    String dateString = elementsToCheck.get(4).getText();
+                    actualSpends.add(new RowSpend(
+                            actualCategory,
+                            actualAmount,
+                            actualCurrency,
+                            actualDescription,
+                            dateString
+                    ));
+                }
+                Set<RowSpend> spends = new HashSet<>();
+                for (final RowSpend expectedSpend : expectedSpends) {
+                    String formattedDate = DateFormatterUtil.formatDate(
+                            expectedSpend.date().toString()
+                    );
+                    spends.add(
+                            new RowSpend(expectedSpend.category(), expectedSpend.amount(), expectedSpend.currency(), expectedSpend.description(), formattedDate));
+                }
+                if (actualSpends.containsAll(spends)) {
+                    return accepted();
+                } else {
+                    final String message = String.format(
+                            "List bubbles mismatch (expected: %s, actual: %s)",
+                            expectedResult,
+                            actualSpends
+                    );
+                    return rejected(message, actualSpends.toString());
+                }
+            }
 
-      @Override
-      @Nonnull
-      public String toString() {
-        return expectedResult;
-      }
-    };
-  }
+            @Override
+            @Nonnull
+            public String toString() {
+                return expectedResult;
+            }
+        };
+    }
+
+    public static WebElementsCondition spends1(SpendJson... expectedSpends) {
+        return new WebElementsCondition() {
+
+            private final List<SpendJson> expectedSpend = Arrays.stream(expectedSpends).toList();
+            private final String expectedResult = Arrays.stream(expectedSpends)
+                    .map(spend -> spend.category() + ": " + spend.amount() + ": " + spend.description() + ": "
+                            + spend.spendDate())
+                    .collect(Collectors.joining(", ", "[", "]"));
+
+            @Override
+            @Nonnull
+            public CheckResult check(Driver driver, List<WebElement> elements) {
+                if (ArrayUtils.isEmpty(expectedSpends)) {
+                    throw new IllegalArgumentException("No expected spends given");
+                }
+                if (expectedSpends.length > elements.size()) {
+                    final String message = String.format("List size mismatch (expected: %s, actual: %s)",
+                            expectedSpends.length, elements.size());
+                    List<String> actualSpends = new ArrayList<>();
+                    for (final WebElement spendsRows : elements) {
+                        final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
+                        final String actualCategory = elementsToCheck.get(1).getText();
+                        final String actualAmount = elementsToCheck.get(2).getText();
+                        final String actualDescription = elementsToCheck.get(3).getText();
+                        final String actualDate = elementsToCheck.get(4).getText();
+                        actualSpends.add(
+                                actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
+                                        + actualDate);
+                    }
+                    return rejected(message, actualSpends.toString());
+                }
+
+                List<String> actualSpends = new ArrayList<>();
+                List<String> actualSpend = new ArrayList<>();
+                boolean passed = true;
+                for (final WebElement spendsRows : elements) {
+                    final List<WebElement> cells = spendsRows.findElements(By.cssSelector("td"));
+                    if (!cells.get(1).getText().equals(expectedSpends[0].category().name())) {
+                        String message = String.format(
+                                "Spend category mismatch (expected: %s, actual: %s)",
+                                expectedSpends[0].category().name(), cells.get(1).getText()
+                        );
+                        passed = false;
+                        actualSpend.add(message);
+                    }
+                    final String[] amountCurrency = cells.get(2).getText().split(" ");
+                    double actualAmount = Double.parseDouble(amountCurrency[0]);
+                    if (actualAmount!=expectedSpends[0].amount()) {
+                        String message = String.format(
+                                "Spend category mismatch (expected: %s, actual: %s)",
+                                expectedSpends[0].amount(), actualAmount
+                        );
+                        passed = false;
+                        actualSpend.add(message);
+                    }
+                    final String actualCurrency = CurrencyValues.fromCurrency(amountCurrency[1]).name();
+                    if (!actualCurrency.equals(expectedSpends[0].currency().name())) {
+                        String message = String.format(
+                                "Spend category mismatch (expected: %s, actual: %s)",
+                                expectedSpends[0].currency().name(), actualCurrency
+                        );
+                        passed = false;
+                        actualSpend.add(message);
+                    }
+                    if (!cells.get(3).getText().equals(expectedSpends[0].description())) {
+                        String message = String.format(
+                                "Spend category mismatch (expected: %s, actual: %s)",
+                                expectedSpends[0].description(), cells.get(3).getText()
+                        );
+                        passed = false;
+                        actualSpend.add(message);
+                    }
+                    String formattedDate = DateFormatterUtil.formatDate(
+                            expectedSpends[0].spendDate().toString()
+                    );
+                    if (!cells.get(4).getText().equals(formattedDate)) {
+                        String message = String.format(
+                                "Spend category mismatch (expected: %s, actual: %s)",
+                                expectedSpends[0].spendDate().toString(), cells.get(4).getText()
+                        );
+                        passed = false;
+                        actualSpend.add(message);
+                    }
+                    actualSpends.add(actualSpend.toString());
+                }
+                Set<String> spends = new HashSet<>();
+                for (final SpendJson expectedSpend : expectedSpends) {
+                    String formattedDate = DateFormatterUtil.formatDate(
+                            expectedSpend.spendDate().toString()
+                    );
+                    spends.add("ss");
+                }
+                if (!passed) {
+                    final String actualSpends1 = actualSpends.toString();
+                    final String message = String.format("List colors mismatch (expected: %s, actual: %s)",
+                            expectedResult, actualSpends1);
+                    return rejected(message, actualSpends);
+                }
+                return accepted();
+            }
+
+            @Override
+            @Nonnull
+            public String toString() {
+                return expectedResult;
+            }
+        };
+    }
 
 }

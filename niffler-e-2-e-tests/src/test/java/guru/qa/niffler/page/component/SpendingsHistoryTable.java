@@ -10,6 +10,7 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.SpendingConditions;
 import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.model.spend.RowSpend;
+import guru.qa.niffler.model.spend.SpendJson;
 import io.qameta.allure.Step;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -93,6 +94,11 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
   @Step("Check spends from table")
   public @Nonnull SpendingsHistoryTable checkSpends(RowSpend... expectedSpends) {
     spendingRows.should(SpendingConditions.spends(expectedSpends));
+    return this;
+  }
+  @Step("Check spends from table")
+  public @Nonnull SpendingsHistoryTable checkSpends11111(SpendJson... expectedSpends) {
+    spendingRows.should(SpendingConditions.spends1(expectedSpends));
     return this;
   }
 

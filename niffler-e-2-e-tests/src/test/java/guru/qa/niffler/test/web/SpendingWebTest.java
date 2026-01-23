@@ -377,4 +377,29 @@ public class SpendingWebTest {
             user.testData().spendings().getFirst().spendDate().toString()
         ));
   }
+
+  @User(
+      spendings = {@Spending(
+          category = "Машина",
+          amount = 300,
+          currency = CurrencyValues.RUB,
+          description = "На ТО"
+      ),
+          @Spending(
+              category = "Книги",
+              amount = 200,
+              currency = CurrencyValues.RUB,
+              description = "Обучение Niffler 2.0 юбилейный поток!"
+          )}
+  )
+  @ScreenShotTest(value = "img/updateSpending.png")
+  @DisplayName("History of spendings  should display all spendings")
+  void historySpendingsShouldDisplaySpending1(UserJson user, BufferedImage expected) {
+    SpendingsHistoryTable spendingTable = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .login(user.username(), user.testData().password())
+        .historyOfSpendingIsVisible()
+        .getSpendingsHistoryComponent();
+
+    spendingTable.checkSpends11111(user.testData().spendings().getFirst());
+  }
 }
