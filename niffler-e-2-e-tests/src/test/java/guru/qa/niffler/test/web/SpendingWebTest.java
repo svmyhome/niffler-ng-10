@@ -400,6 +400,7 @@ public class SpendingWebTest {
         .historyOfSpendingIsVisible()
         .getSpendingsHistoryComponent();
 
-    spendingTable.checkSpends11111(user.testData().spendings().getFirst());
+    spendingTable.checkSpends11111(user.testData().spendings().getFirst(),
+    user.testData().spendings().get(1));
   }
 }

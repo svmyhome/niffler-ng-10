@@ -135,62 +135,55 @@ public class SpendingConditions {
                 List<String> actualSpends = new ArrayList<>();
                 List<String> actualSpend = new ArrayList<>();
                 boolean passed = true;
-                for (final WebElement spendsRows : elements) {
-                    final List<WebElement> cells = spendsRows.findElements(By.cssSelector("td"));
-                    if (!cells.get(1).getText().equals(expectedSpends[0].category().name())) {
+                for (int i = 0; i < elements.size(); i++) {
+                    final List<WebElement> cells = elements.get(i).findElements(By.cssSelector("td"));
+                    if (!cells.get(1).getText().equals(expectedSpends[i].category().name())) {
                         String message = String.format(
                                 "Spend category mismatch (expected: %s, actual: %s)",
-                                expectedSpends[0].category().name(), cells.get(1).getText()
+                                expectedSpends[i].category().name(), cells.get(1).getText()
                         );
                         passed = false;
                         actualSpend.add(message);
                     }
                     final String[] amountCurrency = cells.get(2).getText().split(" ");
                     double actualAmount = Double.parseDouble(amountCurrency[0]);
-                    if (actualAmount!=expectedSpends[0].amount()) {
+                    if (actualAmount!=expectedSpends[i].amount()) {
                         String message = String.format(
                                 "Spend category mismatch (expected: %s, actual: %s)",
-                                expectedSpends[0].amount(), actualAmount
+                                expectedSpends[i].amount(), actualAmount
                         );
                         passed = false;
                         actualSpend.add(message);
                     }
                     final String actualCurrency = CurrencyValues.fromCurrency(amountCurrency[1]).name();
-                    if (!actualCurrency.equals(expectedSpends[0].currency().name())) {
+                    if (!actualCurrency.equals(expectedSpends[i].currency().name())) {
                         String message = String.format(
                                 "Spend category mismatch (expected: %s, actual: %s)",
-                                expectedSpends[0].currency().name(), actualCurrency
+                                expectedSpends[i].currency().name(), actualCurrency
                         );
                         passed = false;
                         actualSpend.add(message);
                     }
-                    if (!cells.get(3).getText().equals(expectedSpends[0].description())) {
+                    if (!cells.get(3).getText().equals(expectedSpends[i].description())) {
                         String message = String.format(
                                 "Spend category mismatch (expected: %s, actual: %s)",
-                                expectedSpends[0].description(), cells.get(3).getText()
+                                expectedSpends[i].description(), cells.get(3).getText()
                         );
                         passed = false;
                         actualSpend.add(message);
                     }
                     String formattedDate = DateFormatterUtil.formatDate(
-                            expectedSpends[0].spendDate().toString()
+                            expectedSpends[i].spendDate().toString()
                     );
                     if (!cells.get(4).getText().equals(formattedDate)) {
                         String message = String.format(
                                 "Spend category mismatch (expected: %s, actual: %s)",
-                                expectedSpends[0].spendDate().toString(), cells.get(4).getText()
+                                expectedSpends[i].spendDate().toString(), cells.get(4).getText()
                         );
                         passed = false;
                         actualSpend.add(message);
                     }
                     actualSpends.add(actualSpend.toString());
-                }
-                Set<String> spends = new HashSet<>();
-                for (final SpendJson expectedSpend : expectedSpends) {
-                    String formattedDate = DateFormatterUtil.formatDate(
-                            expectedSpend.spendDate().toString()
-                    );
-                    spends.add("ss");
                 }
                 if (!passed) {
                     final String actualSpends1 = actualSpends.toString();
