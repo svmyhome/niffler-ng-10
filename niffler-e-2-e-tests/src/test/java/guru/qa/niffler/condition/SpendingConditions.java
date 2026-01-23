@@ -131,8 +131,7 @@ public class SpendingConditions {
                     }
                     return rejected(message, actualSpends.toString());
                 }
-
-                List<String> actualSpends = new ArrayList<>();
+                List<String> actualSpendsList = new ArrayList<>();
                 List<String> actualSpend = new ArrayList<>();
                 boolean passed = true;
                 for (int i = 0; i < elements.size(); i++) {
@@ -183,13 +182,13 @@ public class SpendingConditions {
                         passed = false;
                         actualSpend.add(message);
                     }
-                    actualSpends.add(actualSpend.toString());
+                    actualSpendsList.add(actualSpend.toString());
                 }
                 if (!passed) {
-                    final String actualSpends1 = actualSpends.toString();
+                    final String actualSpends = actualSpendsList.toString();
                     final String message = String.format("List colors mismatch (expected: %s, actual: %s)",
-                            expectedResult, actualSpends1);
-                    return rejected(message, actualSpends);
+                            expectedResult, actualSpends);
+                    return rejected(message, actualSpendsList);
                 }
                 return accepted();
             }
