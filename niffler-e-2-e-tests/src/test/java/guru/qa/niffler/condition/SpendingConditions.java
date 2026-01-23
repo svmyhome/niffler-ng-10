@@ -23,7 +23,6 @@ import org.openqa.selenium.WebElement;
 @ParametersAreNonnullByDefault
 public class SpendingConditions {
 
-
   public static WebElementsCondition spends(RowSpend... expectedSpends) {
     return new WebElementsCondition() {
 
@@ -52,14 +51,12 @@ public class SpendingConditions {
                 actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
                     + actualDate);
           }
-
           return rejected(message, actualSpends.toString());
         }
 
         List<RowSpend> actualSpends = new ArrayList<>();
         for (final WebElement spendsRows : elements) {
           final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
-
           final String actualCategory = elementsToCheck.get(1).getText();
           final String[] amountCurrency = elementsToCheck.get(2).getText().split(" ");
           final double actualAmount = Double.parseDouble(amountCurrency[0]);
@@ -74,9 +71,7 @@ public class SpendingConditions {
               dateString
           ));
         }
-
         Set<RowSpend> spends = new HashSet<>();
-
         for (final RowSpend expectedSpend : expectedSpends) {
           String formattedDate = DateFormatterUtil.formatDate(
               expectedSpend.date().toString()
@@ -84,8 +79,6 @@ public class SpendingConditions {
           spends.add(
               new RowSpend(expectedSpend.category(), expectedSpend.amount(), expectedSpend.currency(), expectedSpend.description(), formattedDate));
         }
-
-
         if (actualSpends.containsAll(spends)) {
           return accepted();
         } else {
@@ -106,5 +99,4 @@ public class SpendingConditions {
     };
   }
 
-  ;
 }
