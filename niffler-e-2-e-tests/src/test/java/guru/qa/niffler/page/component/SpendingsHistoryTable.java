@@ -92,13 +92,13 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
 
 
   @Step("Check spends from table")
-  public @Nonnull SpendingsHistoryTable checkSpends(RowSpend... expectedSpends) {
-    spendingRows.should(SpendingConditions.spends(expectedSpends));
+  public @Nonnull SpendingsHistoryTable checkSpendsContains(RowSpend... expectedSpends) {
+    spendingRows.should(SpendingConditions.spendsContains(expectedSpends));
     return this;
   }
   @Step("Check spends from table")
-  public @Nonnull SpendingsHistoryTable checkSpends11111(SpendJson... expectedSpends) {
-    spendingRows.should(SpendingConditions.spends1(expectedSpends));
+  public @Nonnull SpendingsHistoryTable checkSpends(SpendJson... expectedSpends) {
+    spendingRows.should(SpendingConditions.spends(expectedSpends));
     return this;
   }
 
