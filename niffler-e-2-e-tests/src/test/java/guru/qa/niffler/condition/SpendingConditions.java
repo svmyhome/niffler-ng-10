@@ -104,10 +104,7 @@ public class SpendingConditions {
         return new WebElementsCondition() {
 
             private final List<SpendJson> expectedSpendList = Arrays.asList(expectedSpends);
-            private final String expectedResult = expectedSpendList.stream()
-                    .map(spend -> spend.category().name() + ": " + spend.amount() + ": " + spend.description() + ": "
-                            + spend.spendDate())
-                    .collect(Collectors.joining(", ", "[", "]"));
+            private final String expectedResult = formatExpectedSpends(expectedSpendList);
 
             @Override
             @Nonnull
@@ -116,23 +113,9 @@ public class SpendingConditions {
                     throw new IllegalArgumentException("No expected spends given");
                 }
                 if (expectedSpendList.size() > elements.size()) {
-                    final String message = String.format("List size mismatch (expected: %s, actual: %s)",
-                            expectedSpendList.size(), elements.size());
-                    List<String> actualSpends = new ArrayList<>();
-                    for (final WebElement spendsRows : elements) {
-                        final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
-                        final String actualCategory = elementsToCheck.get(1).getText();
-                        final String actualAmount = elementsToCheck.get(2).getText();
-                        final String actualDescription = elementsToCheck.get(3).getText();
-                        final String actualDate = elementsToCheck.get(4).getText();
-                        actualSpends.add(
-                                actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
-                                        + actualDate);
-                    }
-                    return rejected(message, actualSpends.toString());
+                  return handleSizeMismatch(elements);
                 }
                 List<String> actualSpendsList = new ArrayList<>();
-                List<String> errorMessages = new ArrayList<>();
                 boolean passed = true;
                 for (int i = 0; i < elements.size(); i++) {
                     List<String> currentSpendErrors = new ArrayList<>();
@@ -187,10 +170,7 @@ public class SpendingConditions {
                     if (!currentSpendErrors.isEmpty()) {
                         actualSpendsList.add(currentSpendErrors.toString());
                     } else {
-                        actualSpendsList.add(cells.get(1).getText() + ": " +
-                                cells.get(2).getText() + ": " +
-                                cells.get(3).getText() + ": " +
-                                cells.get(4).getText());
+                        actualSpendsList.add(formatActualSpend(cells));
                     }
                 }
                 if (!passed) {
@@ -206,6 +186,47 @@ public class SpendingConditions {
             @Nonnull
             public String toString() {
                 return expectedResult;
+            }
+
+            @Nonnull
+            private String formatExpectedSpends(List<SpendJson> spends) {
+                return spends.stream()
+                        .map(this::formatSpend)
+                        .collect(Collectors.joining(", ", "[", "]"));
+            }
+
+            @Nonnull
+            private String formatSpend(SpendJson spend) {
+                return spend.category().name() + ": " +
+                        spend.amount() + ": " +
+                        spend.description() + ": " +
+                        spend.spendDate();
+            }
+
+            @Nonnull
+            private CheckResult handleSizeMismatch(List<WebElement> elements) {
+                final String message = String.format("List size mismatch (expected: %s, actual: %s)",
+                        expectedSpendList.size(), elements.size());
+                List<String> actualSpends = new ArrayList<>();
+                for (final WebElement spendsRows : elements) {
+                    final List<WebElement> elementsToCheck = spendsRows.findElements(By.cssSelector("td"));
+                    final String actualCategory = elementsToCheck.get(1).getText();
+                    final String actualAmount = elementsToCheck.get(2).getText();
+                    final String actualDescription = elementsToCheck.get(3).getText();
+                    final String actualDate = elementsToCheck.get(4).getText();
+                    actualSpends.add(
+                            actualCategory + ": " + actualAmount + ": " + actualDescription + ": "
+                                    + actualDate);
+                }
+                return rejected(message, actualSpends.toString());
+            }
+
+            @Nonnull
+            private String formatActualSpend(List<WebElement> cells) {
+                return cells.get(1).getText() + ": " +
+                        cells.get(2).getText() + ": " +
+                        cells.get(3).getText() + ": " +
+                        cells.get(4).getText();
             }
         };
     }
