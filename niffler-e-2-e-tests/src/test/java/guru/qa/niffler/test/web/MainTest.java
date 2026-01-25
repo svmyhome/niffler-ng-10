@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
+import static utils.SelenideUtils.chromeConfig;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Isolated;
-import org.openqa.selenium.remote.Browser;
 
 
 @Isolated
@@ -24,18 +23,20 @@ import org.openqa.selenium.remote.Browser;
 @ExtendWith(BrowserExtension.class)
 public class MainTest {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
+    private final SelenideDriver driver = new SelenideDriver(chromeConfig);
 
-  @User
-  @Test
-  @DisplayName("User should be able to navigate from profile back to main page")
-  public void userShouldNavigateFromProfileToMainPage(UserJson user) {
-    Configuration.browser = Browser.FIREFOX.browserName();
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .openProfile()
-        .checkProfileIsDisplayed()
-        .goToMainPage()
-        .mainPageShouldBeDisplayed();
-  }
+
+    @User
+    @Test
+    @DisplayName("User should be able to navigate from profile back to main page")
+    public void userShouldNavigateFromProfileToMainPage(UserJson user) {
+//    Configuration.browser = Browser.FIREFOX.browserName();
+        driver.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfile()
+                .checkProfileIsDisplayed()
+                .goToMainPage()
+                .mainPageShouldBeDisplayed();
+    }
 }

@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+import static utils.SelenideUtils.chromeConfig;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.assertions.ImageAssertions;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
@@ -24,51 +25,53 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BrowserExtension.class)
 public class ProfileTest {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
+    private final SelenideDriver driver = new SelenideDriver(chromeConfig);
 
-  @User
-  @Test
-  @DisplayName("Profile name should be editable")
-  public void profileNameShouldBeEditable(UserJson user) {
-    String name = "Ivan";
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .openProfile()
-        .checkProfileIsDisplayed()
-        .setName(name)
-        .saveChanges()
-        .checkSnackBarText("Profile successfully updated")
-        .goToMainPage()
-        .openProfile()
-        .checkName(name);
-  }
 
-  @User
-  @Test
-  @DisplayName("User cannot upload invalid image as profile picture")
-  public void shouldFailWhenUploadingInvalidPicture(UserJson user) {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .openProfile()
-        .checkProfileIsDisplayed()
-        .uploadNewPictureInProfile("profile.jpg")
-        .saveChanges()
-        .checkSnackBarText("Error while updating profile: Failed to read request");
-  }
+    @User
+    @Test
+    @DisplayName("Profile name should be editable")
+    public void profileNameShouldBeEditable(UserJson user) {
+        String name = "Ivan";
+        driver.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfile()
+                .checkProfileIsDisplayed()
+                .setName(name)
+                .saveChanges()
+                .checkSnackBarText("Profile successfully updated")
+                .goToMainPage()
+                .openProfile()
+                .checkName(name);
+    }
 
-  @User
-  @ScreenShotTest(value = "img/avatar.jpg")
-  @DisplayName("User can save valid picture in the profile")
-  public void shouldSaveValidPictureInProfile(UserJson user, BufferedImage expected) throws IOException {
-    ProfilePage getProfile = Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .openProfile()
-        .checkProfileIsDisplayed()
-        .uploadNewPictureInProfile("avatar.jpg")
-        .saveChanges()
-        .checkSnackBarText("Profile successfully updated");
+    @User
+    @Test
+    @DisplayName("User cannot upload invalid image as profile picture")
+    public void shouldFailWhenUploadingInvalidPicture(UserJson user) {
+        driver.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfile()
+                .checkProfileIsDisplayed()
+                .uploadNewPictureInProfile("profile.jpg")
+                .saveChanges()
+                .checkSnackBarText("Error while updating profile: Failed to read request");
+    }
 
-    ImageAssertions.checkScreenshotMatches(expected,
-        getProfile.captureAvatarScreenshot());
-  }
+    @User
+    @ScreenShotTest(value = "img/avatar.jpg")
+    @DisplayName("User can save valid picture in the profile")
+    public void shouldSaveValidPictureInProfile(UserJson user, BufferedImage expected) throws IOException {
+        ProfilePage getProfile = driver.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfile()
+                .checkProfileIsDisplayed()
+                .uploadNewPictureInProfile("avatar.jpg")
+                .saveChanges()
+                .checkSnackBarText("Profile successfully updated");
+
+        ImageAssertions.checkScreenshotMatches(expected,
+                getProfile.captureAvatarScreenshot());
+    }
 }

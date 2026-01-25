@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+import static utils.SelenideUtils.chromeConfig;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.assertions.ImageAssertions;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
@@ -36,6 +37,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class SpendingWebTest {
 
     private static final Config CFG = Config.getInstance();
+    private final SelenideDriver driver = new SelenideDriver(chromeConfig);
+
 
     @User(
             spendings = {@Spending(
@@ -56,7 +59,7 @@ public class SpendingWebTest {
     void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation 10";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .editSpending(user.testData().spendings().getFirst().description())
                 .setNewSpendingDescription(newDescription)
@@ -82,7 +85,7 @@ public class SpendingWebTest {
     void spendingDescriptionShouldBeVisible(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation 10";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .editSpending(user.testData().spendings().getFirst().description())
@@ -99,7 +102,7 @@ public class SpendingWebTest {
         Calendar cal = Calendar.getInstance();
         cal.set(2011, Calendar.NOVEMBER, 12);
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .openNewSpending()
@@ -119,7 +122,7 @@ public class SpendingWebTest {
     @Test
     @DisplayName("User should be able delete spending")
     void spendingShouldBeDeleted(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .deleteSpendingFromTable("Обучение Niffler 2.0 юбилейный поток!")
@@ -141,7 +144,7 @@ public class SpendingWebTest {
         Calendar date = Calendar.getInstance();
         date.set(2024, 11, 12);
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .editSpendingFromTable(newDescription)
@@ -160,7 +163,7 @@ public class SpendingWebTest {
     @Test
     @DisplayName("User should be able select spending by period")
     void userShouldBeAbleSelectPeriodSpending(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .selectPeriodSpendingFromTable(DataFilterValues.WEEK)
@@ -181,7 +184,7 @@ public class SpendingWebTest {
         String today = LocalDate.now()
                 .format(DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH));
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .checkTableContent("Машина", "89900", String.valueOf(CurrencyValues.RUB),
@@ -205,13 +208,13 @@ public class SpendingWebTest {
     )
     @ScreenShotTest(value = "img/spendings.png")
     @DisplayName("Spending chart should correctly display test data")
-    void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected) {
-        StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+    void spendingChartShouldDisplayTestDataCorrectly(UserJson user, BufferedImage expected) throws InterruptedException {
+        StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .getStatComponent();
 
-        Selenide.sleep(4000);
+        driver.wait(4000);
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
         statComponent.checkBubbles(
@@ -236,14 +239,14 @@ public class SpendingWebTest {
     )
     @ScreenShotTest(value = "img/spending.png")
     @DisplayName("Spending chart should refresh correctly after deletion")
-    void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected) {
-        StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+    void spendingChartShouldRefreshAfterDeletion(UserJson user, BufferedImage expected) throws InterruptedException {
+        StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .deleteSpendingFromTable("На ТО")
                 .getStatComponent();
 
-        Selenide.sleep(4000);
+        driver.wait(4000);
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
         statComponent.checkBubbles(new Bubble(Color.yellow, "Книги 200 ₽"));
@@ -265,15 +268,15 @@ public class SpendingWebTest {
     )
     @ScreenShotTest(value = "img/updateSpending.png")
     @DisplayName("Spending chart should update correctly")
-    void spendingChartShouldDisplayCorrectlyAfterUpdate(UserJson user, BufferedImage expected) {
-        StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+    void spendingChartShouldDisplayCorrectlyAfterUpdate(UserJson user, BufferedImage expected) throws InterruptedException {
+        StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .editSpending("На ТО")
                 .setNewAmount(1000.0)
                 .getStatComponent();
 
-        Selenide.sleep(4000);
+        driver.wait(4000);
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
         statComponent.checkBubbles(
@@ -299,7 +302,7 @@ public class SpendingWebTest {
     @ScreenShotTest(value = "img/updateSpending.png")
     @DisplayName("Spending chart should display correctly any order")
     void spendingChartShouldDisplayCorrectlyAnyOrder(UserJson user, BufferedImage expected) {
-        StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .editSpending("На ТО")
@@ -329,7 +332,7 @@ public class SpendingWebTest {
     @ScreenShotTest(value = "img/updateSpending.png")
     @DisplayName("Spending chart should display contains spending")
     void spendingChartShouldDisplayContainsSpending(UserJson user, BufferedImage expected) {
-        StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        StatComponent statComponent = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .editSpending("На ТО")
@@ -359,17 +362,17 @@ public class SpendingWebTest {
     @Test
     @DisplayName("History of spendings  should contains spends")
     void historySpendingsShouldContainsSpending(UserJson user) {
-        SpendingsHistoryTable spendingTable = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        SpendingsHistoryTable spendingTable = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .getSpendingsHistoryComponent();
 
         spendingTable.checkSpendsContains(new RowSpend(user.testData().spendings().get(1).category().name(),
-                        user.testData().spendings().get(1).amount(),
-                        user.testData().spendings().get(1).currency().name(),
-                        user.testData().spendings().get(1).description(),
-                        user.testData().spendings().get(1).spendDate().toString()
-                ));
+                user.testData().spendings().get(1).amount(),
+                user.testData().spendings().get(1).currency().name(),
+                user.testData().spendings().get(1).description(),
+                user.testData().spendings().get(1).spendDate().toString()
+        ));
     }
 
     @User(
@@ -389,7 +392,7 @@ public class SpendingWebTest {
     @Test
     @DisplayName("History of spendings  should display all spendings")
     void historySpendingsShouldDisplaySpending1(UserJson user) {
-        SpendingsHistoryTable spendingTable = Selenide.open(CFG.frontUrl(), LoginPage.class)
+        SpendingsHistoryTable spendingTable = driver.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .historyOfSpendingIsVisible()
                 .getSpendingsHistoryComponent();
