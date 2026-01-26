@@ -7,7 +7,9 @@ import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.meta.User;
+import guru.qa.niffler.jupiter.extension.BrowserConverter;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.Browser;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Epic;
@@ -18,6 +20,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.EnumSource;
 
 @Epic("UI")
 @Feature("User management")
@@ -66,10 +71,12 @@ public class LoginTest {
                 .loginPageShouldBeDisplayed();
     }
 
-    @DisabledByIssue("5")
-    @Test
+    @ParameterizedTest
+    @EnumSource(Browser.class)
     @DisplayName("User should NOT be able to login with incorrect password")
-    void userStayOnLoginPageAfterLoginWithBadCredentialTestDisabled() {
+    void userStayOnLoginPageAfterLoginWithBadCredentialTestDisabled(
+            @ConvertWith(BrowserConverter.class) SelenideDriver driver
+    ) {
         browserExtension.drivers().add(driver);
 
         driver.open(CFG.frontUrl());
