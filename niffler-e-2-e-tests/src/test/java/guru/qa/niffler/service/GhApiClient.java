@@ -10,24 +10,24 @@ import retrofit2.Response;
 @ParametersAreNonnullByDefault
 public final class GhApiClient extends RestClient {
 
-  private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
-  private final GhApi ghApi;
+    private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
+    private final GhApi ghApi;
 
-  public GhApiClient() {
-    super(CFG.ghUrl());
-    this.ghApi = create(GhApi.class);
-  }
-
-  public String issueState(String issueNumber) {
-    final Response<JsonNode> response;
-    try {
-      response = ghApi.issue(
-          "Bearer " + System.getenv(GH_TOKEN_ENV),
-          issueNumber
-      ).execute();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    public GhApiClient() {
+        super(CFG.ghUrl());
+        this.ghApi = create(GhApi.class);
     }
-    return Objects.requireNonNull(response.body()).get("state").asText();
-  }
+
+    public String issueState(String issueNumber) {
+        final Response<JsonNode> response;
+        try {
+            response = ghApi.issue(
+                    "Bearer " + System.getenv(GH_TOKEN_ENV),
+                    issueNumber
+            ).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return Objects.requireNonNull(response.body()).get("state").asText();
+    }
 }

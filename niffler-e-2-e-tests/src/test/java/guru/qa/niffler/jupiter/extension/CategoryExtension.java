@@ -22,91 +22,91 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import utils.RandomDataUtils;
 
 public class CategoryExtension implements
-    BeforeEachCallback,
-    AfterTestExecutionCallback,
-    ParameterResolver {
+        BeforeEachCallback,
+        AfterTestExecutionCallback,
+        ParameterResolver {
 
-  public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
-      CategoryExtension.class);
-  private final SpendClient spendClient = new SpendDbClient();
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
+            CategoryExtension.class);
+    private final SpendClient spendClient = new SpendDbClient();
 
-  @Override
-  public void beforeEach(ExtensionContext context) {
-    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-        .ifPresent(usersAnno -> {
-          if (ArrayUtils.isNotEmpty(usersAnno.categories())) {
-            Optional<UserJson> testUser = UserExtension.createdUser();
-            final String username =
-                testUser.isPresent() ? testUser.get().username() : usersAnno.username();
-
-            List<CategoryJson> result = new ArrayList<>();
-            for (Category categoryAnno : usersAnno.categories()) {
-              CategoryJson category = new CategoryJson(
-                  null,
-                  "".equals(categoryAnno.name()) ? RandomDataUtils.randomCategoryName()
-                      : categoryAnno.name(),
-                  username,
-                  categoryAnno.archived()
-              );
-              CategoryJson created = spendClient.createCategory(category);
-              if (categoryAnno.archived()) {
-                CategoryJson archivedCategory = new CategoryJson(
-                    created.id(),
-                    created.name(),
-                    created.username(),
-                    true
-                );
-                created = spendClient.updateCategory(archivedCategory);
-              }
-              result.add(created);
-            }
-            if (testUser.isPresent()) {
-              testUser.get().testData().categories().addAll(result);
-            } else {
-              context.getStore(NAMESPACE).put(
-                  context.getUniqueId(),
-                  result.stream().toArray(CategoryJson[]::new)
-              );
-            }
-          }
-        });
-  }
-
-  @Override
-  public boolean supportsParameter(ParameterContext parameterContext,
-      ExtensionContext extensionContext) throws ParameterResolutionException {
-    return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson[].class);
-  }
-
-  @Override
-  @Nonnull
-  public CategoryJson[] resolveParameter(ParameterContext parameterContext,
-      ExtensionContext extensionContext) throws ParameterResolutionException {
-    return createdCategories();
-  }
-
-  @Nonnull
-  public static CategoryJson[] createdCategories() {
-    final ExtensionContext methodContext = context();
-    return methodContext.getStore(NAMESPACE)
-        .get(methodContext.getUniqueId(), CategoryJson[].class);
-  }
-
-  @Override
-  public void afterTestExecution(ExtensionContext context) {
-    CategoryJson[] categories = createdCategories();
-    if (categories != null && categories.length > 0) {
-      for (CategoryJson category : categories) {
-        if (!category.archived()) {
-          CategoryJson archivedCategory = new CategoryJson(
-              category.id(),
-              category.name(),
-              category.username(),
-              true
-          );
-          spendClient.updateCategory(archivedCategory);
-        }
-      }
+    @Nonnull
+    public static CategoryJson[] createdCategories() {
+        final ExtensionContext methodContext = context();
+        return methodContext.getStore(NAMESPACE)
+                .get(methodContext.getUniqueId(), CategoryJson[].class);
     }
-  }
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
+                .ifPresent(usersAnno -> {
+                    if (ArrayUtils.isNotEmpty(usersAnno.categories())) {
+                        Optional<UserJson> testUser = UserExtension.createdUser();
+                        final String username =
+                                testUser.isPresent() ? testUser.get().username():usersAnno.username();
+
+                        List<CategoryJson> result = new ArrayList<>();
+                        for (Category categoryAnno : usersAnno.categories()) {
+                            CategoryJson category = new CategoryJson(
+                                    null,
+                                    "".equals(categoryAnno.name()) ? RandomDataUtils.randomCategoryName()
+                                            :categoryAnno.name(),
+                                    username,
+                                    categoryAnno.archived()
+                            );
+                            CategoryJson created = spendClient.createCategory(category);
+                            if (categoryAnno.archived()) {
+                                CategoryJson archivedCategory = new CategoryJson(
+                                        created.id(),
+                                        created.name(),
+                                        created.username(),
+                                        true
+                                );
+                                created = spendClient.updateCategory(archivedCategory);
+                            }
+                            result.add(created);
+                        }
+                        if (testUser.isPresent()) {
+                            testUser.get().testData().categories().addAll(result);
+                        } else {
+                            context.getStore(NAMESPACE).put(
+                                    context.getUniqueId(),
+                                    result.stream().toArray(CategoryJson[]::new)
+                            );
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext,
+                                     ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson[].class);
+    }
+
+    @Override
+    @Nonnull
+    public CategoryJson[] resolveParameter(ParameterContext parameterContext,
+                                           ExtensionContext extensionContext) throws ParameterResolutionException {
+        return createdCategories();
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) {
+        CategoryJson[] categories = createdCategories();
+        if (categories!=null && categories.length > 0) {
+            for (CategoryJson category : categories) {
+                if (!category.archived()) {
+                    CategoryJson archivedCategory = new CategoryJson(
+                            category.id(),
+                            category.name(),
+                            category.username(),
+                            true
+                    );
+                    spendClient.updateCategory(archivedCategory);
+                }
+            }
+        }
+    }
 }

@@ -26,14 +26,14 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Story("Last execution test")
 public class LastExecutionTest {
 
-  private final UserApiClient userApiClient = new UserApiClient();
+    private final UserApiClient userApiClient = new UserApiClient();
 
-  @User
-  @Test
-  @DisplayName("API: Should return all users")
-  public void shouldReturnAllExistingUsersFromApi(UserJson user) {
-    List<UserJson> allUsers = userApiClient.getAllUsers(user.username());
-    assertThat(allUsers.size(), greaterThan(1));
-  }
+    @User
+    @Test
+    @DisplayName("API: Should return all users")
+    public void shouldReturnAllExistingUsersFromApi(UserJson user) {
+        List<UserJson> allUsers = userApiClient.getAllUsers(user.username());
+        assertThat(allUsers.size(), greaterThan(1));
+    }
 
 }

@@ -9,7 +9,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class BaseComponent<T extends BaseComponent<T>> {
 
-  protected final SelenideElement self;
+    protected final SelenideElement self;
     protected final SelenideDriver driver;
 
 
@@ -18,15 +18,15 @@ public abstract class BaseComponent<T extends BaseComponent<T>> {
         this.self = self;
     }
 
-    // Вспомогательные методы для работы с переданным драйвером
     protected SelenideElement $(String selector) {
-        return driver != null ? driver.$(selector) : Selenide.$(selector);
+        return driver!=null ? driver.$(selector):Selenide.$(selector);
     }
 
     protected ElementsCollection $$(String selector) {
-        return driver != null ? driver.$$(selector) : Selenide.$$(selector);
+        return driver!=null ? driver.$$(selector):Selenide.$$(selector);
     }
-  public SelenideElement getSelf() {
-    return self;
-  }
+
+    public SelenideElement getSelf() {
+        return self;
+    }
 }

@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 
 public class FriendshipDbTest {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
-  @Test
-  void findFridByIdTest() {
-    UserDbClient userDbClient = new UserDbClient();
-    userDbClient.findUserById(UUID.fromString("4d4d6b81-e573-4270-ac88-6b1b10d97d40"));
-  }
+    @Test
+    void findFridByIdTest() {
+        UserDbClient userDbClient = new UserDbClient();
+        userDbClient.findUserById(UUID.fromString("4d4d6b81-e573-4270-ac88-6b1b10d97d40"));
+    }
 }

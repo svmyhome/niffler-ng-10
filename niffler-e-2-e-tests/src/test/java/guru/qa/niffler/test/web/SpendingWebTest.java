@@ -10,7 +10,7 @@ import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.NonStaticBrowsersExtension;
 import guru.qa.niffler.model.spend.Bubble;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.RowSpend;
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Epic("UI")
 @Feature("Categories and Spendings")
 @Story("Spending Management")
-@ExtendWith(BrowserExtension.class)
+@ExtendWith(NonStaticBrowsersExtension.class)
 public class SpendingWebTest {
 
     private static final Config CFG = Config.getInstance();

@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.jupiter.converter;
 
 public enum Browser {
 

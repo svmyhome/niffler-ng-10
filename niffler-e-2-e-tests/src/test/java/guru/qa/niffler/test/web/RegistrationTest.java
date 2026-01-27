@@ -3,7 +3,7 @@ package guru.qa.niffler.test.web;
 import static utils.SelenideUtils.chromeConfig;
 import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.NonStaticBrowsersExtension;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -16,12 +16,12 @@ import utils.RandomDataUtils;
 @Epic("UI")
 @Feature("User management")
 @Story("Registration")
-@ExtendWith(BrowserExtension.class)
+@ExtendWith(NonStaticBrowsersExtension.class)
 public class RegistrationTest {
 
     private static final Config CFG = Config.getInstance();
-    private final SelenideDriver driver = new SelenideDriver(chromeConfig);
     private static final String REGISTRATION_SUCCESS = "Congratulations! You've registered!";
+    private final SelenideDriver driver = new SelenideDriver(chromeConfig);
 
     @Test
     @DisplayName("New user registration should be successful")

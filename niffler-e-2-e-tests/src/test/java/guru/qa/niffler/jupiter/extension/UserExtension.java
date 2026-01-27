@@ -21,58 +21,58 @@ import utils.RandomDataUtils;
 
 public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
-  public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
-      UserExtension.class);
-  public static final String DEFAULT_PASSWORD = "12345";
-  private final UserClient userClient = new UserDbClient();
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
+            UserExtension.class);
+    public static final String DEFAULT_PASSWORD = "12345";
+    private final UserClient userClient = new UserDbClient();
 
-  @Override
-  public void beforeEach(ExtensionContext context) {
+    @Nullable
+    public static Optional<UserJson> createdUser() {
+        final ExtensionContext methodContext = context();
+        return Optional.ofNullable(methodContext.getStore(NAMESPACE)
+                .get(methodContext.getUniqueId(), UserJson.class));
+    }
 
-    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-        .ifPresent(usersAnno -> {
-          if ("".equals(usersAnno.username())) {
-            final String username = RandomDataUtils.randomUsername();
-            final UserJson user = userClient.createUser(username, DEFAULT_PASSWORD);
-            List<UserJson> incomeInvitations = userClient.createIncomeInvitations(user,
-                usersAnno.incomeInvitations());
-            List<UserJson> outcomeInvitations = userClient.createOutcomeInvitations(user,
-                usersAnno.outcomeInvitations());
-            List<UserJson> friends = userClient.createFriends(user, usersAnno.friends());
+    @Override
+    public void beforeEach(ExtensionContext context) {
 
-            final TestData testData = new TestData(
-                DEFAULT_PASSWORD,
-                incomeInvitations,
-                outcomeInvitations,
-                friends,
-                new ArrayList<>(),
-                new ArrayList<>()
-            );
-            context.getStore(NAMESPACE).put(
-                context.getUniqueId(),
-                user.addTestData(testData)
-            );
-          }
-        });
-  }
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
+                .ifPresent(usersAnno -> {
+                    if ("".equals(usersAnno.username())) {
+                        final String username = RandomDataUtils.randomUsername();
+                        final UserJson user = userClient.createUser(username, DEFAULT_PASSWORD);
+                        List<UserJson> incomeInvitations = userClient.createIncomeInvitations(user,
+                                usersAnno.incomeInvitations());
+                        List<UserJson> outcomeInvitations = userClient.createOutcomeInvitations(user,
+                                usersAnno.outcomeInvitations());
+                        List<UserJson> friends = userClient.createFriends(user, usersAnno.friends());
 
-  @Override
-  public boolean supportsParameter(ParameterContext parameterContext,
-      ExtensionContext extensionContext) throws ParameterResolutionException {
-    return parameterContext.getParameter().getType().isAssignableFrom(UserJson.class);
-  }
+                        final TestData testData = new TestData(
+                                DEFAULT_PASSWORD,
+                                incomeInvitations,
+                                outcomeInvitations,
+                                friends,
+                                new ArrayList<>(),
+                                new ArrayList<>()
+                        );
+                        context.getStore(NAMESPACE).put(
+                                context.getUniqueId(),
+                                user.addTestData(testData)
+                        );
+                    }
+                });
+    }
 
-  @Override
-  @Nonnull
-  public UserJson resolveParameter(ParameterContext parameterContext,
-      ExtensionContext extensionContext) throws ParameterResolutionException {
-    return createdUser().orElseThrow();
-  }
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext,
+                                     ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(UserJson.class);
+    }
 
-  @Nullable
-  public static Optional<UserJson> createdUser() {
-    final ExtensionContext methodContext = context();
-    return Optional.ofNullable(methodContext.getStore(NAMESPACE)
-        .get(methodContext.getUniqueId(), UserJson.class));
-  }
+    @Override
+    @Nonnull
+    public UserJson resolveParameter(ParameterContext parameterContext,
+                                     ExtensionContext extensionContext) throws ParameterResolutionException {
+        return createdUser().orElseThrow();
+    }
 }

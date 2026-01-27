@@ -27,7 +27,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
             categories,
             categoriesArchived,
             headersH2;
-
     private final Header header;
 
     public ProfilePage(SelenideDriver driver) {

@@ -7,23 +7,23 @@ import java.util.UUID;
 
 public interface SpendClient {
 
-  SpendJson create(SpendJson spend);
+    SpendJson create(SpendJson spend);
 
-  SpendJson update(SpendJson spend);
+    SpendJson update(SpendJson spend);
 
-  CategoryJson createCategory(CategoryJson category);
+    CategoryJson createCategory(CategoryJson category);
 
-  CategoryJson updateCategory(CategoryJson spend);
+    CategoryJson updateCategory(CategoryJson spend);
 
-  Optional<CategoryJson> findCategoryById(UUID id);
+    Optional<CategoryJson> findCategoryById(UUID id);
 
-  Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name);
+    Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name);
 
-  Optional<SpendJson> findById(UUID id);
+    Optional<SpendJson> findById(UUID id);
 
-  Optional<SpendJson> findByUsernameAndSpendDescription(String username, String description);
+    Optional<SpendJson> findByUsernameAndSpendDescription(String username, String description);
 
-  void remove(SpendJson spend);
+    void remove(SpendJson spend);
 
-  void removeCategory(CategoryJson category);
+    void removeCategory(CategoryJson category);
 }

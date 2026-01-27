@@ -15,36 +15,13 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-public class BrowserExtension implements BeforeEachCallback,
+public class NonStaticBrowsersExtension implements BeforeEachCallback,
         AfterEachCallback, TestExecutionExceptionHandler, LifecycleMethodExecutionExceptionHandler {
 
-    public final List<SelenideDriver> drivers = new ArrayList<>();
+    private final List<SelenideDriver> drivers = new ArrayList<>();
 
     public List<SelenideDriver> drivers() {
         return drivers;
-    }
-
-//    @Override
-//    public void beforeAll(ExtensionContext context) throws Exception {
-//
-//        Configuration.browser = Browser.CHROME.browserName();
-//        Configuration.timeout = 6000L;
-//    }
-
-
-    private void doScreenshot() {
-        for (SelenideDriver driver : drivers) {
-            if (driver.hasWebDriverStarted()) {
-                Allure.addAttachment(
-                        "Screen on fail for browser: " + driver.getSessionId(),
-                        new ByteArrayInputStream(
-                                ((TakesScreenshot) driver.getWebDriver()).getScreenshotAs(OutputType.BYTES)
-                        )
-                );
-            }
-        }
-
-
     }
 
     @Override
@@ -85,4 +62,18 @@ public class BrowserExtension implements BeforeEachCallback,
         throw throwable;
     }
 
+    private void doScreenshot() {
+        for (SelenideDriver driver : drivers) {
+            if (driver.hasWebDriverStarted()) {
+                Allure.addAttachment(
+                        "Screen on fail for browser: " + driver.getSessionId(),
+                        new ByteArrayInputStream(
+                                ((TakesScreenshot) driver.getWebDriver()).getScreenshotAs(OutputType.BYTES)
+                        )
+                );
+            }
+        }
+
+
+    }
 }

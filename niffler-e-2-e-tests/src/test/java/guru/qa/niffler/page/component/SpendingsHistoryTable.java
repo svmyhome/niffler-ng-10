@@ -30,9 +30,7 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
 
 
     public SpendingsHistoryTable(SelenideDriver driver, SelenideElement self) {
-        super(driver, self);
-//        searchSpending = self.$("[placeholder='Search']");
-
+        super(driver, driver.$("form.MuiBox-root"));
         this.searchPeriod = driver.$("#period");
         this.editSpending = driver.$("[aria-label*='Edit spending']");
         this.selectAllRows = driver.$("[aria-label='select all rows']");
@@ -41,14 +39,24 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
         this.searchSpending = self.$("[placeholder='Search']");
         this.spendingRows = driver.$("tbody").$$("tr");
     }
-//
-//    public SpendingsHistoryTable() {
-//    super($("#spendings"));
-//  }
-//  public SpendingTable() {
-//    super($("#spendings .MuiTableContainer-root"));
-//  }
 
+    private @Nonnull
+    static String expectedString(String[] expectedSpends) {
+        return Arrays.stream(expectedSpends)
+                .map(SpendingsHistoryTable::convertCurrency)
+                .collect(Collectors.joining(" ")).trim();
+    }
+
+    private @Nonnull
+    static String convertCurrency(String value) {
+        return switch (value) {
+            case "RUB" -> "₽";
+            case "USD" -> "$";
+            case "EUR" -> "€";
+            case "KZT" -> "₸";
+            default -> value;
+        };
+    }
 
     @Step("Select search period {period}")
     public @Nonnull SpendingsHistoryTable selectPeriod(DataFilterValues period) {
@@ -97,14 +105,6 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
         return this;
     }
 
-    private @Nonnull
-    static String expectedString(String[] expectedSpends) {
-        return Arrays.stream(expectedSpends)
-                .map(SpendingsHistoryTable::convertCurrency)
-                .collect(Collectors.joining(" ")).trim();
-    }
-
-
     @Step("Check spends from table")
     public @Nonnull SpendingsHistoryTable checkSpendsContains(RowSpend... expectedSpends) {
         spendingRows.should(SpendingConditions.spendsContains(expectedSpends));
@@ -115,16 +115,5 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
     public @Nonnull SpendingsHistoryTable checkSpends(SpendJson... expectedSpends) {
         spendingRows.should(SpendingConditions.spends(expectedSpends));
         return this;
-    }
-
-    private @Nonnull
-    static String convertCurrency(String value) {
-        return switch (value) {
-            case "RUB" -> "₽";
-            case "USD" -> "$";
-            case "EUR" -> "€";
-            case "KZT" -> "₸";
-            default -> value;
-        };
     }
 }

@@ -4,7 +4,6 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.AllPeoplesPage;
@@ -23,9 +22,7 @@ public class Header extends BaseComponent<Header> {
     private final ElementsCollection menuItems, actionButtons;
 
     public Header(SelenideDriver driver) {
-        super(driver, driver != null ? driver.$("#root header") : Selenide.$("#root header"));
-
-        // Инициализируем элементы через методы из BaseComponent
+        super(driver, driver.$("#root header"));
         this.openMenu = self.$(".MuiAvatar-root");
         this.menu = $("#account-menu");  // ← теперь использует $() из BaseComponent
         this.profile = $("[href='/profile']");
@@ -38,63 +35,63 @@ public class Header extends BaseComponent<Header> {
         this.actionButtons = $$("button");
     }
 
-  @Step("Open menu")
-  public @Nonnull Header openMenu() {
-    openMenu.click();
-    menu.shouldBe(visible);
-    return this;
-  }
+    @Step("Open menu")
+    public @Nonnull Header openMenu() {
+        openMenu.click();
+        menu.shouldBe(visible);
+        return this;
+    }
 
-  @Step("Open profile page")
-  public @Nonnull ProfilePage toProfilePage() {
-    openMenu();
-    profile.shouldBe(visible).click();
-    return new ProfilePage(driver);
-  }
+    @Step("Open profile page")
+    public @Nonnull ProfilePage toProfilePage() {
+        openMenu();
+        profile.shouldBe(visible).click();
+        return new ProfilePage(driver);
+    }
 
-  @Step("Open friends page")
-  public @Nonnull FriendsPage toFriendsPage() {
-    openMenu();
-    friends.shouldBe(visible).click();
-    return new FriendsPage(driver);
-  }
+    @Step("Open friends page")
+    public @Nonnull FriendsPage toFriendsPage() {
+        openMenu();
+        friends.shouldBe(visible).click();
+        return new FriendsPage(driver);
+    }
 
-  @Step("Open all people page")
-  public @Nonnull AllPeoplesPage toAllPeoplesPage() {
-    openMenu();
-    allPeople.click();
-    return new AllPeoplesPage(driver);
-  }
+    @Step("Open all people page")
+    public @Nonnull AllPeoplesPage toAllPeoplesPage() {
+        openMenu();
+        allPeople.click();
+        return new AllPeoplesPage(driver);
+    }
 
-  @Step("Select Sign out from menu")
-  public @Nonnull Header selectSignOut() {
-    menuItems.findBy(text("Sign out")).click();
-    return this;
-  }
+    @Step("Select Sign out from menu")
+    public @Nonnull Header selectSignOut() {
+        menuItems.findBy(text("Sign out")).click();
+        return this;
+    }
 
-  @Step("Confirm logout")
-  public @Nonnull LoginPage confirmLogout() {
-    actionButtons.findBy(exactText("Log out")).click();
-    return new LoginPage(driver);
-  }
+    @Step("Confirm logout")
+    public @Nonnull LoginPage confirmLogout() {
+        actionButtons.findBy(exactText("Log out")).click();
+        return new LoginPage(driver);
+    }
 
-  @Step("Sign out")
-  public @Nonnull LoginPage signOut() {
-    openMenu();
-    selectSignOut().confirmLogout();
-    return new LoginPage(driver);
-  }
+    @Step("Sign out")
+    public @Nonnull LoginPage signOut() {
+        openMenu();
+        selectSignOut().confirmLogout();
+        return new LoginPage(driver);
+    }
 
-  @Step("Open spending page")
-  public @Nonnull EditSpendingPage addSpendingPage() {
-    spending.click();
-    return new EditSpendingPage(driver);
-  }
+    @Step("Open spending page")
+    public @Nonnull EditSpendingPage addSpendingPage() {
+        spending.click();
+        return new EditSpendingPage(driver);
+    }
 
-  @Step("Open main page")
-  public @Nonnull MainPage toMainPage() {
-    main.click();
-    return new MainPage(driver);
-  }
+    @Step("Open main page")
+    public @Nonnull MainPage toMainPage() {
+        main.click();
+        return new MainPage(driver);
+    }
 }
 

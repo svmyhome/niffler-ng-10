@@ -1,11 +1,10 @@
-package guru.qa.niffler.jupiter.extension;
+package guru.qa.niffler.jupiter.converter;
 
 
 import static com.codeborne.selenide.Browsers.CHROME;
 import static com.codeborne.selenide.Browsers.FIREFOX;
 import com.codeborne.selenide.SelenideConfig;
 import com.codeborne.selenide.SelenideDriver;
-import guru.qa.niffler.model.Browser;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
@@ -23,7 +22,7 @@ public class BrowserConverter implements ArgumentConverter {
         } else if (browserName.contains(FIREFOX)) {
             browserName = FIREFOX.toLowerCase();
         }
-        SelenideConfig config = new SelenideConfig()
+        final SelenideConfig config = new SelenideConfig()
                 .browser(browserName)
                 .pageLoadStrategy("eager")
                 .timeout(6000L);
@@ -33,7 +32,7 @@ public class BrowserConverter implements ArgumentConverter {
     @Override
     public Object convert(Object source, FieldContext context) throws ArgumentConversionException {
         Browser browser = (Browser) source;
-        SelenideConfig config = new SelenideConfig()
+        final SelenideConfig config = new SelenideConfig()
                 .browser(browser.name().toLowerCase());
 
         return new SelenideDriver(config);

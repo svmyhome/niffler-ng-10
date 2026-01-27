@@ -6,7 +6,7 @@ import guru.qa.niffler.assertions.ImageAssertions;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.NonStaticBrowsersExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Epic("UI")
 @Feature("Navigation")
 @Story("Profile page")
-@ExtendWith(BrowserExtension.class)
+@ExtendWith(NonStaticBrowsersExtension.class)
 public class ProfileTest {
 
     private static final Config CFG = Config.getInstance();

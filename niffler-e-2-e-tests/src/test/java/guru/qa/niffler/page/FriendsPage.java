@@ -3,7 +3,6 @@ package guru.qa.niffler.page;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
@@ -29,7 +28,7 @@ public class FriendsPage extends BasePage<FriendsPage> {
         this.friendsTable = driver.$("#friends");
         this.requestsTable = driver.$("#requests");
         this.emptyTable = driver.$("#simple-tabpanel-friends");
-        this.searchField = new SearchField(driver, driver.$("#stat"));
+        this.searchField = new SearchField(driver, driver.$("form.MuiBox-root"));
         this.sectionHeaders = driver.$$("h2");
         friendsTablesCells = friendsTable.$$("tr td");
         requestsTablesCells = requestsTable.$$("tr td");
@@ -51,20 +50,20 @@ public class FriendsPage extends BasePage<FriendsPage> {
 
     @Step("User accept friendship request")
     public @Nonnull FriendsPage acceptFriendRequest() {
-        $(byText("Accept")).click();
+        driver.$(byText("Accept")).click();
         return this;
     }
 
     @Step("Check user have friend")
     public @Nonnull FriendsPage verifyUserHaveFriend() {
-        $(byText("Unfriend")).shouldBe(visible);
+        driver.$(byText("Unfriend")).shouldBe(visible);
         return this;
     }
 
     @Step("User decline friendship request")
     public @Nonnull FriendsPage declineFriendRequest() {
-        $(byText("Decline")).click();
-        $("[role='dialog']").$$("button").findBy(text("Decline")).click();
+        driver.$(byText("Decline")).click();
+        driver.$("[role='dialog']").$$("button").findBy(text("Decline")).click();
         return this;
     }
 

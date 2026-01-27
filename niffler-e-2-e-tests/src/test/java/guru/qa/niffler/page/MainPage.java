@@ -22,10 +22,7 @@ public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection tableRows;
     private final ElementsCollection sectionHeaders;
     private final ElementsCollection spendingLegends;
-
     private final SelenideElement mainPage;
-
-    //  private final Header header = new Header();
     private final SearchField search;
     private final SpendingsHistoryTable spendingTable;
     private final StatComponent statComponent;
