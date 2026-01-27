@@ -2,7 +2,7 @@ package guru.qa.niffler.page.component;
 
 import static com.codeborne.selenide.Condition.empty;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
@@ -11,13 +11,20 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class SearchField extends BaseComponent<SearchField> {
 
-  private final SelenideElement self = $("form.MuiBox-root");
-  private final SelenideElement searchField = self.$("[placeholder='Search']"),
-      clearSearchField = self.$("#input-clear");
+  private final SelenideElement self;
+  private final SelenideElement searchField,
+      clearSearchField;
 
-  public SearchField() {
-    super($("form.MuiBox-root"));
-  }
+    public SearchField(SelenideDriver driver, SelenideElement self) {
+        super(driver, self);
+        this.self = driver.$("form.MuiBox-root");
+        this.searchField = self.$("[placeholder='Search']");
+        this.clearSearchField = self.$("#input-clear");
+    }
+
+//    public SearchField() {
+//    super($("form.MuiBox-root"));
+//  }
 
   @Step("Fill search field {query}")
   public @Nonnull SearchField search(String query) {

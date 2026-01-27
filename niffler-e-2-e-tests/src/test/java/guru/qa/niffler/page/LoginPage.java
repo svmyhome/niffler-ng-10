@@ -1,7 +1,6 @@
 package guru.qa.niffler.page;
 
 import static com.codeborne.selenide.Condition.text;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
@@ -28,21 +27,12 @@ public class LoginPage extends BasePage<LoginPage> {
         this.formError = driver.$(".form__error");
     }
 
-    public LoginPage() {
-        this.usernameInput = Selenide.$("#username");
-        this.passwordInput = Selenide.$("#password");
-        this.submitBtn = Selenide.$("#login-button");
-        this.registerBtn = Selenide.$("#register-button");
-        this.checkLogin = Selenide.$(".header");
-        this.formError = Selenide.$(".form__error");
-    }
-
     @Step("Login user with credentials")
     public @Nonnull MainPage login(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
         submitBtn.click();
-        return new MainPage();
+        return new MainPage(driver);
     }
 
     @Step("Login with bad credential")
@@ -56,7 +46,7 @@ public class LoginPage extends BasePage<LoginPage> {
     @Step("Switch to register page")
     public @Nonnull RegistrationPage switchToRegisterPage() {
         registerBtn.click();
-        return new RegistrationPage();
+        return new RegistrationPage(driver);
     }
 
     @Step("Successfully opened profile")

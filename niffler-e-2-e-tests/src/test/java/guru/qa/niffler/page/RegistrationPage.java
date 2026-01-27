@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
@@ -10,22 +11,33 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class RegistrationPage extends BasePage<RegistrationPage> {
 
-  private final SelenideElement usernameInput = $("#username"),
-      passwordInput = $("#password"),
-      passwordSubmitInput = $("#passwordSubmit"),
-      submitBtn = $("#register-button"),
-      checkRegisterResult = $(".form__paragraph_success"),
-      switchToLogin = $(".form_sign-in"),
-      formError = $(".form__error");
+  private final SelenideElement usernameInput,
+      passwordInput,
+      passwordSubmitInput,
+      submitBtn,
+      checkRegisterResult,
+      switchToLogin,
+      formError;
 
-  @Step("Register user with credentials")
+    public RegistrationPage(SelenideDriver driver) {
+        super(driver);
+        this.usernameInput = $("#username");
+                this.passwordInput = $("#password");
+                this.passwordSubmitInput = $("#passwordSubmit");
+                this.submitBtn = $("#register-button");
+                this.checkRegisterResult = $(".form__paragraph_success");
+                this.switchToLogin = $(".form_sign-in");
+                this.formError = $(".form__error");
+    }
+
+    @Step("Register user with credentials")
   public @Nonnull RegistrationPage registerUser(String username, String password,
       String passwordSubmit) {
     setUsername(username)
         .setPassword(password)
         .setPasswordSubmit(passwordSubmit)
         .submitRegistration();
-    return new RegistrationPage();
+    return new RegistrationPage(driver);
   }
 
   @Step("Set username: '{username}'")
@@ -65,6 +77,6 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
   @Step("Switch to login page")
   public @Nonnull LoginPage switchToLoginPage() {
     switchToLogin.click();
-    return new LoginPage();
+    return new LoginPage(driver);
   }
 }

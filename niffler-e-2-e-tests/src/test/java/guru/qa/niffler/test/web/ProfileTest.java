@@ -34,7 +34,8 @@ public class ProfileTest {
     @DisplayName("Profile name should be editable")
     public void profileNameShouldBeEditable(UserJson user) {
         String name = "Ivan";
-        driver.open(CFG.frontUrl(), LoginPage.class)
+        driver.open(CFG.frontUrl());
+        new LoginPage(driver)
                 .login(user.username(), user.testData().password())
                 .openProfile()
                 .checkProfileIsDisplayed()
