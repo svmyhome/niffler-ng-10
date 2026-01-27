@@ -24,7 +24,7 @@ import org.openqa.selenium.WebElement;
 @ParametersAreNonnullByDefault
 public class SpendingConditions {
 
-    public static WebElementsCondition spendsContains(RowSpend... expectedSpends) {
+    public static WebElementsCondition spendsContainsAnyOrder(RowSpend... expectedSpends) {
         return new WebElementsCondition() {
 
             private final String expectedResult = Arrays.stream(expectedSpends)

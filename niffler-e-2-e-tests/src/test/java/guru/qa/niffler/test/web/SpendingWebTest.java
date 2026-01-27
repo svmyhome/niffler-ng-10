@@ -215,8 +215,8 @@ public class SpendingWebTest {
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
         statComponent.checkBubbles(
-                new Bubble(Color.yellow, "Машина 300 ₽"),
-                new Bubble(Color.green, "Книги 200 ₽")
+                new Bubble(Color.YELLOW, "Машина 300 ₽"),
+                new Bubble(Color.GREEN, "Книги 200 ₽")
         );
     }
 
@@ -246,7 +246,7 @@ public class SpendingWebTest {
         Selenide.sleep(4000);
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
-        statComponent.checkBubbles(new Bubble(Color.yellow, "Книги 200 ₽"));
+        statComponent.checkBubbles(new Bubble(Color.YELLOW, "Книги 200 ₽"));
     }
 
     @User(
@@ -277,8 +277,8 @@ public class SpendingWebTest {
         ImageAssertions.checkScreenshotMatches(expected,
                 statComponent.getChartScreenshot());
         statComponent.checkBubbles(
-                new Bubble(Color.yellow, "Машина 1000 ₽"),
-                new Bubble(Color.green, "Книги 200 ₽")
+                new Bubble(Color.YELLOW, "Машина 1000 ₽"),
+                new Bubble(Color.GREEN, "Книги 200 ₽")
         );
     }
 
@@ -307,8 +307,8 @@ public class SpendingWebTest {
                 .getStatComponent();
 
         statComponent.checkBubblesInAnyOrder(
-                new Bubble(Color.yellow, "Машина 1000 ₽"),
-                new Bubble(Color.green, "Книги 200 ₽")
+                new Bubble(Color.YELLOW, "Машина 1000 ₽"),
+                new Bubble(Color.GREEN, "Книги 200 ₽")
         );
     }
 
@@ -337,8 +337,8 @@ public class SpendingWebTest {
                 .getStatComponent();
 
         statComponent.checkBubblesContains(
-                new Bubble(Color.yellow, "Машина 1000 ₽"),
-                new Bubble(Color.green, "Книги 200 ₽")
+                new Bubble(Color.YELLOW, "Машина 1000 ₽"),
+                new Bubble(Color.GREEN, "Книги 200 ₽")
         );
     }
 

@@ -31,10 +31,6 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
   public SpendingsHistoryTable() {
     super($("#spendings"));
   }
-//  public SpendingTable() {
-//    super($("#spendings .MuiTableContainer-root"));
-//  }
-
 
   @Step("Select search period {period}")
   public @Nonnull SpendingsHistoryTable selectPeriod(DataFilterValues period) {
@@ -93,7 +89,7 @@ public class SpendingsHistoryTable extends BaseComponent<SpendingsHistoryTable> 
 
   @Step("Check spends from table")
   public @Nonnull SpendingsHistoryTable checkSpendsContains(RowSpend... expectedSpends) {
-    spendingRows.should(SpendingConditions.spendsContains(expectedSpends));
+    spendingRows.should(SpendingConditions.spendsContainsAnyOrder(expectedSpends));
     return this;
   }
   @Step("Check spends from table")
