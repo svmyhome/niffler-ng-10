@@ -88,17 +88,19 @@ public class ScreenShotTestExtension implements BeforeEachCallback, AfterEachCal
     if (getExpected() == null) {
       setExpected(expectedFromAnnotation);
     }
-    ScreenDif screenDif = new ScreenDif(
-        "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
-        "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
-        "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
-    );
+    if (throwable.getMessage().contains("Screenshot comparison failure")) {
+      ScreenDif screenDif = new ScreenDif(
+          "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
+          "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
+          "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
+      );
 
-    Allure.addAttachment(
-        "Screenshot diff",
-        "application/vnd.allure.image.diff",
-        objectMapper.writeValueAsString(screenDif)
-    );
+      Allure.addAttachment(
+          "Screenshot diff",
+          "application/vnd.allure.image.diff",
+          objectMapper.writeValueAsString(screenDif)
+      );
+    }
     throw throwable;
   }
 
