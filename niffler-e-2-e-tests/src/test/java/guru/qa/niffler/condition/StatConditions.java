@@ -22,6 +22,13 @@ import org.openqa.selenium.WebElement;
 @ParametersAreNonnullByDefault
 public class StatConditions {
 
+    private static CheckResult createMismatchResult(String expected, List<String> actual) {
+        String actualString = actual.toString();
+        String message = String.format("List mismatch (expected: %s, actual: %s)",
+                expected, actualString);
+        return rejected(message, actualString);
+    }
+
   @Nonnull
   public static WebElementCondition color(Color expectedColor) {
     return new WebElementCondition("color") {
@@ -70,15 +77,20 @@ public class StatConditions {
         }
 
         if (!passed) {
-          final String actualRgba = actualRgbaList.toString();
-          final String message = String.format("List colors mismatch (expected: %s, actual: %s)",
-              expectedRgba, actualRgba);
-          return rejected(message, actualRgba);
+            return StatConditions.createMismatchResult(expectedRgba, actualRgbaList);
         }
         return accepted();
       }
 
-      @Override
+        @NotNull
+        private CheckResult createMismatchResult(List<String> actualRgbaList) {
+            final String actualRgba = actualRgbaList.toString();
+            final String message = String.format("List colors mismatch (expected: %s, actual: %s)",
+                expectedRgba, actualRgba);
+            return rejected(message, actualRgba);
+        }
+
+        @Override
       @Nonnull
       public String toString() {
         return expectedRgba;
@@ -123,10 +135,7 @@ public class StatConditions {
           }
         }
         if (!passed) {
-          final String actualRgba = actualRgbaList.toString();
-          final String message = String.format("List bubbles mismatch (expected: %s, actual: %s)",
-              expectedResult, actualRgba);
-          return rejected(message, actualRgba);
+            return StatConditions.createMismatchResult(expectedResult, actualRgbaList);
         }
         return accepted();
       }
@@ -244,12 +253,8 @@ public class StatConditions {
         if (actualSet.containsAll(expectedList)) {
           return accepted();
         } else {
-          final String message = String.format(
-              "List bubbles mismatch (expected: %s, actual: %s)",
-              expectedResult,
-              actualRgbaList
-          );
-          return rejected(message, actualRgbaList.toString());
+          return StatConditions.createMismatchResult(expectedResult, actualRgbaList);
+
         }
       }
 
@@ -260,5 +265,4 @@ public class StatConditions {
       }
     };
   }
-
 }
