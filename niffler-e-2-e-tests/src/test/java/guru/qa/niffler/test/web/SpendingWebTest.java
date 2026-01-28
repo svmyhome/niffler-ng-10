@@ -307,7 +307,8 @@ public class SpendingWebTest {
 
         statComponent.checkBubblesInAnyOrder(
                 new Bubble(Color.YELLOW, "Машина 1000 ₽"),
-                new Bubble(Color.GREEN, "Книги 200 ₽")
+                new Bubble(Color.GREEN, "Книги 200 ₽"),
+                new Bubble(Color.RED, "Книги 200 ₽")
         );
     }
 

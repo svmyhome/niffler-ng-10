@@ -106,13 +106,7 @@ public class StatConditions {
                     throw new IllegalArgumentException("No expected bubbles given");
                 }
                 if (expectedBubbles.length!=elements.size()) {
-                    final String message = String.format("List size mismatch (expected: %s, actual: %s)",
-                            expectedBubbles.length, elements.size());
-                    List<String> actualColors = elements.stream()
-                            .map(
-                                    el -> el.getCssValue("background-color") + " : " + el.getText())
-                            .toList();
-                    return rejected(message, actualColors.toString());
+                    return bubblesMismatchResults(elements, expectedBubbles);
                 }
                 boolean passed = true;
                 List<String> actualRgbaList = new ArrayList<>();
@@ -157,14 +151,8 @@ public class StatConditions {
                 if (ArrayUtils.isEmpty(expectedBubbles)) {
                     throw new IllegalArgumentException("No expected bubbles given");
                 }
-                if (expectedBubbles.length!=elements.size()) {
-                    final String message = String.format("List size mismatch (expected: %s, actual: %s)",
-                            expectedBubbles.length, elements.size());
-                    List<String> actualRgbaListErr = elements.stream()
-                            .map(element ->
-                                    element.getCssValue("background-color") + ": " + element.getText())
-                            .toList();
-                    return rejected(message, actualRgbaListErr.toString());
+                if (expectedBubbles.length!= elements.size()) {
+                    return bubblesMismatchResults(elements, expectedBubbles);
                 }
 
                 Set<Bubble> actualSet = new HashSet<>();
@@ -233,6 +221,16 @@ public class StatConditions {
         String message = String.format("List mismatch (expected: %s, actual: %s)",
                 expected, actualString);
         return rejected(message, actualString);
+    }
+    private @Nonnull
+    static CheckResult bubblesMismatchResults(List<WebElement> elements, Bubble... expectedBubbles) {
+        final String message = String.format("List size mismatch (expected: %s, actual: %s)",
+                expectedBubbles.length, elements.size());
+        List<String> actualRgbaListErr = elements.stream()
+                .map(element ->
+                        element.getCssValue("background-color") + ": " + element.getText())
+                .toList();
+        return rejected(message, actualRgbaListErr.toString());
     }
 
     private static void setActualResult(Set<Bubble> actualSet, List<String> actualRgbaList, List<WebElement> elements) {
