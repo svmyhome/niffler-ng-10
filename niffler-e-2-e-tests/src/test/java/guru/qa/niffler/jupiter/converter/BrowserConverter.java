@@ -1,8 +1,6 @@
 package guru.qa.niffler.jupiter.converter;
 
 
-import static com.codeborne.selenide.Browsers.CHROME;
-import static com.codeborne.selenide.Browsers.FIREFOX;
 import com.codeborne.selenide.SelenideConfig;
 import com.codeborne.selenide.SelenideDriver;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -16,17 +14,7 @@ public class BrowserConverter implements ArgumentConverter {
     @Override
     public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
         Browser browser = (Browser) source;
-        String browserName = browser.name();
-        if (browserName.contains(CHROME)) {
-            browserName = CHROME.toLowerCase();
-        } else if (browserName.contains(FIREFOX)) {
-            browserName = FIREFOX.toLowerCase();
-        }
-        final SelenideConfig config = new SelenideConfig()
-                .browser(browserName)
-                .pageLoadStrategy("eager")
-                .timeout(6000L);
-        return new SelenideDriver(config);
+        return new SelenideDriver(browser.config);
     }
 
     @Override
