@@ -14,21 +14,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 @ExtendWith({
-    UserExtension.class,
-    CategoryExtension.class,
-    SpendingExtension.class
+        UserExtension.class,
+        CategoryExtension.class,
+        SpendingExtension.class
 })
 public @interface User {
 
-  String username() default "";
+    String username() default "";
 
-  int incomeInvitations() default 0;
+    int incomeInvitations() default 0;
 
-  int outcomeInvitations() default 0;
+    int outcomeInvitations() default 0;
 
-  int friends() default 0;
+    int friends() default 0;
 
-  Category[] categories() default {};
+    Category[] categories() default {};
 
-  Spending[] spendings() default {};
+    Spending[] spendings() default {};
 }

@@ -9,20 +9,20 @@ import retrofit2.Response;
 @ParametersAreNonnullByDefault
 public final class AuthApiClient extends RestClient {
 
-  private final AuthApi authApi;
+    private final AuthApi authApi;
 
-  public AuthApiClient() {
-    super(CFG.authUrl(), true);
-    this.authApi = create(AuthApi.class);
-  }
+    public AuthApiClient() {
+        super(CFG.authUrl(), true);
+        this.authApi = create(AuthApi.class);
+    }
 
-  public Response<Void> register(String username, String password) throws IOException {
-    authApi.requestRegisterForm().execute();
-    return authApi.register(
-        username,
-        password,
-        password,
-        ThreadSafeCookieStore.INSTANCE.xsrfCookie()
-    ).execute();
-  }
+    public Response<Void> register(String username, String password) throws IOException {
+        authApi.requestRegisterForm().execute();
+        return authApi.register(
+                username,
+                password,
+                password,
+                ThreadSafeCookieStore.INSTANCE.xsrfCookie()
+        ).execute();
+    }
 }

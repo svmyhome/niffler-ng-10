@@ -7,9 +7,12 @@
   <!-- Highlight.js -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
   <script>
     hljs.highlightAll();
   </script>
@@ -20,11 +23,13 @@
       font-size: 13px;
       color: #24292f;
     }
+
     h4 {
       margin: 16px 0 8px;
       border-bottom: 1px solid #d0d7de;
       padding-bottom: 4px;
     }
+
     .badge {
       display: inline-block;
       padding: 2px 8px;
@@ -34,24 +39,29 @@
       background: #0969da;
       color: #fff;
     }
+
     .method {
       background: #1a7f37;
     }
+
     .url {
       font-family: monospace;
       word-break: break-all;
     }
+
     pre {
       background: #f6f8fa;
       padding: 12px;
       border-radius: 6px;
       overflow-x: auto;
     }
+
     table {
       border-collapse: collapse;
       width: 100%;
       margin-top: 8px;
     }
+
     th, td {
       text-align: left;
       padding: 6px 8px;
@@ -59,11 +69,13 @@
       font-family: monospace;
       vertical-align: top;
     }
+
     th {
       background: #f6f8fa;
       font-weight: 600;
       width: 220px;
     }
+
     .empty {
       color: #6e7781;
       font-style: italic;

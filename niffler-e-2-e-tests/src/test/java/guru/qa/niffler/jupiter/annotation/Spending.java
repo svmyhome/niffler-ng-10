@@ -13,11 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(SpendingExtension.class)
 public @interface Spending {
 
-  String category();
+    String category();
 
-  String description();
+    String description();
 
-  double amount();
+    double amount();
 
-  CurrencyValues currency();
+    CurrencyValues currency();
 }

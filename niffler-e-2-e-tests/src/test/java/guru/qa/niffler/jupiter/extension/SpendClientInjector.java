@@ -8,14 +8,14 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 public class SpendClientInjector implements TestInstancePostProcessor {
 
-  @Override
-  public void postProcessTestInstance(Object testInstance, ExtensionContext context)
-      throws Exception {
-    for (Field field : testInstance.getClass().getDeclaredFields()) {
-      if (field.getType().isAssignableFrom(SpendClient.class)) {
-        field.setAccessible(true);
-        field.set(testInstance, new SpendDbClient());
-      }
+    @Override
+    public void postProcessTestInstance(Object testInstance, ExtensionContext context)
+            throws Exception {
+        for (Field field : testInstance.getClass().getDeclaredFields()) {
+            if (field.getType().isAssignableFrom(SpendClient.class)) {
+                field.setAccessible(true);
+                field.set(testInstance, new SpendDbClient());
+            }
+        }
     }
-  }
 }

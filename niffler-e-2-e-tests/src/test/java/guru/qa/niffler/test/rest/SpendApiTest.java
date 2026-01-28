@@ -20,52 +20,52 @@ import org.junit.jupiter.api.Test;
 @Story("Spending Management")
 public class SpendApiTest {
 
-  private final SpendClient spendApi = new SpendApiClient();
+    private final SpendClient spendApi = new SpendApiClient();
 
-  @Test
-  @DisplayName("API: Should creat new spend")
-  public void shouldCreateSpendFromApi() {
-    CategoryEntity categoryEntity = new CategoryEntity();
-    categoryEntity.setName("1111111222qaa");
-    categoryEntity.setUsername("duck");
-    categoryEntity.setArchived(false);
+    @Test
+    @DisplayName("API: Should creat new spend")
+    public void shouldCreateSpendFromApi() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setName("1111111222qaa");
+        categoryEntity.setUsername("duck");
+        categoryEntity.setArchived(false);
 
-    SpendEntity entity = new SpendEntity();
-    entity.setUsername("duck");
-    entity.setCurrency(CurrencyValues.RUB);
-    entity.setSpendDate(new Date());
-    entity.setAmount(123.0);
-    entity.setDescription("903");
-    entity.setCategory(categoryEntity);
-    SpendJson spendJson = SpendJson.fromEntity(entity);
-    spendApi.create(spendJson);
-  }
+        SpendEntity entity = new SpendEntity();
+        entity.setUsername("duck");
+        entity.setCurrency(CurrencyValues.RUB);
+        entity.setSpendDate(new Date());
+        entity.setAmount(123.0);
+        entity.setDescription("903");
+        entity.setCategory(categoryEntity);
+        SpendJson spendJson = SpendJson.fromEntity(entity);
+        spendApi.create(spendJson);
+    }
 
-  @Test
-  @DisplayName("API: Should creat new category")
-  public void shouldCreateCategoryFromApi() {
-    CategoryEntity categoryEntity = new CategoryEntity();
-    categoryEntity.setName("1298761543218");
-    categoryEntity.setUsername("mouse");
-    categoryEntity.setArchived(false);
+    @Test
+    @DisplayName("API: Should creat new category")
+    public void shouldCreateCategoryFromApi() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setName("1298761543218");
+        categoryEntity.setUsername("mouse");
+        categoryEntity.setArchived(false);
 
-    spendApi.createCategory(CategoryJson.fromEntity(categoryEntity));
-  }
+        spendApi.createCategory(CategoryJson.fromEntity(categoryEntity));
+    }
 
-  @Test
-  @DisplayName("API: Should find existing spending by ID and username")
-  public void shouldFindSpendingByIdAndUsernameFromApi() {
-    SpendApiClient spendApiClient = new SpendApiClient();
-    spendApiClient.findByIdAndUsername(
-        UUID.fromString("5a39bd6e-ebe9-4dff-a98b-535fcf844969"),
-        "duck"
-    );
-  }
+    @Test
+    @DisplayName("API: Should find existing spending by ID and username")
+    public void shouldFindSpendingByIdAndUsernameFromApi() {
+        SpendApiClient spendApiClient = new SpendApiClient();
+        spendApiClient.findByIdAndUsername(
+                UUID.fromString("5a39bd6e-ebe9-4dff-a98b-535fcf844969"),
+                "duck"
+        );
+    }
 
-  @Test
-  @DisplayName("API: Should find existing category by username and name")
-  public void shouldFindCategoryByUsernameAndSpendNameFromApi() {
-    spendApi.findCategoryByUsernameAndSpendName(
-        "Машина", "duck");
-  }
+    @Test
+    @DisplayName("API: Should find existing category by username and name")
+    public void shouldFindCategoryByUsernameAndSpendNameFromApi() {
+        spendApi.findCategoryByUsernameAndSpendName(
+                "Машина", "duck");
+    }
 }
