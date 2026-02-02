@@ -2,37 +2,35 @@ package guru.qa.niffler.page;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.ScrollIntoViewOptions.Block.start;
+import static com.codeborne.selenide.ScrollIntoViewOptions.instant;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.data.constants.DataFilterValues;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
-import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.SpendingsHistoryTable;
+import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.imageio.ImageIO;
-import utils.ScreenDiffResult;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
 
-  private final ElementsCollection tableRows = $$("#spendings tr"),
+  private final ElementsCollection tableRows = $("#spendings").$$("tr"),
       sectionHeaders = $$("h2"),
-      spendingLegends = $$("#legend-container li");
+      spendingLegends = $("#legend-container").$$("li");
 
-  private final SelenideElement mainPage = $("#root"),
-      chartImage = $("canvas[role='img']");
+  private final SelenideElement mainPage = $("#root");
 
   private final Header header = new Header();
   private final SearchField search = new SearchField();
-  private final SpendingTable spendingTable = new SpendingTable();
+  private final SpendingsHistoryTable spendingTable = new SpendingsHistoryTable();
+  private final StatComponent statComponent = new StatComponent();
+  private final SpendingsHistoryTable spendingsTable = new SpendingsHistoryTable();
 
   @Step("Edit spending: '{description}'")
   public @Nonnull EditSpendingPage editSpending(String description) {
@@ -143,26 +141,21 @@ public class MainPage extends BasePage<MainPage> {
     return this;
   }
 
-  @Step("Check spending chart picture")
-  public @Nonnull MainPage checkSpendingChartPictureIsCorrect(
-      BufferedImage expected) {
-    Selenide.sleep(5000);
-    BufferedImage actual = null;
-    try {
-      actual = ImageIO.read(chartImage.screenshot());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    assertFalse(new ScreenDiffResult(
-        expected,
-        actual
-    ));
-    return this;
-  }
-
   @Step("Spending legend should have'{description}'")
   public @Nonnull MainPage checkThatSpendingsLengendContains(String description) {
     spendingLegends.find(text(description)).should(visible);
     return this;
+  }
+
+  @Step("Scroll to and get statistics component")
+  public @Nonnull StatComponent getStatComponent() {
+    statComponent.getSelf().scrollIntoView(instant().block(start));
+    return statComponent;
+  }
+
+  @Step("Scroll to and get History of spendings  component")
+  public @Nonnull SpendingsHistoryTable getSpendingsHistoryComponent() {
+    spendingsTable.getSelf().scrollIntoView(instant().block(start));
+    return spendingsTable;
   }
 }

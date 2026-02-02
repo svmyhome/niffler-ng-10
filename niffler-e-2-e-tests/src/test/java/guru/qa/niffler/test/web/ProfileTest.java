@@ -1,12 +1,14 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.assertions.ImageAssertions;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.ProfilePage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -58,13 +60,15 @@ public class ProfileTest {
   @ScreenShotTest(value = "img/avatar.jpg")
   @DisplayName("User can save valid picture in the profile")
   public void shouldSaveValidPictureInProfile(UserJson user, BufferedImage expected) throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
+    ProfilePage getProfile = Selenide.open(CFG.frontUrl(), LoginPage.class)
         .login(user.username(), user.testData().password())
         .openProfile()
         .checkProfileIsDisplayed()
         .uploadNewPictureInProfile("avatar.jpg")
         .saveChanges()
-        .checkSnackBarText("Profile successfully updated")
-        .checkProfilePictureIsCorrect(expected);
+        .checkSnackBarText("Profile successfully updated");
+
+    ImageAssertions.checkScreenshotMatches(expected,
+        getProfile.captureAvatarScreenshot());
   }
 }
