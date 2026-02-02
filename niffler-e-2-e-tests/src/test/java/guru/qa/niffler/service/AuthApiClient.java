@@ -3,7 +3,6 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.apache.commons.lang3.StringUtils;
 import retrofit2.Response;
@@ -35,7 +34,7 @@ public final class AuthApiClient extends RestClient {
         ).execute();
     }
 
-    public void authorize(String codeChallenge) throws IOException, NoSuchAlgorithmException {
+    public void authorize(String codeChallenge) throws IOException {
         authApi.authorize(
                 RESPONSE_TYPE,
                 CLIENT_ID,
@@ -51,15 +50,15 @@ public final class AuthApiClient extends RestClient {
         return StringUtils.substringAfter(response.raw().request().url().toString(), "code=");
     }
 
-    public String token(String code, String code_verifier) throws IOException {
+    public String token(String code, String codeVerifier) throws IOException {
         var response = authApi.token(
                 code,
                 REDIRECT_URL,
                 CLIENT_ID,
-                code_verifier,
+                codeVerifier,
                 GRANT_TYPE
         ).execute();
-        if(response.body() != null){
+        if (response.body()!=null) {
             return response.body().path("id_token").asText();
         }
         return "";
