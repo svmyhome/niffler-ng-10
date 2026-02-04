@@ -6,13 +6,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class OauthUtils {
+public class OAuthUtils {
 
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     public static String generateCodeVerifier() {
         byte[] bytes = new byte[32];
-        SECURE_RANDOM.nextBytes(bytes);
+        secureRandom.nextBytes(bytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 

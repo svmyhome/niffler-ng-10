@@ -1,5 +1,6 @@
 package guru.qa.niffler.service;
 
+import static org.apache.commons.lang.ArrayUtils.isNotEmpty;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
@@ -18,49 +19,60 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @ParametersAreNonnullByDefault
 public abstract class RestClient {
 
-  protected static final Config CFG = Config.getInstance();
+    protected static final Config CFG = Config.getInstance();
 
-  private final OkHttpClient okHttpClient;
-  private final Retrofit retrofit;
+    private final OkHttpClient okHttpClient;
+    private final Retrofit retrofit;
 
 
-  public RestClient(String baseUrl) {
-    this(baseUrl, JacksonConverterFactory.create(), false, null);
-  }
-
-  public RestClient(String baseUrl, boolean followRedirect) {
-    this(baseUrl, JacksonConverterFactory.create(), followRedirect, null);
-  }
-
-  public RestClient(String baseUrl, Converter.Factory converterFactory, boolean followRedirect,
-      @Nullable Interceptor... interceptors) {
-    final OkHttpClient.Builder builder = new OkHttpClient
-        .Builder()
-        .followRedirects(followRedirect)
-        .cookieJar(new JavaNetCookieJar(new CookieManager(
-                ThreadSafeCookieStore.INSTANCE,
-                CookiePolicy.ACCEPT_ALL
-            )
-            )
-        );
-    if (interceptors != null) {
-      for (Interceptor interceptor : interceptors) {
-        builder.addNetworkInterceptor(interceptor);
-      }
+    public RestClient(String baseUrl) {
+        this(baseUrl, JacksonConverterFactory.create(), false, HttpLoggingInterceptor.Level.HEADERS, null);
     }
 
-    builder.addNetworkInterceptor(
-        new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
-    builder.addNetworkInterceptor(new AllureOkHttp3());
-    this.okHttpClient = builder.build();
-    this.retrofit = new Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(converterFactory)
-        .client(okHttpClient)
-        .build();
-  }
+    public RestClient(String baseUrl, boolean followRedirect) {
+        this(baseUrl, JacksonConverterFactory.create(), followRedirect, HttpLoggingInterceptor.Level.HEADERS, null);
+    }
 
-  public <T> T create(Class<T> serviceClass) {
-    return retrofit.create(serviceClass);
-  }
+    public RestClient(String baseUrl, boolean followRedirect, @Nullable Interceptor... interceptors) {
+        this(baseUrl, JacksonConverterFactory.create(), followRedirect, HttpLoggingInterceptor.Level.HEADERS, interceptors);
+    }
+
+    public RestClient(String baseUrl, Converter.Factory converterFactory, boolean followRedirect,
+                      HttpLoggingInterceptor.Level level, @Nullable Interceptor... interceptors) {
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+                .followRedirects(followRedirect);
+
+        if (isNotEmpty(interceptors)) {
+            for (Interceptor interceptor : interceptors) {
+                clientBuilder.addNetworkInterceptor(interceptor);
+            }
+        }
+
+        clientBuilder
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(level))
+                .addNetworkInterceptor(
+                        new AllureOkHttp3()
+                                .setRequestTemplate("http-request.ftl")
+                                .setResponseTemplate("http-response.ftl")
+                )
+                .cookieJar(
+                        new JavaNetCookieJar(
+                                new CookieManager(
+                                        ThreadSafeCookieStore.INSTANCE,
+                                        CookiePolicy.ACCEPT_ALL
+                                )
+                        )
+                );
+
+        this.okHttpClient = clientBuilder.build();
+        this.retrofit = new Retrofit.Builder()
+                .client(this.okHttpClient)
+                .baseUrl(baseUrl)
+                .addConverterFactory(converterFactory)
+                .build();
+    }
+
+    public <T> T create(Class<T> serviceClass) {
+        return retrofit.create(serviceClass);
+    }
 }

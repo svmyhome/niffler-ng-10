@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.db;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
