@@ -125,4 +125,15 @@ public final class UserApiClient extends RestClient implements UserClient {
   public List<UserJson> getAllUsers(String username) {
     return getAllUsers(username, null);
   }
+
+  @Step("Get all friends")
+  public List<UserJson> getAllFriends(String username) {
+    List<UserJson> allFriends;
+    try {
+      allFriends = userApi.getFriends(username).execute().body();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return allFriends;
+  }
 }

@@ -13,6 +13,7 @@ import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.AuthApiClient;
 import guru.qa.niffler.service.SpendApiClient;
+import guru.qa.niffler.service.UserApiClient;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -27,6 +28,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
     public static final Config CFG = Config.getInstance();
     public final SpendApiClient spendApiClient = new SpendApiClient();
+    public final UserApiClient userApiClient = new UserApiClient();
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
             ApiLoginExtension.class);
@@ -61,13 +63,14 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                     } else {
                         List<CategoryJson> categories = spendApiClient.findAllCategories(apiLogin.username());
                         List<SpendJson> spends = spendApiClient.findSpendsByUserName(apiLogin.username());
+                        List<UserJson> allFriends = userApiClient.getAllFriends("duck");
                         UserJson fakeUser = new UserJson(
                                 apiLogin.username(),
                                 new TestData(
                                         apiLogin.password(),
                                         null,
                                         null,
-                                        null,
+                                        allFriends,
                                         categories,
                                         spends
                                 )

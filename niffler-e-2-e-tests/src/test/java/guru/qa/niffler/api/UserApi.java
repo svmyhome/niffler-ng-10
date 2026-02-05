@@ -33,8 +33,12 @@ public interface UserApi {
   @GET("internal/friends/all")
   Call<List<UserJson>> getFriends(
       @Query("username") String username,
-      @Query("searchQuery") String searchQuery
+      @Nullable @Query("searchQuery") String searchQuery
   );
+
+  default Call<List<UserJson>> getFriends(String username) {
+    return getFriends(username, null);
+  }
 
   @DELETE("internal/friends/all")
   Call<Void> removeFriends(

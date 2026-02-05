@@ -88,4 +88,13 @@ public class UserApiTest {
     assertThat(allUsers, hasSize(1));
   }
 
+  @User
+  @Test
+  @DisplayName("API: get all friends by User")
+  public void shouldReturnAllFriendsByUserFromApi(UserJson user) {
+    List<UserJson> allFriends = userApiClient.getAllFriends("duck");
+    assertThat(allFriends, hasSize(1));
+    System.out.println(allFriends);
+  }
+
 }
