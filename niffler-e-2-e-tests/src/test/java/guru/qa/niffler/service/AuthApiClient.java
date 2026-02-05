@@ -42,7 +42,7 @@ public final class AuthApiClient extends RestClient {
     final String codeChallenge = OAuthUtils.generateCodeChallenge(codeVerifier);
 
     @SneakyThrows
-    public String login(String username, String password){
+    public String login(String username, String password) {
         authApi.authorize(
                 RESPONSE_TYPE,
                 CLIENT_ID,
@@ -68,34 +68,4 @@ public final class AuthApiClient extends RestClient {
 
         return tokenResponse.body().get("id_token").asText();
     }
-
-//    public void authorize(String codeChallenge) throws IOException {
-//        authApi.authorize(
-//                RESPONSE_TYPE,
-//                CLIENT_ID,
-//                SCOPE,
-//                REDIRECT_URL,
-//                codeChallenge,
-//                CODE_CHALLENGE_METHOD
-//        ).execute();
-//    }
-//
-//    public String login(String username, String password) throws IOException {
-//        var response = authApi.login(username, password, ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")).execute();
-//        return StringUtils.substringAfter(response.raw().request().url().toString(), "code=");
-//    }
-//
-//    public String token(String code, String codeVerifier) throws IOException {
-//        var response = authApi.token(
-//                code,
-//                REDIRECT_URL,
-//                CLIENT_ID,
-//                codeVerifier,
-//                GRANT_TYPE
-//        ).execute();
-//        if (response.body()!=null) {
-//            return response.body().path("id_token").asText();
-//        }
-//        return "";
-//    }
 }

@@ -3,10 +3,10 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.model.user.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.ProfilePage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -27,13 +27,12 @@ public class MainTest {
   private static final Config CFG = Config.getInstance();
 
   @User
+  @ApiLogin
   @Test
   @DisplayName("User should be able to navigate from profile back to main page")
-  public void userShouldNavigateFromProfileToMainPage(UserJson user) {
+  public void userShouldNavigateFromProfileToMainPage() {
     Configuration.browser = Browser.FIREFOX.browserName();
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login(user.username(), user.testData().password())
-        .openProfile()
+    Selenide.open(ProfilePage.URL, ProfilePage.class)
         .checkProfileIsDisplayed()
         .goToMainPage()
         .mainPageShouldBeDisplayed();
