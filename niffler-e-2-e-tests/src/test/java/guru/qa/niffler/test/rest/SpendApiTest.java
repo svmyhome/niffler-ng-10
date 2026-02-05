@@ -11,6 +11,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,5 +68,21 @@ public class SpendApiTest {
   public void shouldFindCategoryByUsernameAndSpendNameFromApi() {
     spendApi.findCategoryByUsernameAndSpendName(
         "Машина", "duck");
+  }
+
+  @Test
+  @DisplayName("API: Should find existing spends by username")
+  public void shouldFindSpendsByUsernameFromApi() {
+    SpendApiClient spendApiClient = new SpendApiClient();
+    List<SpendJson> spends = spendApiClient.findSpendsByUserName("duck");
+    System.out.println(spends);
+  }
+
+  @Test
+  @DisplayName("API: Should find existing categories by username")
+  public void shouldFindCategoriesByUsernameFromApi() {
+    SpendApiClient spendApiClient = new SpendApiClient();
+    List<CategoryJson> categories = spendApiClient.findAllCategories("duck");
+    System.out.println(categories);
   }
 }

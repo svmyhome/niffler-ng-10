@@ -7,9 +7,13 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.AuthApiClient;
+import guru.qa.niffler.service.SpendApiClient;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -22,6 +26,7 @@ import org.openqa.selenium.Cookie;
 public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final Config CFG = Config.getInstance();
+    public final SpendApiClient spendApiClient = new SpendApiClient();
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
             ApiLoginExtension.class);
@@ -48,23 +53,25 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                 .ifPresent(apiLogin -> {
                     final UserJson userToLogin;
                     final Optional<UserJson> userFromUserExtension = UserExtension.createdUser();
-                    if("".equals(apiLogin.username()) || "".equals(apiLogin.password())) {
+                    if ("".equals(apiLogin.username()) || "".equals(apiLogin.password())) {
                         if (userFromUserExtension.isEmpty()) {
                             throw new IllegalStateException("@User must be present in case that @ApiLogin is empty!");
                         }
                         userToLogin = userFromUserExtension.get();
                     } else {
-                            UserJson fakeUser = new UserJson(
-                                    apiLogin.username(),
-                                    new TestData(
-                                            apiLogin.password(),
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null
-                                    )
-                            );
+                        List<CategoryJson> categories = spendApiClient.findAllCategories(apiLogin.username());
+                        List<SpendJson> spends = spendApiClient.findSpendsByUserName(apiLogin.username());
+                        UserJson fakeUser = new UserJson(
+                                apiLogin.username(),
+                                new TestData(
+                                        apiLogin.password(),
+                                        null,
+                                        null,
+                                        null,
+                                        categories,
+                                        spends
+                                )
+                        );
                         if (userFromUserExtension.isPresent()) {
                             throw new IllegalStateException("@User must not be present in case that @ApiLogin contains username or password!");
                         }
