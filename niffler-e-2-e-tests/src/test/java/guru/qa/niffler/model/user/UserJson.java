@@ -31,7 +31,6 @@ public record UserJson(
         String photo,
         @JsonProperty("photoSmall")
         String photoSmall,
-        @JsonIgnore
         @JsonProperty("friendshipStatus")
         FriendshipStatus friendshipStatus,
         @JsonIgnore

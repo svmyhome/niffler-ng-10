@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
@@ -90,8 +91,8 @@ public class UserApiTest {
         assertThat(allUsers, hasSize(1));
     }
 
-    @User(friends = 2)
     @Test
+    @ApiLogin(username = "mouse", password = "12345")
     @DisplayName("API: get all friends by User")
     public void shouldReturnAllFriendsByUserFromApi(UserJson user) {
         List<UserJson> allFriends = userApiClient.getAllFriends(user.username());
