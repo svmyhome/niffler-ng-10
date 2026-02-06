@@ -2,6 +2,7 @@ package guru.qa.niffler.test.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
@@ -96,7 +97,7 @@ public class UserApiTest {
     @DisplayName("API: get all friends by User")
     public void shouldReturnAllFriendsByUserFromApi(UserJson user) {
         List<UserJson> allFriends = userApiClient.getAllFriends(user.username());
-//        assertThat(allFriends, hasSize(1));
+        assertThat(allFriends.size(), greaterThanOrEqualTo(1));
         List<UserJson>  asdf = allFriends.stream().filter(f -> f.friendshipStatus() != null).toList();
         System.out.println(asdf);
         System.out.println(allFriends);

@@ -45,11 +45,6 @@ public class OAuthTest {
         Selenide.open(MainPage.URL, MainPage.class).mainPageShouldBeDisplayed();
     }
 
-//    @User(
-//            incomeInvitations= 2,
-//            outcomeInvitations = 2,
-//            friends = 2
-//    )
     @Test
     @ApiLogin(username = "mouse", password="12345")
     public void fakeUserApiLoginExtensionTest(@Token String token, UserJson user) {
