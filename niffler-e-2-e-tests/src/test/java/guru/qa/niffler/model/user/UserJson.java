@@ -4,8 +4,8 @@ package guru.qa.niffler.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +46,7 @@ public record UserJson(
     }
 
     @Nonnull
-    public static UserJson fromEntity(@Nonnull UserEntity entity) {
+    public static UserJson fromEntity(@Nonnull UserEntity entity, @Nullable FriendshipStatus friendshipStatus) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),
@@ -58,7 +58,7 @@ public record UserJson(
                         StandardCharsets.UTF_8):null,
                 entity.getPhotoSmall()!=null && entity.getPhotoSmall().length > 0 ? new String(
                         entity.getPhotoSmall(), StandardCharsets.UTF_8):null,
-                null,
+                friendshipStatus,
                 null
         );
     }

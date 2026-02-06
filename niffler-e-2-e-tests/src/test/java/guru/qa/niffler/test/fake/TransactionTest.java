@@ -81,7 +81,7 @@ public class TransactionTest {
         username,
         "12345"
     );
-    List<UserJson> friends = dbClient.createFriends(user, 1);
+    List<UserJson> friends = dbClient.addFriend(user, 1);
   }
 
   @ParameterizedTest

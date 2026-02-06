@@ -4,12 +4,15 @@ import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public record TestData(String password,
-                       List<UserJson> incomeInvitation,
-                       List<UserJson> outcomeInvitation,
-                       List<UserJson> friends,
-                       List<CategoryJson> categories,
-                       List<SpendJson> spendings) {
+                       @Nonnull List<UserJson> incomeInvitations,
+                       @Nonnull List<UserJson> outcomeInvitations,
+                       @Nonnull List<UserJson> friends,
+                       @Nonnull List<CategoryJson> categories,
+                       @Nonnull List<SpendJson> spendings) {
 
 }

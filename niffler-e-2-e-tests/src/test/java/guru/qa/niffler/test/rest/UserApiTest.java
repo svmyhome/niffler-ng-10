@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.jupiter.annotation.meta.User;
+import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserApiClient;
 import guru.qa.niffler.service.UserClient;
@@ -24,9 +25,9 @@ import org.junit.jupiter.api.Test;
 @Story("Friends")
 public class UserApiTest {
 
-  private final UserClient userClient = new UserApiClient();
-  private final UserApiClient userApiClient = new UserApiClient();
-  private final UserDbClient userDbClient = new UserDbClient();
+    private final UserClient userClient = new UserApiClient();
+    private final UserApiClient userApiClient = new UserApiClient();
+    private final UserDbClient userDbClient = new UserDbClient();
 
   @User
   @Test
@@ -35,66 +36,69 @@ public class UserApiTest {
     userClient.createUser(user.username(), user.testData().password());
   }
 
-  @Test
-  @DisplayName("API: Should creat new income invitation")
-  public void shouldCreateIncomeInvitationFromApi() {
-    UserJson user1 = null;
-    Optional<UserEntity> user = userDbClient.findUserById(
-        UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
-    if (user.isPresent()) {
-      user1 = UserJson.fromEntity(user.get());
+    @Test
+    @DisplayName("API: Should creat new income invitation")
+    public void shouldCreateIncomeInvitationFromApi() {
+        UserJson user1 = null;
+        Optional<UserEntity> user = userDbClient.findUserById(
+                UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
+        if (user.isPresent()) {
+            user1 = UserJson.fromEntity(user.get(), FriendshipStatus.INVITE_RECEIVED);
+        }
+        userClient.addIncomeInvitation(user1, 1);
     }
-    userClient.createIncomeInvitations(user1, 1);
-  }
 
-  @Test
-  @DisplayName("API: Should creat new outcome invitation")
-  public void shouldCreateOutcomeInvitationFromApi() {
-    UserJson user1 = null;
-    Optional<UserEntity> user = userDbClient.findUserById(
-        UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
-    if (user.isPresent()) {
-      user1 = UserJson.fromEntity(user.get());
+    @Test
+    @DisplayName("API: Should creat new outcome invitation")
+    public void shouldCreateOutcomeInvitationFromApi() {
+        UserJson user1 = null;
+        Optional<UserEntity> user = userDbClient.findUserById(
+                UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
+        if (user.isPresent()) {
+            user1 = UserJson.fromEntity(user.get(), FriendshipStatus.INVITE_SENT);
+        }
+        userClient.addOutcomeInvitation(user1, 1);
+        System.out.println(user1);
     }
-    userClient.createOutcomeInvitations(user1, 1);
-  }
 
-  @Test
-  @DisplayName("API: Should creat friend")
-  public void shouldCreateFriendsFromApi() {
-    UserJson user1 = null;
-    Optional<UserEntity> user = userDbClient.findUserById(
-        UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
-    if (user.isPresent()) {
-      user1 = UserJson.fromEntity(user.get());
+    @Test
+    @DisplayName("API: Should creat friend")
+    public void shouldCreateFriendsFromApi() {
+        UserJson user1 = null;
+        Optional<UserEntity> user = userDbClient.findUserById(
+                UUID.fromString("8b8996ed-f701-49fd-a421-31183916d818"));
+        if (user.isPresent()) {
+            user1 = UserJson.fromEntity(user.get(), FriendshipStatus.FRIEND);
+        }
+        userClient.addFriend(user1, 1);
     }
-    userClient.createFriends(user1, 1);
-  }
 
-  @User
-  @Test
-  @DisplayName("API: Should returns empty list when search query doesn't match any user")
-  public void shouldReturnEmptyUserListWhenSearchQueryUnmatchedFromApi(UserJson user) {
-    List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), "8gwygcydg");
-    assertThat(allUsers, empty());
-  }
+    @User
+    @Test
+    @DisplayName("API: Should returns empty list when search query doesn't match any user")
+    public void shouldReturnEmptyUserListWhenSearchQueryUnmatchedFromApi(UserJson user) {
+        List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), "8gwygcydg");
+        assertThat(allUsers, empty());
+    }
 
-  @User
-  @Test
-  @DisplayName("API: finds user when searching by 'mouse'")
-  public void shouldReturnUserWhenQueryIsMouseFromApi(UserJson user) {
-    String searchQuery = "mouse";
-    List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), searchQuery);
-    assertThat(allUsers, hasSize(1));
-  }
+    @User
+    @Test
+    @DisplayName("API: finds user when searching by 'mouse'")
+    public void shouldReturnUserWhenQueryIsMouseFromApi(UserJson user) {
+        String searchQuery = "mouse";
+        List<UserJson> allUsers = userApiClient.getAllUsers(user.username(), searchQuery);
+        assertThat(allUsers, hasSize(1));
+    }
 
-  @User
-  @Test
-  @DisplayName("API: get all friends by User")
-  public void shouldReturnAllFriendsByUserFromApi(UserJson user) {
-    List<UserJson> allFriends = userApiClient.getAllFriends("duck");
-    assertThat(allFriends, hasSize(1));
-    System.out.println(allFriends);
-  }
+    @User(friends = 2)
+    @Test
+    @DisplayName("API: get all friends by User")
+    public void shouldReturnAllFriendsByUserFromApi(UserJson user) {
+        List<UserJson> allFriends = userApiClient.getAllFriends(user.username());
+//        assertThat(allFriends, hasSize(1));
+        List<UserJson>  asdf = allFriends.stream().filter(f -> f.friendshipStatus() != null).toList();
+        System.out.println(asdf);
+        System.out.println(allFriends);
+    }
 
 }

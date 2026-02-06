@@ -70,7 +70,7 @@ public class FriendsWebTest {
         Selenide.open(FriendsPage.URL, FriendsPage.class)
                 .verifyMyFriendsRequestSectionDisplayed()
                 .verifyUserHasNewIncomingFriendRequest(
-                        user.testData().incomeInvitation().getFirst().username());
+                        user.testData().incomeInvitations().getFirst().username());
     }
 
     @User(
@@ -83,7 +83,7 @@ public class FriendsWebTest {
         Selenide.open(FriendsPage.URL, FriendsPage.class)
                 .verifyMyFriendsRequestSectionDisplayed()
                 .verifyUserHasNewIncomingFriendRequest(
-                        user.testData().incomeInvitation().getFirst().username())
+                        user.testData().incomeInvitations().getFirst().username())
                 .declineFriendRequest()
                 .verifyFriendsTableIsEmpty();
     }
@@ -98,7 +98,7 @@ public class FriendsWebTest {
         Selenide.open(FriendsPage.URL, FriendsPage.class)
                 .verifyMyFriendsRequestSectionDisplayed()
                 .verifyUserHasNewIncomingFriendRequest(
-                        user.testData().incomeInvitation().getFirst().username())
+                        user.testData().incomeInvitations().getFirst().username())
                 .acceptFriendRequest()
                 .verifyUserHaveFriend();
     }
@@ -114,6 +114,6 @@ public class FriendsWebTest {
                 .verifyFriendsTableIsEmpty()
                 .openAllPeoplePage()
                 .verifyUserHasNewOutcomingFriendRequest(
-                        user.testData().outcomeInvitation().getFirst().username());
+                        user.testData().outcomeInvitations().getFirst().username());
     }
 }

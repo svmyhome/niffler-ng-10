@@ -11,8 +11,6 @@ import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.AuthApiClient;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
 
@@ -23,7 +21,7 @@ public class OAuthTest {
 
     @Test
     @User
-    public void oauthRandomUserTest(UserJson user) throws IOException, NoSuchAlgorithmException {
+    public void oauthRandomUserTest(UserJson user) {
         String token = authApiClient.login(user.username(), user.testData().password());
         assertNotNull(token);
         System.out.println("Final Token: " + token);
@@ -31,7 +29,7 @@ public class OAuthTest {
 
 
     @Test
-    public void oauthUserTest() throws IOException, NoSuchAlgorithmException {
+    public void oauthUserTest() {
 
         String token = authApiClient.login("duck", "12345");
         assertNotNull(token);
@@ -47,8 +45,13 @@ public class OAuthTest {
         Selenide.open(MainPage.URL, MainPage.class).mainPageShouldBeDisplayed();
     }
 
+//    @User(
+//            incomeInvitations= 2,
+//            outcomeInvitations = 2,
+//            friends = 2
+//    )
     @Test
-    @ApiLogin(username = "duck", password="12345")
+    @ApiLogin(username = "mouse", password="12345")
     public void fakeUserApiLoginExtensionTest(@Token String token, UserJson user) {
         System.out.println(user);
         assertNotNull(token);

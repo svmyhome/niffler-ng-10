@@ -33,11 +33,11 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                     if ("".equals(usersAnno.username())) {
                         final String username = RandomDataUtils.randomUsername();
                         final UserJson user = userClient.createUser(username, DEFAULT_PASSWORD);
-                        List<UserJson> incomeInvitations = userClient.createIncomeInvitations(user,
+                        List<UserJson> incomeInvitations = userClient.addIncomeInvitation(user,
                                 usersAnno.incomeInvitations());
-                        List<UserJson> outcomeInvitations = userClient.createOutcomeInvitations(user,
+                        List<UserJson> outcomeInvitations = userClient.addOutcomeInvitation(user,
                                 usersAnno.outcomeInvitations());
-                        List<UserJson> friends = userClient.createFriends(user, usersAnno.friends());
+                        List<UserJson> friends = userClient.addFriend(user, usersAnno.friends());
 
                         final TestData testData = new TestData(
                                 DEFAULT_PASSWORD,

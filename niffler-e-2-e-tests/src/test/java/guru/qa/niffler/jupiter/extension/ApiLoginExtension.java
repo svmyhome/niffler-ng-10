@@ -6,6 +6,7 @@ import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
+import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
@@ -51,26 +52,39 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
+
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ApiLogin.class)
                 .ifPresent(apiLogin -> {
                     final UserJson userToLogin;
+                    final String username = apiLogin.username();
+                    final String password = apiLogin.password();
                     final Optional<UserJson> userFromUserExtension = UserExtension.createdUser();
-                    if ("".equals(apiLogin.username()) || "".equals(apiLogin.password())) {
+                    if ("".equals(username) || "".equals(password)) {
                         if (userFromUserExtension.isEmpty()) {
                             throw new IllegalStateException("@User must be present in case that @ApiLogin is empty!");
                         }
                         userToLogin = userFromUserExtension.get();
                     } else {
-                        List<CategoryJson> categories = spendApiClient.findAllCategories(apiLogin.username());
-                        List<SpendJson> spends = spendApiClient.findSpendsByUserName(apiLogin.username());
-                        List<UserJson> allFriends = userApiClient.getAllFriends("duck");
+                        final List<CategoryJson> categories = spendApiClient.findAllCategories(username);
+                        final List<SpendJson> spends = spendApiClient.findSpendsByUserName(username);
+                        final List<UserJson> allFriends = userApiClient.getAllFriends(username);
+                        final List<UserJson> friends = allFriends.stream()
+                                .filter(f -> f.friendshipStatus() != null && f.friendshipStatus().equals(FriendshipStatus.FRIEND))
+                                .toList();
+                        final List<UserJson> incomeInvitations = allFriends.stream()
+                                .filter(f -> f.friendshipStatus() != null &&  f.friendshipStatus().equals(FriendshipStatus.INVITE_RECEIVED))
+                                .toList();
+
+                        final List<UserJson> outcomeInvitations = userApiClient.getAllUsers(username).stream()
+                                .filter(f -> f.friendshipStatus() != null && f.friendshipStatus().equals(FriendshipStatus.INVITE_SENT))
+                                .toList();
                         UserJson fakeUser = new UserJson(
-                                apiLogin.username(),
+                                username,
                                 new TestData(
-                                        apiLogin.password(),
-                                        null,
-                                        null,
-                                        allFriends,
+                                        password,
+                                        incomeInvitations,
+                                        outcomeInvitations,
+                                        friends,
                                         categories,
                                         spends
                                 )
