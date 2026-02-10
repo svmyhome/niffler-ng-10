@@ -39,7 +39,7 @@ public final class UserDbClient implements UserClient {
             CFG.authJdbcUrl(),
             CFG.userdataJdbcUrl());
 
-    public @Nonnull
+    private @Nonnull
     static UserEntity userEntityRequiredField(String username) {
         UserEntity ue = new UserEntity();
         ue.setUsername(username);
