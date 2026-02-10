@@ -11,14 +11,15 @@ buildscript {
         springJdbcVersion = '6.2.11'
         springCryptoVersion = '6.5.5'
         p6spyVersion = '3.9.1'
-        hibernateVersion = '7.1.1.Final'
+        hibernateVersion = '7.0.0.Final'
+        atomicosVersion = '6.0.0'
         kafkaClientsVersion = '4.1.0'
         saajVersion = '3.0.4'
         springDataCommonsVersion = '3.5.4'
-        atomicosVersion = '6.0.0'
         wiremockVersion = '3.13.1'
         ashotVersion = '1.5.4'
         fakerVersion = '1.0.2'
+        ashotVersion = '1.5.4'
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
                 ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
                 : "http://localhost:8089/ws/userdata.wsdl"
@@ -78,10 +79,8 @@ dependencies {
     testImplementation("com.squareup.retrofit2:retrofit:${retrofitVersion}") {
         exclude group: "com.squareup.okhttp3"
     }
+    testImplementation "com.squareup.retrofit2:converter-scalars:${retrofitVersion}"
     testImplementation("com.squareup.retrofit2:converter-jackson:${retrofitVersion}") {
-        exclude group: "com.squareup.okhttp3"
-    }
-    testImplementation("com.squareup.retrofit2:converter-scalars:${retrofitVersion}") {
         exclude group: "com.squareup.okhttp3"
     }
     testImplementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
@@ -108,6 +107,7 @@ dependencies {
     testImplementation "com.codeborne:selenide:${selenideVersion}"
     testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     // Utils
+    testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {
         exclude group: 'org.yaml'
     }
@@ -122,8 +122,8 @@ dependencies {
     testImplementation "com.google.protobuf:protobuf-java:${project.ext.protobufVersion}"
     testImplementation "com.google.protobuf:protobuf-java-util:${project.ext.protobufVersion}"
     testImplementation project(':niffler-grpc-common')
-    compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5'
-    // Java 9+ compatibility - Do NOT update to 2.0.0
+    compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5' // Java 9+ compatibility - Do NOT update to 2.0.0
+    testImplementation 'jakarta.annotation:jakarta.annotation-api:1.3.5' // Java 9+ compatibility - Do NOT update to 2.0.0
     // SOAP
     testImplementation "com.sun.xml.messaging.saaj:saaj-impl:${saajVersion}"
     testImplementation "jakarta.xml.bind:jakarta.xml.bind-api:${project.ext.jakartaJaxbVersion}"

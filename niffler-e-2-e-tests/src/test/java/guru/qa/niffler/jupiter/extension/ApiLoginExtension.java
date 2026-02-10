@@ -46,7 +46,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
         this.setupBrowser = true;
     }
 
-    public static ApiLoginExtension restApiLoginExtension() {
+    public static ApiLoginExtension rest() {
         return new ApiLoginExtension(false);
     }
 
@@ -114,7 +114,6 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                         );
                         Selenide.open(MainPage.URL, MainPage.class).mainPageShouldBeDisplayed();
                     }
-
                 });
     }
 
@@ -126,7 +125,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getToken();
+        return "Bearer " + getToken();
     }
 
     public static void setToken(String token) {
