@@ -19,6 +19,8 @@ import javax.imageio.ImageIO;
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
 
+  public static final String URL = CFG.frontUrl() + "profile";
+
   private final SelenideElement showArchived = $(".MuiSwitch-input"),
       setName = $("#name"),
       saveChanges = $("[type='submit']"),

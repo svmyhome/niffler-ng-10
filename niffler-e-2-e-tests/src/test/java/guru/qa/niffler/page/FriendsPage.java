@@ -15,6 +15,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class FriendsPage  extends BasePage<FriendsPage> {
 
+  public static final String URL = CFG.frontUrl() + "people/friends";
+
   private final SelenideElement
       friendsTable = $("#friends"),
       requestsTable = $("#requests"),

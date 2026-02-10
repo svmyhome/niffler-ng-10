@@ -1,8 +1,10 @@
 package guru.qa.niffler.service;
 
 import static guru.qa.niffler.jupiter.extension.UserExtension.DEFAULT_PASSWORD;
+import static utils.RandomDataUtils.randomUsername;
 import com.google.common.base.Stopwatch;
 import guru.qa.niffler.api.UserApi;
+import guru.qa.niffler.jupiter.extension.UserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import io.qameta.allure.Step;
 import java.io.IOException;
@@ -13,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import retrofit2.Response;
-import utils.RandomDataUtils;
 
 @ParametersAreNonnullByDefault
 public final class UserApiClient extends RestClient implements UserClient {
@@ -62,11 +63,12 @@ public final class UserApiClient extends RestClient implements UserClient {
 
   @Override
   @Step("Create income invitation for user {targetUser.username} via API")
-  public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
-    List<UserJson> resultList = new ArrayList<>();
+  @Nonnull
+  public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
+    final List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {
-        UserJson friend = createUser(RandomDataUtils.randomUsername(), DEFAULT_PASSWORD);
+        final UserJson friend = createUser(randomUsername(), DEFAULT_PASSWORD);
         resultList.add(userApi.sendInvitation(friend.username(), targetUser.username())
             .execute().body());
       } catch (IOException e) {
@@ -78,27 +80,36 @@ public final class UserApiClient extends RestClient implements UserClient {
 
   @Override
   @Step("Create outcome invitation for user {targetUser.username} via API")
-  public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
-    List<UserJson> resultList = new ArrayList<>();
-    for (int i = 0; i < count; i++) {
-      try {
-        UserJson friend = createUser(RandomDataUtils.randomUsername(), DEFAULT_PASSWORD);
-        resultList.add(userApi.sendInvitation(targetUser.username(), friend.username())
-            .execute().body());
-      } catch (IOException e) {
-        throw new AssertionError(e);
+  @Nonnull
+  public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
+    final List<UserJson> result = new ArrayList<>();
+    if (count > 0) {
+      for (int i = 0; i < count; i++) {
+        final String username = randomUsername();
+        final UserJson newUser;
+        try {
+          newUser = createUser(username, UserExtension.DEFAULT_PASSWORD);
+          result.add(newUser);
+          userApi.sendInvitation(
+                  targetUser.username(),
+                  newUser.username()
+          ).execute();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
-    return resultList;
+    return result;
   }
 
   @Override
   @Step("Create {count} friends for user {targetUser.username} via API")
-  public List<UserJson> createFriends(UserJson targetUser, int count) {
+  @Nonnull
+  public List<UserJson> addFriend(UserJson targetUser, int count) {
     List<UserJson> resultList = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       try {
-        UserJson friend = createUser(RandomDataUtils.randomUsername(), "12345");
+        UserJson friend = createUser(randomUsername(), "12345");
         resultList.add(userApi.sendInvitation(targetUser.username(), friend.username())
             .execute().body());
         resultList.add(userApi.acceptInvitation(friend.username(), targetUser.username())
@@ -124,5 +135,16 @@ public final class UserApiClient extends RestClient implements UserClient {
   @Step("Get all users")
   public List<UserJson> getAllUsers(String username) {
     return getAllUsers(username, null);
+  }
+
+  @Step("Get all friends")
+  public List<UserJson> getAllFriends(String username) {
+    List<UserJson> allFriends;
+    try {
+      allFriends = userApi.getFriends(username).execute().body();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return allFriends;
   }
 }

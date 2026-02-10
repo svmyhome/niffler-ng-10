@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.db;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.auth.AuthUserDao;
@@ -81,7 +81,7 @@ public class TransactionTest {
         username,
         "12345"
     );
-    List<UserJson> friends = dbClient.createFriends(user, 1);
+    List<UserJson> friends = dbClient.addFriend(user, 1);
   }
 
   @ParameterizedTest

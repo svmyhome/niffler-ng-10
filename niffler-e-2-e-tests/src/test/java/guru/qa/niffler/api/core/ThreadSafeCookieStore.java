@@ -45,10 +45,10 @@ public enum ThreadSafeCookieStore implements CookieStore {
     return cs.get().removeAll();
   }
 
-  public String xsrfCookie(){
+  public String cookieValue(String cookieName){
     return cs.get().getCookies()
         .stream()
-        .filter(c -> c.getName().equals("XSRF-TOKEN"))
+        .filter(c -> c.getName().equals(cookieName))
         .findFirst()
         .get()
         .getValue();
