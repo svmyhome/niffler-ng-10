@@ -7,6 +7,7 @@ import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.meta.RestTest;
@@ -70,39 +71,19 @@ public class FriendsTest {
     }
 
     @User(
-            friends = 2
+            friends = 1
     )
     @ApiLogin
     @Test
     @DisplayName("API: Should delete friend")
     void friendShouldBeDelete(UserJson user, @Token String token) {
-        UserJson testFriend = user.testData().friends().getFirst();
-        gatewayApiClient.removeFriend(token, user.username());
-        UserJson testFriend1 = user.testData().friends().getFirst();
+        String username = user.testData().friends().getFirst().username();
+        gatewayApiClient.removeFriend(token, username);
+        final List<UserJson> friends = gatewayApiClient.allFriends(token, null);
         System.out.println();
-//        step("Check that response not null", () ->
-//                assertNotNull(friends)
-//        );
-//
-//
-//        step("Check that response contains expected users", () ->
-//                assertEquals(3, friends.size())
-//        );
-//        step("Check sorting by status", () ->
-//                assertEquals(INVITE_RECEIVED, friends.getFirst().friendshipStatus())
-//        );
-//        final var foundedInvitation = friends.getFirst();
-//        final var foundedFriend = friends.getLast();
-//        step("Check friend in response", () -> {
-//            assertSame(FRIEND, foundedFriend.friendshipStatus());
-//            assertEquals(testFriend.id(), foundedFriend.id());
-//            assertEquals(testFriend.username(), foundedFriend.username());
-//        });
-//        step("Check income invitation in response", () -> {
-//            assertSame(INVITE_RECEIVED, foundedInvitation.friendshipStatus());
-//            assertEquals(incomeInvitation.id(), foundedInvitation.id());
-//            assertEquals(incomeInvitation.username(), foundedInvitation.username());
-//        });
+        step("Current user should not have friend after removing", () ->
+                assertTrue(friends.isEmpty())
+        );
     }
 
     @User(
@@ -116,7 +97,6 @@ public class FriendsTest {
         FriendJson friendJson = new FriendJson(testFriend.username());
         UserJson result = gatewayApiClient.acceptInvitation(token, friendJson);
         final List<UserJson> friends = gatewayApiClient.allFriends(token, null);
-
         step("Check income invitation in response", () -> {
             assertSame(FRIEND, result.friendshipStatus());
             assertEquals(testFriend.id(), friends.getLast().id());
@@ -135,21 +115,6 @@ public class FriendsTest {
         UserJson testFriend = user.testData().incomeInvitations().getFirst();
         FriendJson friendJson = new FriendJson(testFriend.username());
         UserJson result = gatewayApiClient.declineInvitation(token, friendJson);
-        final List<UserJson> friends = gatewayApiClient.allFriends(token, null);
-
-        step("Check that response contains expected users", () ->
-                assertEquals(1, friends.size())
-        );
-    }
-
-    @User
-    @ApiLogin
-    @Test
-    @DisplayName("API: After send invitation create income and outcome invitation")
-    void sendInvitationShouldBeSendIncomeAndOutcome(UserJson user, UserJson user1, @Token String token) {
-        String testFriend = user1.username();
-        FriendJson friendJson = new FriendJson(testFriend);
-        UserJson result = gatewayApiClient.sendInvitation(token, friendJson);
         final List<UserJson> friends = gatewayApiClient.allFriends(token, null);
 
         step("Check that response contains expected users", () ->

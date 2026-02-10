@@ -19,7 +19,7 @@ public final class GatewayV2ApiClient extends RestClient {
     private final GatewayV2Api gatewayV2Api;
 
     public GatewayV2ApiClient() {
-        super(CFG.gwUrl(), Level.BODY);
+        super(CFG.gatewayUrl(), Level.BODY);
         this.gatewayV2Api = create(GatewayV2Api.class);
     }
 

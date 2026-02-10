@@ -18,7 +18,7 @@ public final class GatewayApiClient extends RestClient {
     private final GatewayApi gatewayApi;
 
     public GatewayApiClient() {
-        super(CFG.gwUrl());
+        super(CFG.gatewayUrl());
         this.gatewayApi = create(GatewayApi.class);
     }
 
@@ -38,10 +38,10 @@ public final class GatewayApiClient extends RestClient {
 
     @Step("Delete friend from gateway using endpoint api/friends/remove")
     public void removeFriend(String bearerToken,
-                             @Nullable String username) {
+                             String targetUsername) {
         final Response<Void> response;
         try {
-            response = gatewayApi.removeFriend(bearerToken, username).execute();
+            response = gatewayApi.removeFriend(bearerToken, targetUsername).execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }

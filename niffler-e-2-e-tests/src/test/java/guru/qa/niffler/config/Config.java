@@ -44,5 +44,5 @@ public interface Config {
   String currencyJdbcUrl();
 
   @Nonnull
-  String gwUrl();
+  String gatewayUrl();
 }
