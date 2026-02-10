@@ -67,7 +67,7 @@ enum DockerConfig implements Config {
 
   @Nonnull
   @Override
-  public String gwUrl() {
+  public String gatewayUrl() {
     return "";
   }
 }

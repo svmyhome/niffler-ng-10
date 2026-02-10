@@ -67,7 +67,7 @@ enum LocalConfig implements Config {
 
   @Nonnull
   @Override
-  public String gwUrl() {
-    return "http://localhost:8091";
+  public String gatewayUrl() {
+    return "http://localhost:8090/";
   }
 }
