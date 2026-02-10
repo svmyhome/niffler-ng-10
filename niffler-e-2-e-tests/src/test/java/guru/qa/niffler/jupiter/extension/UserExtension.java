@@ -1,6 +1,5 @@
 package guru.qa.niffler.jupiter.extension;
 
-import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.user.UserJson;
@@ -75,7 +74,6 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
 
     public static Optional<UserJson> createdUser() {
-        final ExtensionContext methodContext = context();
         return getUserJson();
     }
 

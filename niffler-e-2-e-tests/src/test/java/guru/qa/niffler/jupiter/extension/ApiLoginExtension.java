@@ -65,18 +65,21 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                         }
                         userToLogin = userFromUserExtension.get();
                     } else {
+                        if (userFromUserExtension.isPresent()) {
+                            throw new IllegalStateException("@User must not be present in case that @ApiLogin contains username or password!");
+                        }
                         final List<CategoryJson> categories = spendApiClient.findAllCategories(username);
                         final List<SpendJson> spends = spendApiClient.findSpendsByUserName(username);
                         final List<UserJson> allFriends = userApiClient.getAllFriends(username);
                         final List<UserJson> friends = allFriends.stream()
-                                .filter(f -> f.friendshipStatus() != null && f.friendshipStatus().equals(FriendshipStatus.FRIEND))
+                                .filter(f -> f.friendshipStatus()!=null && f.friendshipStatus().equals(FriendshipStatus.FRIEND))
                                 .toList();
                         final List<UserJson> incomeInvitations = allFriends.stream()
-                                .filter(f -> f.friendshipStatus() != null &&  f.friendshipStatus().equals(FriendshipStatus.INVITE_RECEIVED))
+                                .filter(f -> f.friendshipStatus()!=null && f.friendshipStatus().equals(FriendshipStatus.INVITE_RECEIVED))
                                 .toList();
 
                         final List<UserJson> outcomeInvitations = userApiClient.getAllUsers(username).stream()
-                                .filter(f -> f.friendshipStatus() != null && f.friendshipStatus().equals(FriendshipStatus.INVITE_SENT))
+                                .filter(f -> f.friendshipStatus()!=null && f.friendshipStatus().equals(FriendshipStatus.INVITE_SENT))
                                 .toList();
                         UserJson fakeUser = new UserJson(
                                 username,
@@ -89,9 +92,6 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                                         spends
                                 )
                         );
-                        if (userFromUserExtension.isPresent()) {
-                            throw new IllegalStateException("@User must not be present in case that @ApiLogin contains username or password!");
-                        }
                         UserExtension.setUser(fakeUser);
                         userToLogin = fakeUser;
                     }
