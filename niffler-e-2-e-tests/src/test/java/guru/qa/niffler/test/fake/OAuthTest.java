@@ -7,6 +7,7 @@ import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
+import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
@@ -14,6 +15,7 @@ import guru.qa.niffler.service.AuthApiClient;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
 
+@RestTest
 public class OAuthTest {
 
     private final AuthApiClient authApiClient = new AuthApiClient();
