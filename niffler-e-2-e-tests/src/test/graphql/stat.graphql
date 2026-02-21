@@ -8,6 +8,7 @@ query Stat($filterPeriod: FilterPeriod, $filterCurrency: CurrencyValues, $statCu
             sum
             firstSpendDate
             lastSpendDate
+
         }
     }
 }
