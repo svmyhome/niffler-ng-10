@@ -11,6 +11,7 @@ import guru.qa.niffler.service.UserDataClient;
 import guru.qa.niffler.service.utils.GqlQueryPaginationAndSort;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -20,8 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
 
 @Controller
 @PreAuthorize("isAuthenticated()")
@@ -88,6 +87,9 @@ public class UserQueryController {
   private void checkSubQueries(@Nonnull DataFetchingEnvironment env, int depth, @Nonnull String... queryKeys) {
     for (String queryKey : queryKeys) {
       List<SelectedField> selectors = env.getSelectionSet().getFieldsGroupedByResultKey().get(queryKey);
+      if (queryKey.equals("friends") && selectors.size() > 1){
+        throw new TooManySubQueriesException("Can`t fetch subquery for friends of user's friend");
+      }
       if (selectors != null && selectors.size() > depth) {
         throw new TooManySubQueriesException("Can`t fetch over 2 " + queryKey + " sub-queries");
       }

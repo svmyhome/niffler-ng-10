@@ -1,0 +1,26 @@
+query RecursiveFriendsQuery{
+    user{
+        username
+        friends(page: 0, size: 5){
+            edges {
+                node {
+                    username
+                    friends(page: 0, size: 5){
+                        edges {
+                            node {
+                                username
+                                friends(page: 0, size: 5){
+                                    edges {
+                                        node {
+                                            username
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

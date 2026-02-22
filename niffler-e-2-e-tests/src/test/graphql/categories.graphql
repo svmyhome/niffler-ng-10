@@ -1,0 +1,9 @@
+query Categories {
+    user {
+        categories {
+            id
+            name
+            archived
+        }
+    }
+}
