@@ -45,6 +45,9 @@ grpc:
     grpcCurrencyClient:
       address: 'static://localhost:8092'
       negotiationType: PLAINTEXT
+    grpcUserdataClient:
+      address: 'static://localhost:8094'
+      negotiationType: PLAINTEXT
 
 niffler-currency:
   base-uri: 'http://localhost:8091'
