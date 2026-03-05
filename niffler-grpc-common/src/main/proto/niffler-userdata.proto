@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "niffler-currency.proto";
 
 
 package guru.qa.grpc.niffler;
@@ -11,26 +12,15 @@ option java_outer_classname = "NifflerUserdataProto";
 
 service NifflerUserdataService {
   rpc GetUser(UsernameRequest) returns (UserResponse) {}
-  rpc GetAllUser(UsersRequest) returns (stream UserResponse) {}   //List<UserJsonBulk> allUsers(String username, String searchQuery)
-  rpc GetAllPage(UsersRequest) returns (stream UserResponse) {}    // Page<UserJsonBulk> allUsers(String username, Pageable pageable, String searchQuery)
-  rpc UpdateUser(UserRequest) returns (UserResponse) {}
+  rpc ListAllUser(UserRequest) returns (UsersResponse) {}
+  rpc GetAllPage(StreamUserRequest) returns (stream UserResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
 
   rpc GetAllFriends(FriendRequest) returns (stream UserResponse) {}
   rpc acceptFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
   rpc declineFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
   rpc removeFriend(FriendshipRequest) returns(google.protobuf.Empty) {}
 }
-
-
-//  UserJson getCurrentUser(String username)
-//  List<UserJsonBulk> allUsers(String username, String searchQuery)
-//  Page<UserJsonBulk> allUsers(String username, Pageable pageable, String searchQuery)
-//  List<UserJsonBulk> friends(String username, String searchQuery)
-//  UserJson update(UserJson user)
-//UserJson createFriendshipRequest(String username, String targetUsername)
-//  UserJson acceptFriendshipRequest(String username, String targetUsername)
-//  UserJson declineFriendshipRequest(String username, String targetUsername)
-//  void removeFriend(String username, String targetUsername)
 
 message UsernameRequest {
   string username = 1;
@@ -41,10 +31,24 @@ message UserRequest {
   string searchQuery = 2;
 }
 
-message UsersRequest {
+message UpdateUserRequest {
   string username = 1;
-  string searchQuery = 2;
+  optional string firstname = 2;
+  optional string surname = 3;
+  optional string fullname = 4;
+  optional CurrencyValues currency = 5;
+  optional string photo = 6;
+  optional string photo_small = 7;
+  optional FriendshipStatus friendship_status = 8;
 }
+
+message StreamUserRequest {
+  string username = 1;
+  int32 page = 2;
+  int32 size = 3;
+  string searchQuery = 4;
+}
+
 
 message FriendRequest {
   string username = 1;
@@ -56,14 +60,25 @@ message FriendshipRequest {
   string targetUsername = 2;
 }
 
+message UsersResponse {
+  repeated UserResponse user = 1;
+}
+
 message UserResponse {
   string id = 1;
   string username = 2;
-  string firstname = 3;
-  string surname =4;
+  optional string firstname = 3;
+  optional string surname = 4;
+  optional string fullname = 5;
+  optional CurrencyValues currency = 6;
+  optional string photo = 7;
+  optional string photo_small = 8;
+  optional FriendshipStatus friendship_status = 9;
+}
 
-//  CurrencyValues currency =5;
-//  String photo = 5;
-//  String photoSmall();
-//  FriendshipStatus friendshipStatus();
+enum FriendshipStatus {
+  FRIENDSHIP_STATUS_UNSPECIFIED = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
 }
