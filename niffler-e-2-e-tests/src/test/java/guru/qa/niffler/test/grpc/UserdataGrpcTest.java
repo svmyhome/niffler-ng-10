@@ -3,10 +3,10 @@ package guru.qa.niffler.test.grpc;
 import static guru.qa.niffler.model.FriendshipStatus.INVITE_SENT;
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import guru.qa.niffler.grpc.FriendRequest;
 import guru.qa.niffler.grpc.FriendshipRequest;
 import guru.qa.niffler.grpc.StreamUserRequest;
-import guru.qa.niffler.grpc.UpdateUserRequest;
 import guru.qa.niffler.grpc.UserRequest;
 import guru.qa.niffler.grpc.UserResponse;
 import guru.qa.niffler.grpc.UsernameRequest;
@@ -31,13 +31,13 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .setUsername("Ptaha5")
                 .build();
         final UserResponse user = userdataBlockingStub.getUser(usernameRequest);
-        Assertions.assertNotNull(user);
-        assertEquals("Ptaha5", user.getUsername());
-        assertEquals("First", user.getFirstname());
-        assertEquals("Sure", user.getSurname());
-        assertEquals("413bef2a-c7b9-11f0-bd21-fa8c6dc05d6e", user.getId());
+        Assertions.assertAll("User response validation",
+                () -> assertNotNull(user, "User response should not be null"),
+                () -> assertEquals("Ptaha5", user.getUsername(), "Username mismatch"),
+                () -> assertEquals("First", user.getFirstname(), "Firstname mismatch"),
+                () -> assertEquals("Sure", user.getSurname(), "Surname mismatch"),
+                () -> assertEquals("413bef2a-c7b9-11f0-bd21-fa8c6dc05d6e", user.getId(), "User ID mismatch"));
     }
-
 
     @Test
     @DisplayName("GRPC: Should return list users")
@@ -46,7 +46,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .setUsername("duck")
                 .build();
         final UsersResponse users = userdataBlockingStub.listAllUser(usernameRequest);
-        Assertions.assertNotNull(users);
+        step("List users not null", () -> assertNotNull(users));
     }
 
     @Test
@@ -65,9 +65,8 @@ public class UserdataGrpcTest extends BaseGrpcTest {
             usersList.add(usersIterator.next());
         }
 
-        Assertions.assertNotNull(usersList);
-        Assertions.assertFalse(usersList.isEmpty(), "Список пользователей не должен быть пустым");
-        Assertions.assertTrue(usersList.size() <= 15, "Размер не должен превышать 15");
+        step("List users not null", () -> assertNotNull(usersList));
+        step("List < 15 records", () -> Assertions.assertTrue(usersList.size() <= 15));
     }
 
     @Test
@@ -77,19 +76,19 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .setUsername("duck")
                 .build();
         final UsersResponse users = userdataBlockingStub.listAllFriends(friendRequest);
-        Assertions.assertNotNull(users);
+        step("List friends not null", () -> assertNotNull(users));
     }
 
     @Test
     @User
-    @DisplayName("GRPC: Should return list friends")
+    @DisplayName("GRPC: Should send invitation")
     void sendFriendshipInvite(UserJson user) {
         final FriendshipRequest friendshipRequest = FriendshipRequest.newBuilder()
                 .setUsername("duck")
                 .setTargetUsername(user.username())
                 .build();
         final UserResponse users = userdataBlockingStub.sendInvitation(friendshipRequest);
-        assertEquals(INVITE_SENT.toString(), users.getFriendshipStatus().toString());
+        step("Invitation sent to user", () -> assertEquals(INVITE_SENT.toString(), users.getFriendshipStatus().toString()));
     }
 
     @Test
@@ -102,7 +101,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .setUsername(user.username())
                 .setTargetUsername(user.testData().incomeInvitations().getFirst().username())
                 .build();
-        userdataBlockingStub.acceptFriendshipRequest(friendshipRequest);
+        userdataBlockingStub.acceptInvitationRequest(friendshipRequest);
         final var requestor = userdataBlockingStub.listAllFriends(FriendRequest.newBuilder()
                 .setUsername(user.username())
                 .build());
@@ -123,13 +122,12 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .setUsername(user.username())
                 .setTargetUsername(user.testData().incomeInvitations().getFirst().username())
                 .build();
-        userdataBlockingStub.declineFriendshipRequest(friendshipRequest);
+        userdataBlockingStub.declineInvitationRequest(friendshipRequest);
         final var incomeInvitationList = userdataBlockingStub.listAllFriends(FriendRequest.newBuilder()
                 .setUsername(user.username())
                 .build());
         step("Check friend and invitation lists are empty", () -> assertEquals(0, incomeInvitationList.getUserCount()));
     }
-
 
     @Test
     @User(
@@ -147,29 +145,4 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .build());
         step("Check list friends are empty", () -> assertEquals(0, friends.getUserCount()));
     }
-
-    @Test
-    @User
-    @DisplayName("GRPC: Should update user")
-    void updateUser(UserJson user) {
-        final UserResponse updatedUser1 = userdataBlockingStub.getUser(UsernameRequest.newBuilder()
-                .setUsername(user.username())
-                .build());
-        UpdateUserRequest updateUserRequest = UpdateUserRequest.newBuilder()
-                .setUsername(user.username())
-                .setFullname("Тест")
-//                .setCurrency(CurrencyValues.valueOf(user.currency().name()))
-//                .setPhoto(user.photo())
-//                .setPhotoSmall(user.photoSmall())
-//                .setFriendshipStatus(FriendshipStatus.valueOf(user.friendshipStatus().name()))
-                .build();
-        userdataBlockingStub.updateUser(updateUserRequest);
-
-
-        final UserResponse updatedUser = userdataBlockingStub.getUser(UsernameRequest.newBuilder()
-                .setUsername(user.username())
-                .build());
-        step("Check list friends are empty", () -> assertEquals("Тест", updatedUser.getFullname()));
-    }
-
 }

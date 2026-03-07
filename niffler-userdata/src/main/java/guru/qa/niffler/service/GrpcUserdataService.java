@@ -224,18 +224,13 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
 
         final UserJson friendshipRequest = userService.createFriendshipRequest(username, targetUsername);
 
-//        UserResponse response = UserResponse.newBuilder()
-//                .setUsername(friendshipRequest.username())
-//                .setFriendshipStatus(guru.qa.niffler.grpc.FriendshipStatus.valueOf(friendshipRequest.friendshipStatus().name()))
-//                .build();
-
         responseObserver.onNext(fromJson(friendshipRequest));
         responseObserver.onCompleted();
     }
 
 
     @Override
-    public void acceptFriendshipRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void acceptInvitationRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
         final String username = request.getUsername();
         String targetUsername = request.getTargetUsername();
 
@@ -250,7 +245,7 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
     }
 
     @Override
-    public void declineFriendshipRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void declineInvitationRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
         final String username = request.getUsername();
         String targetUsername = request.getTargetUsername();
 

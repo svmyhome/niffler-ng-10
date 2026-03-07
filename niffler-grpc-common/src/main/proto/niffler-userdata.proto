@@ -18,9 +18,9 @@ service NifflerUserdataService {
 
   rpc ListAllFriends(FriendRequest) returns (UsersResponse) {}
   rpc SendInvitation(FriendshipRequest) returns (UserResponse) {}
-  rpc acceptFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
-  rpc declineFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
-  rpc removeFriend(FriendshipRequest) returns(google.protobuf.Empty) {}
+  rpc AcceptInvitationRequest(FriendshipRequest) returns (UserResponse) {}
+  rpc DeclineInvitationRequest(FriendshipRequest) returns (UserResponse) {}
+  rpc RemoveFriend(FriendshipRequest) returns(google.protobuf.Empty) {}
 }
 
 message UsernameRequest {
@@ -49,7 +49,6 @@ message StreamUserRequest {
   int32 size = 3;
   string searchQuery = 4;
 }
-
 
 message FriendRequest {
   string username = 1;
