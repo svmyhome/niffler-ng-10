@@ -25,6 +25,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,10 +36,12 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
     private static final Logger LOG = LoggerFactory.getLogger(GrpcUserdataService.class);
 
     private final UserService userService;
+    private final ClientHttpRequestFactorySettings clientHttpRequestFactorySettings;
 
     @Autowired
-    public GrpcUserdataService(UserService userService) {
+    public GrpcUserdataService(UserService userService, ClientHttpRequestFactorySettings clientHttpRequestFactorySettings) {
         this.userService = userService;
+        this.clientHttpRequestFactorySettings = clientHttpRequestFactorySettings;
     }
 
     @Override
@@ -153,67 +156,122 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
         UserJson updatedUser = new UserJson(
                 user.id(),
                 request.getUsername(),
-                request.hasFirstname() ? request.getFirstname() : user.firstname(),
-                request.hasSurname() ? request.getSurname() : user.surname(),
-                request.hasFullname() ? request.getFullname() : user.fullname(),
-                request.hasCurrency() ? CurrencyValues.valueOf(request.getCurrency().name()) : user.currency(),
-                request.hasPhoto() ? request.getPhoto() : user.photo(),
-                request.hasPhotoSmall() ? request.getPhotoSmall() : user.photoSmall(),
-                request.hasFriendshipStatus() ? FriendshipStatus.valueOf(request.getFriendshipStatus().name()) : user.friendshipStatus()
+                request.hasFirstname() ? request.getFirstname():user.firstname(),
+                request.hasSurname() ? request.getSurname():user.surname(),
+                request.hasFullname() ? request.getFullname():user.fullname(),
+                request.hasCurrency() ? CurrencyValues.valueOf(request.getCurrency().name()):user.currency(),
+                request.hasPhoto() ? request.getPhoto():user.photo(),
+                request.hasPhotoSmall() ? request.getPhotoSmall():user.photoSmall(),
+                request.hasFriendshipStatus() ? FriendshipStatus.valueOf(request.getFriendshipStatus().name()):user.friendshipStatus()
         );
 
-        userService.update(updatedUser);
-
-        UserResponse.Builder builder = UserResponse.newBuilder()
-                .setUsername(updatedUser.username());
-
-        if (updatedUser.id() != null) {
-            builder.setId(updatedUser.id().toString());
-        }
-        if (updatedUser.firstname() != null && !updatedUser.firstname().isEmpty()) {
-            builder.setFirstname(updatedUser.firstname());
-        }
-        if (updatedUser.surname() != null && !updatedUser.surname().isEmpty()) {
-            builder.setSurname(updatedUser.surname());
-        }
-        if (updatedUser.fullname() != null && !updatedUser.fullname().isEmpty()) {
-            builder.setFullname(updatedUser.fullname());
-        }
-        if (updatedUser.currency() != null) {
-            builder.setCurrency(guru.qa.niffler.grpc.CurrencyValues.valueOf(updatedUser.currency().name()));
-        }
-        if (updatedUser.photo() != null && !updatedUser.photo().isEmpty()) {
-            builder.setPhoto(updatedUser.photo());
-        }
-        if (updatedUser.photoSmall() != null && !updatedUser.photoSmall().isEmpty()) {
-            builder.setPhotoSmall(updatedUser.photoSmall());
-        }
-        if (updatedUser.friendshipStatus() != null) {
-            builder.setFriendshipStatus(guru.qa.niffler.grpc.FriendshipStatus.valueOf(updatedUser.friendshipStatus().name()));
-        }
-
-        responseObserver.onNext(builder.build());
+        final UserJson update = userService.update(updatedUser);
+        responseObserver.onNext(fromJson(update));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getAllFriends(FriendRequest request, StreamObserver<UserResponse> responseObserver) {
-        super.getAllFriends(request, responseObserver);
+    public void listAllFriends(FriendRequest request, StreamObserver<UsersResponse> responseObserver) {
+
+        List<UserJsonBulk> friends = userService.friends(request.getUsername(), request.getSearchQuery());
+
+        UsersResponse.Builder responseBuilder = UsersResponse.newBuilder();
+
+        for (UserJsonBulk friend : friends) {
+            UserResponse.Builder userBuilder = UserResponse.newBuilder()
+                    .setUsername(friend.username());
+
+            Optional.ofNullable(friend.id())
+                    .map(UUID::toString)
+                    .ifPresent(userBuilder::setId);
+
+            Optional.ofNullable(friend.firstname())
+                    .ifPresent(userBuilder::setFirstname);
+
+            Optional.ofNullable(friend.surname())
+                    .ifPresent(userBuilder::setSurname);
+
+            Optional.ofNullable(friend.fullname())
+                    .ifPresent(userBuilder::setFullname);
+
+            Optional.ofNullable(friend.currency())
+                    .map(Enum::name)
+                    .map(guru.qa.niffler.grpc.CurrencyValues::valueOf)
+                    .ifPresent(userBuilder::setCurrency);
+
+            Optional.ofNullable(friend.photo())
+                    .ifPresent(userBuilder::setPhoto);
+
+            Optional.ofNullable(friend.photoSmall())
+                    .ifPresent(userBuilder::setPhotoSmall);
+
+            Optional.ofNullable(friend.friendshipStatus())
+                    .map(Enum::name)
+                    .map(guru.qa.niffler.grpc.FriendshipStatus::valueOf)
+                    .ifPresent(userBuilder::setFriendshipStatus);
+
+            responseBuilder.addUser(userBuilder.build());
+        }
+
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
     }
 
     @Override
+    public void sendInvitation(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
+        final String username = request.getUsername();
+        String targetUsername = request.getTargetUsername();
+
+        final UserJson friendshipRequest = userService.createFriendshipRequest(username, targetUsername);
+
+//        UserResponse response = UserResponse.newBuilder()
+//                .setUsername(friendshipRequest.username())
+//                .setFriendshipStatus(guru.qa.niffler.grpc.FriendshipStatus.valueOf(friendshipRequest.friendshipStatus().name()))
+//                .build();
+
+        responseObserver.onNext(fromJson(friendshipRequest));
+        responseObserver.onCompleted();
+    }
+
+
+    @Override
     public void acceptFriendshipRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
-        super.acceptFriendshipRequest(request, responseObserver);
+        final String username = request.getUsername();
+        String targetUsername = request.getTargetUsername();
+
+        userService.acceptFriendshipRequest(username, targetUsername);
+
+        UserResponse response = UserResponse.newBuilder()
+                .setUsername(username)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override
     public void declineFriendshipRequest(FriendshipRequest request, StreamObserver<UserResponse> responseObserver) {
-        super.declineFriendshipRequest(request, responseObserver);
+        final String username = request.getUsername();
+        String targetUsername = request.getTargetUsername();
+
+        final UserJson declineFriendshipRequest = userService.declineFriendshipRequest(username, targetUsername);
+        responseObserver.onNext(fromJson(declineFriendshipRequest));
+        responseObserver.onCompleted();
     }
 
     @Override
     public void removeFriend(FriendshipRequest request, StreamObserver<Empty> responseObserver) {
-        super.removeFriend(request, responseObserver);
+        final String username = request.getUsername();
+        String targetUsername = request.getTargetUsername();
+
+        userService.removeFriend(username, targetUsername);
+
+        UserResponse.newBuilder()
+                .setUsername(username)
+                .build();
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
     }
 
     private @Nonnull UserResponse fromJson(@Nonnull IUserJson userJson) {

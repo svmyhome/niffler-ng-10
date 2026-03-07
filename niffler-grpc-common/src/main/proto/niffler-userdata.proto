@@ -16,7 +16,8 @@ service NifflerUserdataService {
   rpc GetAllPage(StreamUserRequest) returns (stream UserResponse) {}
   rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
 
-  rpc GetAllFriends(FriendRequest) returns (stream UserResponse) {}
+  rpc ListAllFriends(FriendRequest) returns (UsersResponse) {}
+  rpc SendInvitation(FriendshipRequest) returns (UserResponse) {}
   rpc acceptFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
   rpc declineFriendshipRequest(FriendshipRequest) returns (UserResponse) {}
   rpc removeFriend(FriendshipRequest) returns(google.protobuf.Empty) {}
