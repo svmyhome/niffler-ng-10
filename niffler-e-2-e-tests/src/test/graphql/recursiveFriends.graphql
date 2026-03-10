@@ -1,5 +1,5 @@
 query RecursiveFriendsQuery{
-    user{
+    user {
         username
         friends(page: 0, size: 5){
             edges {
