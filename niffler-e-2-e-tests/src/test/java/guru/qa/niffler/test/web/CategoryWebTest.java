@@ -5,7 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.ProfilePage;
 import io.qameta.allure.Epic;
@@ -13,12 +13,11 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 @Epic("UI")
 @Feature("Categories and Spendings")
 @Story("Category Management")
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class CategoryWebTest {
 
   private static final Config CFG = Config.getInstance();

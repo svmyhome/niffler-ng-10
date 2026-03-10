@@ -1,0 +1,10 @@
+query AllPeople{
+    allPeople(page: 0, size: 5) {
+        edges {
+            node {
+                username
+                friendshipStatus
+            }
+        }
+    }
+}
