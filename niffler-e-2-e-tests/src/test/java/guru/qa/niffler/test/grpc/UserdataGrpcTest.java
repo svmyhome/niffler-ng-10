@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import guru.qa.niffler.grpc.FriendRequest;
 import guru.qa.niffler.grpc.FriendshipRequest;
 import guru.qa.niffler.grpc.StreamUserRequest;
+import guru.qa.niffler.grpc.UserPageResponse;
 import guru.qa.niffler.grpc.UserRequest;
 import guru.qa.niffler.grpc.UserResponse;
 import guru.qa.niffler.grpc.UsernameRequest;
@@ -15,8 +16,6 @@ import guru.qa.niffler.grpc.UsersResponse;
 import guru.qa.niffler.jupiter.annotation.meta.GrpcTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.user.UserJson;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -56,18 +55,16 @@ public class UserdataGrpcTest extends BaseGrpcTest {
         final StreamUserRequest usernameRequest = StreamUserRequest.newBuilder()
                 .setUsername("duck")
                 .setPage(0)
-                .setSize(4)
+                .setSize(2)
                 .build();
 
-        Iterator<UserResponse> usersIterator = userdataBlockingStub.getAllPage(usernameRequest);
+        UserPageResponse users = userdataBlockingStub.getAllPage(usernameRequest);
 
-        List<UserResponse> usersList = new ArrayList<>();
-        while (usersIterator.hasNext()) {
-            usersList.add(usersIterator.next());
-        }
-
-        step("List users not null", () -> assertNotNull(usersList));
-        step("List < 4 records", () -> Assertions.assertTrue(usersList.size() <= 4));
+        step("totalElements not null", () -> Assertions.assertEquals(3406, users.getTotalElements()));
+        step("totalPages not null", () -> Assertions.assertEquals(1703, users.getTotalPages()));
+        step("first is true", () -> Assertions.assertTrue(users.getFirst()));
+        step("size is 2", () -> Assertions.assertEquals(2, users.getSize()));
+        step("edges is not null", () -> Assertions.assertEquals("артём.селиверстов", users.getUsers(1).getUsername()));
     }
 
     @Test

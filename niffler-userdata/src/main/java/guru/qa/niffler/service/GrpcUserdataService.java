@@ -7,6 +7,7 @@ import guru.qa.niffler.grpc.FriendshipRequest;
 import guru.qa.niffler.grpc.NifflerUserdataServiceGrpc;
 import guru.qa.niffler.grpc.StreamUserRequest;
 import guru.qa.niffler.grpc.UpdateUserRequest;
+import guru.qa.niffler.grpc.UserPageResponse;
 import guru.qa.niffler.grpc.UserRequest;
 import guru.qa.niffler.grpc.UserResponse;
 import guru.qa.niffler.grpc.UsernameRequest;
@@ -97,9 +98,8 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
         responseObserver.onCompleted();
     }
 
-
     @Override
-    public void getAllPage(StreamUserRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void getAllPage(StreamUserRequest request, StreamObserver<UserPageResponse> responseObserver) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
 
         Page<UserJsonBulk> usersPage = userService.allUsers(
@@ -108,45 +108,52 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
                 request.getSearchQuery()
         );
 
+        UserPageResponse.Builder responseBuilder = UserPageResponse.newBuilder()
+                .setTotalElements((int) usersPage.getTotalElements())
+                .setTotalPages(usersPage.getTotalPages())
+                .setFirst(usersPage.isFirst())
+                .setLast(usersPage.isLast())
+                .setSize(usersPage.getSize());
+
         for (UserJsonBulk user : usersPage.getContent()) {
-            UserResponse.Builder builder = UserResponse.newBuilder()
+            UserResponse.Builder userBuilder = UserResponse.newBuilder()
                     .setUsername(user.username());
 
             Optional.ofNullable(user.id())
                     .map(UUID::toString)
-                    .ifPresent(builder::setId);
+                    .ifPresent(userBuilder::setId);
 
             Optional.ofNullable(user.firstname())
-                    .ifPresent(builder::setFirstname);
+                    .ifPresent(userBuilder::setFirstname);
 
             Optional.ofNullable(user.surname())
-                    .ifPresent(builder::setSurname);
+                    .ifPresent(userBuilder::setSurname);
 
             Optional.ofNullable(user.fullname())
-                    .ifPresent(builder::setFullname);
+                    .ifPresent(userBuilder::setFullname);
 
             Optional.ofNullable(user.currency())
                     .map(Enum::name)
                     .map(guru.qa.niffler.grpc.CurrencyValues::valueOf)
-                    .ifPresent(builder::setCurrency);
+                    .ifPresent(userBuilder::setCurrency);
 
             Optional.ofNullable(user.photo())
-                    .ifPresent(builder::setPhoto);
+                    .ifPresent(userBuilder::setPhoto);
 
             Optional.ofNullable(user.photoSmall())
-                    .ifPresent(builder::setPhotoSmall);
+                    .ifPresent(userBuilder::setPhotoSmall);
 
             Optional.ofNullable(user.friendshipStatus())
                     .map(Enum::name)
                     .map(guru.qa.niffler.grpc.FriendshipStatus::valueOf)
-                    .ifPresent(builder::setFriendshipStatus);
+                    .ifPresent(userBuilder::setFriendshipStatus);
 
-            responseObserver.onNext(builder.build());
+            responseBuilder.addUsers(userBuilder.build());
         }
 
+        responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
     }
-
 
     @Override
     @Transactional

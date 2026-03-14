@@ -13,7 +13,7 @@ option java_outer_classname = "NifflerUserdataProto";
 service NifflerUserdataService {
   rpc GetUser(UsernameRequest) returns (UserResponse) {}
   rpc ListAllUser(UserRequest) returns (UsersResponse) {}
-  rpc GetAllPage(StreamUserRequest) returns (stream UserResponse) {}
+  rpc GetAllPage(StreamUserRequest) returns (UserPageResponse) {}
   rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
 
   rpc ListAllFriends(FriendRequest) returns (UsersResponse) {}
@@ -74,6 +74,15 @@ message UserResponse {
   optional string photo = 7;
   optional string photo_small = 8;
   optional FriendshipStatus friendship_status = 9;
+}
+
+message UserPageResponse {
+  int32 totalElements = 1;
+  int32 totalPages = 2;
+  bool first = 3;
+  bool last = 4;
+  int32 size = 5;
+  repeated UserResponse users = 6;
 }
 
 enum FriendshipStatus {
