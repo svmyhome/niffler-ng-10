@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.grpc;
 
+import static guru.qa.niffler.model.FriendshipStatus.FRIEND;
 import static guru.qa.niffler.model.FriendshipStatus.INVITE_SENT;
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +56,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
         final StreamUserRequest usernameRequest = StreamUserRequest.newBuilder()
                 .setUsername("duck")
                 .setPage(0)
-                .setSize(15)
+                .setSize(4)
                 .build();
 
         Iterator<UserResponse> usersIterator = userdataBlockingStub.getAllPage(usernameRequest);
@@ -66,7 +67,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
         }
 
         step("List users not null", () -> assertNotNull(usersList));
-        step("List < 15 records", () -> Assertions.assertTrue(usersList.size() <= 15));
+        step("List < 4 records", () -> Assertions.assertTrue(usersList.size() <= 4));
     }
 
     @Test
@@ -77,6 +78,22 @@ public class UserdataGrpcTest extends BaseGrpcTest {
                 .build();
         final UsersResponse users = userdataBlockingStub.listAllFriends(friendRequest);
         step("List friends not null", () -> assertNotNull(users));
+    }
+
+    @Test
+    @DisplayName("GRPC: Should return list of friends filtered by search query")
+    void getUserFriendsWithSearchQuery() {
+        final FriendRequest friendRequest = FriendRequest.newBuilder()
+                .setUsername("duck")
+                .setSearchQuery("ele")
+                .build();
+        List<UserResponse> users = userdataBlockingStub.listAllFriends(friendRequest).getUserList();
+        UserResponse user = users.getFirst();
+
+        Assertions.assertAll("User response validation",
+                () -> assertNotNull(user.getUsername(), "User response should not be null"),
+                () -> assertEquals("elephant", user.getUsername(), "Username mismatch"),
+                () -> assertEquals(FRIEND.name(), user.getFriendshipStatus().name(), "Firstname mismatch"));
     }
 
     @Test
