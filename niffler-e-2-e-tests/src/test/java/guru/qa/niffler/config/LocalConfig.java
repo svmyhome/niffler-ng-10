@@ -1,6 +1,7 @@
 package guru.qa.niffler.config;
 
 import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 enum LocalConfig implements Config {
   INSTANCE;
@@ -58,6 +59,17 @@ enum LocalConfig implements Config {
   public String currencyUrl() {
     return "http://localhost:8091";
   }
+
+  @Override
+  public @NonNull String currencyGrpcAddress() {
+    return "localhost";
+  }
+
+  @Override
+  public @NonNull String userdataGrpcAddress() {
+    return "localhost";
+  }
+
 
   @Nonnull
   @Override

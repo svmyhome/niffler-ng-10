@@ -21,3 +21,6 @@ grpc:
     grpcCurrencyClient:
       address: 'static://localhost:8092'
       negotiationType: PLAINTEXT
+    grpcuserdataClient:
+      address: 'static://localhost:8092'
+      negotiationType: PLAINTEXT

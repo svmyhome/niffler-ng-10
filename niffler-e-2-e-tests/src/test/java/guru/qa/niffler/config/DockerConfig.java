@@ -1,6 +1,7 @@
 package guru.qa.niffler.config;
 
 import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 enum DockerConfig implements Config {
   INSTANCE;
@@ -56,6 +57,16 @@ enum DockerConfig implements Config {
   @Nonnull
   @Override
   public String currencyUrl() {
+    return "";
+  }
+
+  @Override
+  public @NonNull String currencyGrpcAddress() {
+    return "";
+  }
+
+  @Override
+  public @NonNull String userdataGrpcAddress() {
     return "";
   }
 

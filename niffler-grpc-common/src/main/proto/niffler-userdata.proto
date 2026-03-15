@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "niffler-currency.proto";
+
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.niffler.grpc";
+option java_outer_classname = "NifflerUserdataProto";
+
+service NifflerUserdataService {
+  rpc GetUser(UsernameRequest) returns (UserResponse) {}
+  rpc ListAllUser(UserRequest) returns (UsersResponse) {}
+  rpc GetAllPage(StreamUserRequest) returns (UserPageResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
+
+  rpc ListAllFriends(FriendRequest) returns (UsersResponse) {}
+  rpc SendInvitation(FriendshipRequest) returns (UserResponse) {}
+  rpc AcceptInvitationRequest(FriendshipRequest) returns (UserResponse) {}
+  rpc DeclineInvitationRequest(FriendshipRequest) returns (UserResponse) {}
+  rpc RemoveFriend(FriendshipRequest) returns(google.protobuf.Empty) {}
+}
+
+message UsernameRequest {
+  string username = 1;
+}
+
+message UserRequest {
+  string username = 1;
+  string searchQuery = 2;
+}
+
+message UpdateUserRequest {
+  string username = 1;
+  optional string firstname = 2;
+  optional string surname = 3;
+  optional string fullname = 4;
+  optional CurrencyValues currency = 5;
+  optional string photo = 6;
+  optional string photo_small = 7;
+  optional FriendshipStatus friendship_status = 8;
+}
+
+message StreamUserRequest {
+  string username = 1;
+  int32 page = 2;
+  int32 size = 3;
+  string searchQuery = 4;
+}
+
+message FriendRequest {
+  string username = 1;
+  string searchQuery = 2;
+}
+
+message FriendshipRequest {
+  string username = 1;
+  string targetUsername = 2;
+}
+
+message UsersResponse {
+  repeated UserResponse user = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string username = 2;
+  optional string firstname = 3;
+  optional string surname = 4;
+  optional string fullname = 5;
+  optional CurrencyValues currency = 6;
+  optional string photo = 7;
+  optional string photo_small = 8;
+  optional FriendshipStatus friendship_status = 9;
+}
+
+message UserPageResponse {
+  int32 totalElements = 1;
+  int32 totalPages = 2;
+  bool first = 3;
+  bool last = 4;
+  int32 size = 5;
+  repeated UserResponse users = 6;
+}
+
+enum FriendshipStatus {
+  FRIENDSHIP_STATUS_UNSPECIFIED = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
+}
