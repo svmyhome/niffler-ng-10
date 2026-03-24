@@ -20,6 +20,7 @@ public class SoapConverterFactory extends Converter.Factory {
         return new SoapConverterFactory(null, namespace);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static SoapConverterFactory create(@Nonnull JAXBContext context, @Nonnull String namespace) {
         return new SoapConverterFactory(context, namespace);
     }
@@ -55,7 +56,7 @@ public class SoapConverterFactory extends Converter.Factory {
 
     private JAXBContext contextForType(Class<?> type) {
         try {
-            return context!=null ? context:JAXBContext.newInstance(type);
+            return context != null ? context : JAXBContext.newInstance(type);
         } catch (JAXBException e) {
             throw new IllegalArgumentException(e);
         }

@@ -19,10 +19,10 @@ public class soapTest {
     @User
     public void currentUserTest(UserJson user) throws IOException {
         CurrentUserRequest request = new CurrentUserRequest();
-        request.setUsername("максим.хохлова");
+        request.setUsername(user.username());
         UserResponse response = userdataSoapClient.currentUser(request);
         Assertions.assertEquals(
-                "максим.хохлова",
+                user.username(),
                 response.getUser().getUsername()
         );
     }

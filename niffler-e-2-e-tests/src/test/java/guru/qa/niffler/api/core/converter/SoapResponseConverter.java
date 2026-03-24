@@ -8,11 +8,13 @@ import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.xml.stream.XMLInputFactory;
 import okhttp3.ResponseBody;
 import org.w3c.dom.Document;
 import retrofit2.Converter;
 
 final class SoapResponseConverter<T> implements Converter<ResponseBody, T> {
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
     final JAXBContext context;
     final Class<T> type;
 
@@ -25,8 +27,8 @@ final class SoapResponseConverter<T> implements Converter<ResponseBody, T> {
     public T convert(ResponseBody value) throws IOException {
         try (value; InputStream is = value.byteStream()) {
             MimeHeaders header = new MimeHeaders();
-            if (value.contentType()!=null) {
-                header.addHeader("Content-Type", value.contentType().toString());
+            if (value.contentType() != null) {
+                header.addHeader("Content-type", value.contentType().toString());
             }
             SOAPMessage response = MessageFactory.newInstance().createMessage(
                     header,

@@ -28,20 +28,19 @@ final class SoapRequestConverter<T> implements Converter<T, RequestBody> {
     @Override
     public RequestBody convert(final T value) throws IOException {
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            try {
-                SOAPMessage message = MessageFactory.newInstance().createMessage();
-                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.marshal(value, os);
-                message.getSOAPBody().addDocument(document);
-                SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-                envelope.addNamespaceDeclaration("tns", namespace);
-                message.writeTo(os);
-                return RequestBody.create(XML, os.toByteArray());
-            } catch (SOAPException | ParserConfigurationException | JAXBException e) {
-                throw new RuntimeException(e);
-            }
+            SOAPMessage message = MessageFactory.newInstance().createMessage();
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.marshal(value, document);
+
+            message.getSOAPBody().addDocument(document);
+            SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
+            envelope.addNamespaceDeclaration("tns", namespace);
+            message.writeTo(os);
+            return RequestBody.create(XML, os.toByteArray());
+        } catch (SOAPException | ParserConfigurationException | JAXBException e) {
+            throw new RuntimeException(e);
         }
     }
 }
